@@ -1,5 +1,5 @@
 
-# LIBRARIES, DIRECTORY --------------------------------------------------------
+# libraries, directory --------------------------------------------------------
 
 library(tidyverse)
 library(here)
@@ -8,10 +8,13 @@ library(ggrepel)
 
 here::i_am("code/exploring_dictionaries.R")
 
+# load our custom dictionary of change
 change_dict <- read_csv(here("data/dictionaries/change_dictionary.csv"))
-
 # unigram stems from dictionary 
 unigrams_as_list <- as.list(change_dict$stem)
+
+# load ref dataframe for matching campaing doc speakers to political party 
+ref_affiliations <- read_csv(here("data/ref/campaigndocs_polparty_ref.csv"))
 
 
 # DEBATES ====================================================================
@@ -126,7 +129,7 @@ crosstab_debates_totals %>%
 
 # CAMPAIGN DOCS ====================================================================
 
-# load debate data --------------------------------------------------------------------
+# load campaign data --------------------------------------------------------------------
 campaigndocs_raw <- readRDS(here("data/APP_UCSB/scraped_campaigndocs.rds"))
   
   
@@ -149,16 +152,19 @@ campaigndocs_byyear <- campaigndocs_raw %>%
                                                                  )))))))) %>%
   filter(as.integer(year) > 1999) %>%
   filter(!(year %in% c("2022", "2021", "2018", "2017", "2006", "2002"))) %>%
+  mutate(speaker = str_replace_all(speaker,
+                                   "Donald J. Trump \\(1st Term\\)",
+                                   "Donald J. Trump")) %>%
   mutate(speaker_year_id = paste0(speaker, "_", year)) %>%
   group_by(speaker, year, speaker_year_id) %>%
   summarise(text = paste(body, collapse = " "), .groups = "drop") %>%
   mutate(nchars = nchar(text))
 
-
 unique(campaigndocs_byyear$year)
 
-# campaign docs dictionary counts ----------------------------------------------------------------
+# campaign docs crosstabs ----------------------------------------------------------------
 
+# aka dictionary counts 
 # create a new dataframe with only speaker_year IDs
 # which will become the base for a df of counts
 # rows will be speaker_year
@@ -208,6 +214,7 @@ crosstab_campaigndocs_totals <- crosstab_campaigndocs %>%
          year,
          total_changegrams,
          nchars) %>%
+  left_join(ref_affiliations, by = "speaker") %>%
   mutate(percent_changegrams = (total_changegrams/(nchars/6))) %>% # div 6 for avg word length in chars
   arrange(desc(percent_changegrams))    # chars (4.5) plus one space character
  
@@ -216,27 +223,34 @@ crosstab_campaigndocs_totals <- crosstab_campaigndocs %>%
 crosstab_campaigndocs_totals %>%
   write_csv(here("data/results/crosstab_campaigndocs_totals.csv"))
 
-
-
+crosstab_campaigndocs_totals <- read_csv(here("data/results/crosstab_campaigndocs_totals.csv"))
 
 
 
 # GRAPHING ---------------------------------------------------------------
 
-# scatter 1: 'change vocabulary' across years
+# scatter 1: '% change vocabulary' across years -----------------------------------------
 top_changespeaker_byyear <- crosstab_campaigndocs_totals %>%
   group_by(year) %>%
   slice_max(order_by = percent_changegrams, n = 1, with_ties = FALSE)
 
 # WOULD BE NICE TO ADD:
-# 1) on each year, mark the dem and rep presidential candidates as red and blue dots
-    # or maybe just separate colours into red and blue in general?
 # 2) top change speaker and lowest change speaker
 crosstab_campaigndocs_totals %>%
 ggplot(aes(x = year, 
-           y = percent_changegrams)) +
-  geom_point(size = 2, color = "#c54bfa", alpha = 0.6) +  # Scatter points
-  geom_text(data = top_changespeaker_byyear, aes(label = speaker), vjust = -1, size = 3, color = "#c54bfa") + # Labels
+           y = percent_changegrams,
+           color = pol_party)) +
+  geom_point(size = 2, 
+             #color = "#c54bfa", # currently replaced by red blue pol_party
+             alpha = 0.6) +  # Scatter points
+  geom_text(data = top_changespeaker_byyear, 
+            aes(label = speaker), 
+            vjust = -1, size = 2, 
+            color = "grey") + # Labels
+  scale_color_manual(values = c("Democrat" = "#3c5cf9", 
+                                "Republican" = "#ff603e",
+                                "Libertarian" = "#f3d04b")) + # Custom colors
+  scale_x_continuous(breaks = c(2000, 2004, 2008, 2012, 2016, 2020, 2024)) +  # Custom x-axis labels
   labs(
     title = "Degree of 'Change Vocabulary' use Across Election Years",
     x = "Year",
@@ -251,12 +265,13 @@ ggplot(aes(x = year,
   ) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) # Format y-axis as percentage
 
-ggsave(here("outputs/candidates_changengrams_acrossyears.png"))
+
+ggsave(here("outputs/candidates_changengrams_acrossyears_affil.png"))
 
 
 
 
-# scatter 2: length of total text vs amount of change grams
+# scatter 2: length of total text vs amount of change grams -------------------------------
 top_changespeakers <- crosstab_campaigndocs_totals %>%
   arrange(desc(percent_changegrams)) %>%
   head(6)
@@ -284,6 +299,64 @@ ggplot(aes(x = log(nchars), y = percent_changegrams)) +
 
 
 ggsave(here("outputs/candidates_changengrams_ncharsvspctchange.png"))
+
+
+
+
+
+
+# scatter 3: individual scatters (progression across years for candidate) -----------------------------------
+
+crosstab_campaigndocs_totals %>%
+  filter(speaker %in% c("Barack Obama",
+                        "Hillary Clinton",
+                        "Donald J. Trump" 
+                        #"Joseph R. Biden, Jr.",
+                        #"Kamala Harris"
+                        )) %>%
+  ggplot(aes(x = year, 
+             y = percent_changegrams,
+             color = pol_party)) +
+  geom_point(size = 2, 
+             #color = "#c54bfa", # currently replaced by red blue pol_party
+             alpha = 0.6) +  # Scatter points
+  geom_text_repel(aes(label = speaker_year_id), 
+            vjust = -1, size = 2, 
+            color = "grey") + # Labels
+  scale_color_manual(values = c("Democrat" = "#3c5cf9", 
+                                "Republican" = "#ff603e",
+                                "Libertarian" = "#f3d04b")) + # Custom colors
+  scale_x_continuous(breaks = c(2000, 2004, 2008, 2012, 2016, 2020, 2024)) +  # Custom x-axis labels
+  labs(
+    title = "Individual 'Change Vocabulary' Across Election Years",
+    #subtitle = "Trump, Biden, Harris",
+    subtitle = "Obama, Clinton, Trump",
+    x = "Year",
+    y = "Percent of 'Change' Vocab"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),  # White plot background
+    plot.background = element_rect(fill = "white", color = NA),   # White outer background
+    panel.grid.major = element_line(color = "gray90"),  # Light grid lines
+    panel.grid.minor = element_blank()  # Remove minor grid lines
+  ) +
+  scale_y_continuous(labels = scales::percent_format(scale = 100)) # Format y-axis as percentage
+
+  
+  
+#ggsave(here("outputs/candidates_changengrams_acrossyears_reduced_TBH.png"))
+ggsave(here("outputs/candidates_changengrams_acrossyears_reduced_OCT.png"))
+
+
+
+
+
+
+
+
+
+
 
 
 
