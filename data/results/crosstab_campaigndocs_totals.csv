@@ -1,112 +1,112 @@
-speaker_year_id,speaker,year,total_changegrams,nchars,percent_changegrams,pol_party
-John McCain_2000,John McCain,2000,18,7452,0.014492754,Republican
-George W. Bush_2000,George W. Bush,2000,172,61444,0.016795782,Republican
-"Albert Gore, Jr._2000","Albert Gore, Jr.",2000,566,200947,0.016899979,Democrat
-Richard B. Cheney_2004,Richard B. Cheney,2004,4234,2782347,0.009130421,Republican
-William J. Clinton_2004,William J. Clinton,2004,27,13933,0.011627072,Democrat
-John Edwards_2004,John Edwards,2004,244,112025,0.013068511,Democrat
-John F. Kerry_2004,John F. Kerry,2004,2567,1074188,0.014338272000000001,Democrat
-George W. Bush_2004,George W. Bush,2004,114,34015,0.020108776,Republican
-Mike Huckabee_2008,Mike Huckabee,2008,501,391914,0.00767005,Republican
-Ron Paul_2008,Ron Paul,2008,29,22217,0.00783184,Libertarian
-Joseph Lieberman_2008,Joseph Lieberman,2008,15,11192,0.008041458,Democrat
-Christopher Dodd_2008,Christopher Dodd,2008,49,34231,0.008588706,Democrat
-Michelle Obama_2008,Michelle Obama,2008,18,11657,0.009264819,Democrat
-Fred Thompson_2008,Fred Thompson,2008,1091,666811,0.009816875,Republican
-Sarah Palin_2008,Sarah Palin,2008,293,172426,0.010195678,Republican
-"Joseph R. Biden, Jr._2008","Joseph R. Biden, Jr.",2008,1948,1023353,0.011421279,Democrat
-Hillary Clinton_2008,Hillary Clinton,2008,14908,7094722,0.012607682,Democrat
-John McCain_2008,John McCain,2008,11469,5421928,0.012691795,Republican
-Mitt Romney_2008,Mitt Romney,2008,8011,3713461,0.01294372,Republican
-William J. Clinton_2008,William J. Clinton,2008,49,20193,0.014559501,Democrat
-John Edwards_2008,John Edwards,2008,6121,2435562,0.015079066,Democrat
-Barack Obama_2008,Barack Obama,2008,13536,5194829,0.015634008,Democrat
-Bill Richardson_2008,Bill Richardson,2008,4503,1568836,0.017221685,Democrat
-Rudy Giuliani_2008,Rudy Giuliani,2008,6722,2319816,0.017385862,Republican
-"Albert Gore, Jr._2008","Albert Gore, Jr.",2008,96,21050,0.02736342,Democrat
-Jill Biden_2012,Jill Biden,2012,4,3506,0.006845408,Democrat
-Ron Paul_2012,Ron Paul,2012,1889,1142616,0.009919343,Libertarian
-William J. Clinton_2012,William J. Clinton,2012,62,34157,0.010890886,Democrat
-Rick Santorum_2012,Rick Santorum,2012,1633,880237,0.011131093,Republican
-Herman Cain_2012,Herman Cain,2012,328,169240,0.011628457,Republican
-"Joseph R. Biden, Jr._2012","Joseph R. Biden, Jr.",2012,288,141230,0.012235361,Democrat
-Michele Bachmann_2012,Michele Bachmann,2012,708,340630,0.01247101,Republican
-Mitt Romney_2012,Mitt Romney,2012,16932,7622602,0.013327732,Republican
-Tim Pawlenty_2012,Tim Pawlenty,2012,308,134244,0.013765978,Republican
-Paul Ryan_2012,Paul Ryan,2012,152,63525,0.014356553,Republican
-Rick Perry_2012,Rick Perry,2012,1530,630732,0.014554518,Republican
-Jon Huntsman_2012,Jon Huntsman,2012,546,196379,0.016682028,Republican
-Newt Gingrich_2012,Newt Gingrich,2012,5458,1539558,0.02127104,Republican
-Barack Obama_2012,Barack Obama,2012,136,37189,0.021941972,Democrat
-Tim Kaine_2016,Tim Kaine,2016,49,41783,0.007036354,Democrat
-George W. Bush_2016,George W. Bush,2016,16,13638,0.007039155,Republican
-"Joseph R. Biden, Jr._2016","Joseph R. Biden, Jr.",2016,13,10167,0.00767188,Democrat
-Mike Huckabee_2016,Mike Huckabee,2016,475,335280,0.008500358,Republican
-Ted Cruz_2016,Ted Cruz,2016,2579,1732140,0.008933458,Republican
-Ben Carson_2016,Ben Carson,2016,312,191022,0.009799918,Republican
-Rick Santorum_2016,Rick Santorum,2016,152,89576,0.010181299,Republican
-Mitt Romney_2016,Mitt Romney,2016,23,13469,0.010245749,Republican
-Rand Paul_2016,Rand Paul,2016,306,171438,0.010709411,Republican
-Hillary Clinton_2016,Hillary Clinton,2016,5644,3072686,0.011020976,Democrat
-Lindsey Graham_2016,Lindsey Graham,2016,993,513968,0.011592161,Republican
-Rick Perry_2016,Rick Perry,2016,356,182628,0.011695906,Republican
-Bobby Jindal_2016,Bobby Jindal,2016,305,149159,0.012268787,Republican
-John Kasich_2016,John Kasich,2016,1629,769149,0.012707551,Republican
-Jim Webb_2016,Jim Webb,2016,233,109464,0.012771322,Democrat
-Lincoln Chafee_2016,Lincoln Chafee,2016,117,53906,0.013022669,Libertarian
-Mike Pence_2016,Mike Pence,2016,57,25978,0.013164986,Republican
-Donald J. Trump_2016,Donald J. Trump,2016,4047,1819297,0.013346914,Republican
-Bernie Sanders_2016,Bernie Sanders,2016,4768,2119823,0.013495466,Democrat
-Scott Walker_2016,Scott Walker,2016,429,181497,0.014182053,Republican
-Jeb Bush_2016,Jeb Bush,2016,2000,817665,0.014675937,Republican
-Marco Rubio_2016,Marco Rubio,2016,3421,1385937,0.014810197,Republican
-William J. Clinton_2016,William J. Clinton,2016,74,28787,0.015423629,Democrat
-Chris Christie_2016,Chris Christie,2016,901,308670,0.01751385,Republican
-George Pataki_2016,George Pataki,2016,203,67998,0.017912292,Republican
-Martin O'Malley_2016,Martin O'Malley,2016,793,256792,0.018528615,Democrat
-Carly Fiorina_2016,Carly Fiorina,2016,6,1009,0.03567889,Republican
-Hillary Clinton_2020,Hillary Clinton,2020,6,5748,0.006263048,Democrat
-Mike Pence_2020,Mike Pence,2020,26,19871,0.007850637,Republican
-John Kasich_2020,John Kasich,2020,5,3375,0.008888889,Republican
-Kamala Harris_2020,Kamala Harris,2020,720,428946,0.010071198,Democrat
-Barack Obama_2020,Barack Obama,2020,22,12893,0.010238114,Democrat
-Donald J. Trump_2020,Donald J. Trump,2020,5170,2935093,0.01056866,Republican
-"Joseph R. Biden, Jr._2020","Joseph R. Biden, Jr.",2020,6681,3786992,0.010585182,Democrat
-Amy Klobuchar_2020,Amy Klobuchar,2020,966,505921,0.011456334,Democrat
-Ben Carson_2020,Ben Carson,2020,8,3936,0.012195122,Republican
-Julián Castro_2020,Julián Castro,2020,760,354441,0.012865329,Democrat
-Beto O'Rourke_2020,Beto O'Rourke,2020,206,95825,0.012898513,Democrat
-Elizabeth Warren_2020,Elizabeth Warren,2020,3955,1763259,0.013458034,Democrat
-John Delaney_2020,John Delaney,2020,226,99857,0.013579419,Democrat
-Eric Swalwell_2020,Eric Swalwell,2020,133,56993,0.01400172,Democrat
-Bill de Blasio_2020,Bill de Blasio,2020,111,47051,0.014154853,Democrat
-Michael Bloomberg_2020,Michael Bloomberg,2020,3002,1253769,0.014366283,Democrat
-Bernie Sanders_2020,Bernie Sanders,2020,1242,516434,0.014429724,Democrat
-Rudy Giuliani_2020,Rudy Giuliani,2020,17,6948,0.014680484,Republican
-Jill Biden_2020,Jill Biden,2020,15,5977,0.015057721,Democrat
-Tim Ryan_2020,Tim Ryan,2020,106,41892,0.015181896,Democrat
-Steve Bullock_2020,Steve Bullock,2020,214,83657,0.015348387,Democrat
-Michael Bennet_2020,Michael Bennet,2020,812,308236,0.015806071,Democrat
-Pete Buttigieg_2020,Pete Buttigieg,2020,327,119408,0.01643106,Democrat
-Cory Booker_2020,Cory Booker,2020,756,268742,0.016878642,Democrat
-John Hickenlooper_2020,John Hickenlooper,2020,103,36496,0.016933363,Democrat
-Tom Steyer_2020,Tom Steyer,2020,1020,347854,0.017593588,Democrat
-Andrew Yang_2020,Andrew Yang,2020,284,96774,0.017608035,Democrat
-Deval Patrick_2020,Deval Patrick,2020,813,265870,0.018347313,Democrat
-Tulsi Gabbard_2020,Tulsi Gabbard,2020,336,108430,0.01859264,Republican
-Kirsten Gillibrand_2020,Kirsten Gillibrand,2020,309,97961,0.018925899,Democrat
-William J. Clinton_2020,William J. Clinton,2020,15,4396,0.020473157,Democrat
-Jay Inslee_2020,Jay Inslee,2020,435,86619,0.030131957,Democrat
-Tim Walz_2024,Tim Walz,2024,9,9552,0.005653266,Democrat
-"Joseph R. Biden, Jr._2024","Joseph R. Biden, Jr.",2024,547,466358,0.007037512,Democrat
-Donald J. Trump_2024,Donald J. Trump,2024,1359,1150480,0.007087477,Republican
-Kamala Harris_2024,Kamala Harris,2024,742,558918,0.00796539,Democrat
-Chris Christie_2024,Chris Christie,2024,35,23459,0.008951788,Republican
-J.D. Vance_2024,J.D. Vance,2024,35,19803,0.010604454,Republican
-Asa Hutchinson_2024,Asa Hutchinson,2024,130,71996,0.010833935,Republican
-Ron DeSantis_2024,Ron DeSantis,2024,3476,1889327,0.011038851,Republican
-Mike Pence_2024,Mike Pence,2024,129,67684,0.011435494,Republican
-Tim Scott_2024,Tim Scott,2024,748,351951,0.012751775,Republican
-Nikki Haley_2024,Nikki Haley,2024,5338,2338054,0.013698572,Republican
-Doug Burgum_2024,Doug Burgum,2024,91,29903,0.018259038,Republican
-Will Hurd_2024,Will Hurd,2024,125,40398,0.018565276,Republican
+speaker_year_id,speaker,year,total_changegrams,nchars,percent_changegrams,pol_party,nominee_yn,president_yn
+John McCain_2000,John McCain,2000,18,7452,0.014492754,Republican,0,0
+George W. Bush_2000,George W. Bush,2000,172,61444,0.016795782,Republican,1,1
+"Albert Gore, Jr._2000","Albert Gore, Jr.",2000,566,200947,0.016899979,Democrat,1,0
+Richard B. Cheney_2004,Richard B. Cheney,2004,4234,2782347,0.009130421,Republican,0,0
+William J. Clinton_2004,William J. Clinton,2004,27,13933,0.011627072,Democrat,0,0
+John Edwards_2004,John Edwards,2004,244,112025,0.013068511,Democrat,0,0
+John F. Kerry_2004,John F. Kerry,2004,2567,1074188,0.014338272000000001,Democrat,1,0
+George W. Bush_2004,George W. Bush,2004,114,34015,0.020108776,Republican,1,1
+Mike Huckabee_2008,Mike Huckabee,2008,501,391914,0.00767005,Republican,0,0
+Ron Paul_2008,Ron Paul,2008,29,22217,0.00783184,Libertarian,0,0
+Joseph Lieberman_2008,Joseph Lieberman,2008,15,11192,0.008041458,Democrat,0,0
+Christopher Dodd_2008,Christopher Dodd,2008,49,34231,0.008588706,Democrat,0,0
+Michelle Obama_2008,Michelle Obama,2008,18,11657,0.009264819,Democrat,0,0
+Fred Thompson_2008,Fred Thompson,2008,1091,666811,0.009816875,Republican,0,0
+Sarah Palin_2008,Sarah Palin,2008,293,172426,0.010195678,Republican,0,0
+"Joseph R. Biden, Jr._2008","Joseph R. Biden, Jr.",2008,1948,1023353,0.011421279,Democrat,0,0
+Hillary Clinton_2008,Hillary Clinton,2008,14908,7094722,0.012607682,Democrat,0,0
+John McCain_2008,John McCain,2008,11469,5421928,0.012691795,Republican,1,0
+Mitt Romney_2008,Mitt Romney,2008,8011,3713461,0.01294372,Republican,0,0
+William J. Clinton_2008,William J. Clinton,2008,49,20193,0.014559501,Democrat,0,0
+John Edwards_2008,John Edwards,2008,6121,2435562,0.015079066,Democrat,0,0
+Barack Obama_2008,Barack Obama,2008,13536,5194829,0.015634008,Democrat,1,1
+Bill Richardson_2008,Bill Richardson,2008,4503,1568836,0.017221685,Democrat,0,0
+Rudy Giuliani_2008,Rudy Giuliani,2008,6722,2319816,0.017385862,Republican,0,0
+"Albert Gore, Jr._2008","Albert Gore, Jr.",2008,96,21050,0.02736342,Democrat,0,0
+Jill Biden_2012,Jill Biden,2012,4,3506,0.006845408,Democrat,0,0
+Ron Paul_2012,Ron Paul,2012,1889,1142616,0.009919343,Libertarian,0,0
+William J. Clinton_2012,William J. Clinton,2012,62,34157,0.010890886,Democrat,0,0
+Rick Santorum_2012,Rick Santorum,2012,1633,880237,0.011131093,Republican,0,0
+Herman Cain_2012,Herman Cain,2012,328,169240,0.011628457,Republican,0,0
+"Joseph R. Biden, Jr._2012","Joseph R. Biden, Jr.",2012,288,141230,0.012235361,Democrat,0,0
+Michele Bachmann_2012,Michele Bachmann,2012,708,340630,0.01247101,Republican,0,0
+Mitt Romney_2012,Mitt Romney,2012,16932,7622602,0.013327732,Republican,1,0
+Tim Pawlenty_2012,Tim Pawlenty,2012,308,134244,0.013765978,Republican,0,0
+Paul Ryan_2012,Paul Ryan,2012,152,63525,0.014356553,Republican,0,0
+Rick Perry_2012,Rick Perry,2012,1530,630732,0.014554518,Republican,0,0
+Jon Huntsman_2012,Jon Huntsman,2012,546,196379,0.016682028,Republican,0,0
+Newt Gingrich_2012,Newt Gingrich,2012,5458,1539558,0.02127104,Republican,0,0
+Barack Obama_2012,Barack Obama,2012,136,37189,0.021941972,Democrat,1,1
+Tim Kaine_2016,Tim Kaine,2016,49,41783,0.007036354,Democrat,0,0
+George W. Bush_2016,George W. Bush,2016,16,13638,0.007039155,Republican,0,0
+"Joseph R. Biden, Jr._2016","Joseph R. Biden, Jr.",2016,13,10167,0.00767188,Democrat,0,0
+Mike Huckabee_2016,Mike Huckabee,2016,475,335280,0.008500358,Republican,0,0
+Ted Cruz_2016,Ted Cruz,2016,2579,1732140,0.008933458,Republican,0,0
+Ben Carson_2016,Ben Carson,2016,312,191022,0.009799918,Republican,0,0
+Rick Santorum_2016,Rick Santorum,2016,152,89576,0.010181299,Republican,0,0
+Mitt Romney_2016,Mitt Romney,2016,23,13469,0.010245749,Republican,0,0
+Rand Paul_2016,Rand Paul,2016,306,171438,0.010709411,Republican,0,0
+Hillary Clinton_2016,Hillary Clinton,2016,5644,3072686,0.011020976,Democrat,1,0
+Lindsey Graham_2016,Lindsey Graham,2016,993,513968,0.011592161,Republican,0,0
+Rick Perry_2016,Rick Perry,2016,356,182628,0.011695906,Republican,0,0
+Bobby Jindal_2016,Bobby Jindal,2016,305,149159,0.012268787,Republican,0,0
+John Kasich_2016,John Kasich,2016,1629,769149,0.012707551,Republican,0,0
+Jim Webb_2016,Jim Webb,2016,233,109464,0.012771322,Democrat,0,0
+Lincoln Chafee_2016,Lincoln Chafee,2016,117,53906,0.013022669,Libertarian,0,0
+Mike Pence_2016,Mike Pence,2016,57,25978,0.013164986,Republican,0,0
+Donald J. Trump_2016,Donald J. Trump,2016,4047,1819297,0.013346914,Republican,1,1
+Bernie Sanders_2016,Bernie Sanders,2016,4768,2119823,0.013495466,Democrat,0,0
+Scott Walker_2016,Scott Walker,2016,429,181497,0.014182053,Republican,0,0
+Jeb Bush_2016,Jeb Bush,2016,2000,817665,0.014675937,Republican,0,0
+Marco Rubio_2016,Marco Rubio,2016,3421,1385937,0.014810197,Republican,0,0
+William J. Clinton_2016,William J. Clinton,2016,74,28787,0.015423629,Democrat,0,0
+Chris Christie_2016,Chris Christie,2016,901,308670,0.01751385,Republican,0,0
+George Pataki_2016,George Pataki,2016,203,67998,0.017912292,Republican,0,0
+Martin O'Malley_2016,Martin O'Malley,2016,793,256792,0.018528615,Democrat,0,0
+Carly Fiorina_2016,Carly Fiorina,2016,6,1009,0.03567889,Republican,0,0
+Hillary Clinton_2020,Hillary Clinton,2020,6,5748,0.006263048,Democrat,0,0
+Mike Pence_2020,Mike Pence,2020,26,19871,0.007850637,Republican,0,0
+John Kasich_2020,John Kasich,2020,5,3375,0.008888889,Republican,0,0
+Kamala Harris_2020,Kamala Harris,2020,720,428946,0.010071198,Democrat,0,0
+Barack Obama_2020,Barack Obama,2020,22,12893,0.010238114,Democrat,0,0
+Donald J. Trump_2020,Donald J. Trump,2020,5170,2935093,0.01056866,Republican,1,0
+"Joseph R. Biden, Jr._2020","Joseph R. Biden, Jr.",2020,6681,3786992,0.010585182,Democrat,1,1
+Amy Klobuchar_2020,Amy Klobuchar,2020,966,505921,0.011456334,Democrat,0,0
+Ben Carson_2020,Ben Carson,2020,8,3936,0.012195122,Republican,0,0
+Julián Castro_2020,Julián Castro,2020,760,354441,0.012865329,Democrat,0,0
+Beto O'Rourke_2020,Beto O'Rourke,2020,206,95825,0.012898513,Democrat,0,0
+Elizabeth Warren_2020,Elizabeth Warren,2020,3955,1763259,0.013458034,Democrat,0,0
+John Delaney_2020,John Delaney,2020,226,99857,0.013579419,Democrat,0,0
+Eric Swalwell_2020,Eric Swalwell,2020,133,56993,0.01400172,Democrat,0,0
+Bill de Blasio_2020,Bill de Blasio,2020,111,47051,0.014154853,Democrat,0,0
+Michael Bloomberg_2020,Michael Bloomberg,2020,3002,1253769,0.014366283,Democrat,0,0
+Bernie Sanders_2020,Bernie Sanders,2020,1242,516434,0.014429724,Democrat,0,0
+Rudy Giuliani_2020,Rudy Giuliani,2020,17,6948,0.014680484,Republican,0,0
+Jill Biden_2020,Jill Biden,2020,15,5977,0.015057721,Democrat,0,0
+Tim Ryan_2020,Tim Ryan,2020,106,41892,0.015181896,Democrat,0,0
+Steve Bullock_2020,Steve Bullock,2020,214,83657,0.015348387,Democrat,0,0
+Michael Bennet_2020,Michael Bennet,2020,812,308236,0.015806071,Democrat,0,0
+Pete Buttigieg_2020,Pete Buttigieg,2020,327,119408,0.01643106,Democrat,0,0
+Cory Booker_2020,Cory Booker,2020,756,268742,0.016878642,Democrat,0,0
+John Hickenlooper_2020,John Hickenlooper,2020,103,36496,0.016933363,Democrat,0,0
+Tom Steyer_2020,Tom Steyer,2020,1020,347854,0.017593588,Democrat,0,0
+Andrew Yang_2020,Andrew Yang,2020,284,96774,0.017608035,Democrat,0,0
+Deval Patrick_2020,Deval Patrick,2020,813,265870,0.018347313,Democrat,0,0
+Tulsi Gabbard_2020,Tulsi Gabbard,2020,336,108430,0.01859264,Republican,0,0
+Kirsten Gillibrand_2020,Kirsten Gillibrand,2020,309,97961,0.018925899,Democrat,0,0
+William J. Clinton_2020,William J. Clinton,2020,15,4396,0.020473157,Democrat,0,0
+Jay Inslee_2020,Jay Inslee,2020,435,86619,0.030131957,Democrat,0,0
+Tim Walz_2024,Tim Walz,2024,9,9552,0.005653266,Democrat,0,0
+"Joseph R. Biden, Jr._2024","Joseph R. Biden, Jr.",2024,547,466358,0.007037512,Democrat,0,0
+Donald J. Trump_2024,Donald J. Trump,2024,1359,1150480,0.007087477,Republican,1,1
+Kamala Harris_2024,Kamala Harris,2024,742,558918,0.00796539,Democrat,1,0
+Chris Christie_2024,Chris Christie,2024,35,23459,0.008951788,Republican,0,0
+J.D. Vance_2024,J.D. Vance,2024,35,19803,0.010604454,Republican,0,0
+Asa Hutchinson_2024,Asa Hutchinson,2024,130,71996,0.010833935,Republican,0,0
+Ron DeSantis_2024,Ron DeSantis,2024,3476,1889327,0.011038851,Republican,0,0
+Mike Pence_2024,Mike Pence,2024,129,67684,0.011435494,Republican,0,0
+Tim Scott_2024,Tim Scott,2024,748,351951,0.012751775,Republican,0,0
+Nikki Haley_2024,Nikki Haley,2024,5338,2338054,0.013698572,Republican,0,0
+Doug Burgum_2024,Doug Burgum,2024,91,29903,0.018259038,Republican,0,0
+Will Hurd_2024,Will Hurd,2024,125,40398,0.018565276,Republican,0,0

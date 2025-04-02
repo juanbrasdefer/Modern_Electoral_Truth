@@ -1,0 +1,112 @@
+﻿speaker_year_id,nominee_yn,president_yn
+John McCain_2000,0,0
+George W. Bush_2000,1,1
+"Albert Gore, Jr._2000",1,0
+Richard B. Cheney_2004,0,0
+William J. Clinton_2004,0,0
+John Edwards_2004,0,0
+John F. Kerry_2004,1,0
+George W. Bush_2004,1,1
+Mike Huckabee_2008,0,0
+Ron Paul_2008,0,0
+Joseph Lieberman_2008,0,0
+Christopher Dodd_2008,0,0
+Michelle Obama_2008,0,0
+Fred Thompson_2008,0,0
+Sarah Palin_2008,0,0
+"Joseph R. Biden, Jr._2008",0,0
+Hillary Clinton_2008,0,0
+John McCain_2008,1,0
+Mitt Romney_2008,0,0
+William J. Clinton_2008,0,0
+John Edwards_2008,0,0
+Barack Obama_2008,1,1
+Bill Richardson_2008,0,0
+Rudy Giuliani_2008,0,0
+"Albert Gore, Jr._2008",0,0
+Jill Biden_2012,0,0
+Ron Paul_2012,0,0
+William J. Clinton_2012,0,0
+Rick Santorum_2012,0,0
+Herman Cain_2012,0,0
+"Joseph R. Biden, Jr._2012",0,0
+Michele Bachmann_2012,0,0
+Mitt Romney_2012,1,0
+Tim Pawlenty_2012,0,0
+Paul Ryan_2012,0,0
+Rick Perry_2012,0,0
+Jon Huntsman_2012,0,0
+Newt Gingrich_2012,0,0
+Barack Obama_2012,1,1
+Tim Kaine_2016,0,0
+George W. Bush_2016,0,0
+"Joseph R. Biden, Jr._2016",0,0
+Mike Huckabee_2016,0,0
+Ted Cruz_2016,0,0
+Ben Carson_2016,0,0
+Rick Santorum_2016,0,0
+Mitt Romney_2016,0,0
+Rand Paul_2016,0,0
+Hillary Clinton_2016,1,0
+Lindsey Graham_2016,0,0
+Rick Perry_2016,0,0
+Bobby Jindal_2016,0,0
+John Kasich_2016,0,0
+Jim Webb_2016,0,0
+Lincoln Chafee_2016,0,0
+Mike Pence_2016,0,0
+Donald J. Trump_2016,1,1
+Bernie Sanders_2016,0,0
+Scott Walker_2016,0,0
+Jeb Bush_2016,0,0
+Marco Rubio_2016,0,0
+William J. Clinton_2016,0,0
+Chris Christie_2016,0,0
+George Pataki_2016,0,0
+Martin O'Malley_2016,0,0
+Carly Fiorina_2016,0,0
+Hillary Clinton_2020,0,0
+Mike Pence_2020,0,0
+John Kasich_2020,0,0
+Kamala Harris_2020,0,0
+Barack Obama_2020,0,0
+Donald J. Trump_2020,1,0
+"Joseph R. Biden, Jr._2020",1,1
+Amy Klobuchar_2020,0,0
+Ben Carson_2020,0,0
+Julián Castro_2020,0,0
+Beto O'Rourke_2020,0,0
+Elizabeth Warren_2020,0,0
+John Delaney_2020,0,0
+Eric Swalwell_2020,0,0
+Bill de Blasio_2020,0,0
+Michael Bloomberg_2020,0,0
+Bernie Sanders_2020,0,0
+Rudy Giuliani_2020,0,0
+Jill Biden_2020,0,0
+Tim Ryan_2020,0,0
+Steve Bullock_2020,0,0
+Michael Bennet_2020,0,0
+Pete Buttigieg_2020,0,0
+Cory Booker_2020,0,0
+John Hickenlooper_2020,0,0
+Tom Steyer_2020,0,0
+Andrew Yang_2020,0,0
+Deval Patrick_2020,0,0
+Tulsi Gabbard_2020,0,0
+Kirsten Gillibrand_2020,0,0
+William J. Clinton_2020,0,0
+Jay Inslee_2020,0,0
+Tim Walz_2024,0,0
+"Joseph R. Biden, Jr._2024",0,0
+Donald J. Trump_2024,1,1
+Kamala Harris_2024,1,0
+Chris Christie_2024,0,0
+J.D. Vance_2024,0,0
+Asa Hutchinson_2024,0,0
+Ron DeSantis_2024,0,0
+Mike Pence_2024,0,0
+Tim Scott_2024,0,0
+Nikki Haley_2024,0,0
+Doug Burgum_2024,0,0
+Will Hurd_2024,0,0
