@@ -202,21 +202,21 @@ combined_summary <- tibble(
 )
 
 # Expand into long format with new naming scheme
-comparison_df <- combined_summary %>%
+comparison_sumstats <- combined_summary %>%
   unnest_wider(fulldset, names_sep = "_") %>%
   unnest_wider(subset, names_sep = "_")
 
 # Rename columns so numbers come first
-colnames(comparison_df) <- ifelse(
-  colnames(comparison_df) == "variable",
+colnames(comparison_sumstats) <- ifelse(
+  colnames(comparison_sumstats) == "variable",
   "variable",
-  paste0(str_extract(colnames(comparison_df), 
+  paste0(str_extract(colnames(comparison_sumstats), 
                      "\\d+"), "_", 
-         str_extract(colnames(comparison_df), "fulldset|subset"))
+         str_extract(colnames(comparison_sumstats), "fulldset|subset"))
 )
 
 # Get the names of all columns except the 'variable' column
-all_cols <- colnames(comparison_df)
+all_cols <- colnames(comparison_sumstats)
 data_cols <- setdiff(all_cols, "variable")
 
 # Extract the number and type (fulldset/subset) to sort properly
@@ -232,19 +232,12 @@ sorted_names <- col_order %>%
   pull(name)
 
 # Reorder the original dataframe
-comparison_df <- comparison_df %>%
+comparison_sumstats <- comparison_sumstats %>%
   select(variable, all_of(sorted_names))
 
 
 # 2020 Select Variables - Graphing Comparison between full dataset and change voters -------------------------------------------------
 
-# Voter election history variables
-V202072, # V202072 - POST: Did R vote for President in this election
-V202073, # V202073 - POST: For whom did R vote for President
-V201101_V201102_summary, # Joint V201101 and V201102 - PRE: Did R vote for President in 2016 
-V201103, # V201103 - PRE: Recall of last (2016) Presidential vote choice
-V201104, # V201104 - PRE: Did R vote for president in 2012 election
-V201105, # V201105 - PRE: recall of 2012 presidential vote choice
 
 # need to filter these out of the graphing section
 
@@ -330,10 +323,10 @@ subset_long <- subset %>%
   mutate(dataset = "subset")
 
 # Combine them
-long_df <- bind_rows(fulldset_long, subset_long)
+joint_long_df <- bind_rows(fulldset_long, subset_long)
 
 # Merge with type info
-long_df <- long_df %>%
+joint_long_df <- joint_long_df %>%
   left_join(var_types_slct_2020, by = "variable")
 
 
@@ -341,7 +334,7 @@ long_df <- long_df %>%
 # graphing 
 
 plot_bar_comparison <- function(var_name) {
-  long_df %>%
+  joint_long_df %>%
       filter(variable == var_name) %>%
       ggplot(aes(x = as.factor(value), fill = dataset)) +
       geom_bar(
@@ -356,7 +349,7 @@ plot_bar_comparison <- function(var_name) {
 }
 
 plot_density_comparison <- function(var_name) {
-  long_df %>%
+  joint_long_df %>%
     filter(variable == var_name, !is.na(value)) %>%
     ggplot(aes(x = as.numeric(value), fill = dataset, color = dataset)) +
     geom_density(alpha = 0.4) +
@@ -404,7 +397,7 @@ ggsave(here("outputs/ANES_comparison_grid.png"), wrap_plots(plot_list, nrow = 5,
 # T-TEST experiments -----------------------------------------------------------------
 
 # Run t-test for variable V202430 comparing fulldset vs subset
-t_test_result <- long_df %>%
+t_test_result <- joint_long_df %>%
   filter(variable == "V202430") %>%       # focus on just this variable
   t.test(value ~ dataset, data = .)       # run the t-test comparing the two groups
 
@@ -442,7 +435,7 @@ t_test_result
 
 # Step 1: Get a list of variables you'd like to run t-tests on
 # (assuming your variable column is called "variable" and dataset is long-form)
-variables_to_test <- long_df %>%
+variables_to_test <- joint_long_df %>%
   filter(type %in% c("ordinal","continuous")) %>% # or "continuous", or omit this if you want all
   distinct(variable) %>%
   pull(variable)
@@ -450,7 +443,7 @@ variables_to_test <- long_df %>%
 # Step 2: Run t-tests in a loop, collect results
 t_test_summary <- map_dfr(variables_to_test, function(var) {
   
-  test_data <- long_df %>%
+  test_data <- joint_long_df %>%
     filter(variable == var)
   
   # If fewer than 2 groups, skip (helps prevent errors)
@@ -485,7 +478,7 @@ t_test_summary <- map_dfr(variables_to_test, function(var) {
 
 
 # Step 1: Define binary variables (only 1 and 2, no 3+ levels)
-binary_vars <- long_df %>%
+binary_vars <- joint_long_df %>%
   group_by(variable) %>%
   filter(!is.na(value)) %>%
   summarise(n_levels = n_distinct(value)) %>%
@@ -494,7 +487,7 @@ binary_vars <- long_df %>%
 
 # Step 2: Function to run Fisher's Test and extract results
 run_fisher_test <- function(var_name) {
-  tab <- long_df %>%
+  tab <- joint_long_df %>%
     filter(variable == var_name) %>%
     filter(!is.na(value)) %>%
     count(dataset, value) %>%

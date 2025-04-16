@@ -1,4 +1,6 @@
-# libraries, directory ------------------------------------------------------------
+
+# Script Setup ----------------------------------------------------------------------
+### libraries, directory ------------------------------------------------------------
 library(tidyverse)
 library(here)
 library(patchwork)
@@ -7,17 +9,14 @@ here::i_am("code/analysis_ANES.R")
 options(scipen = 999)
 
 
-# load data -----------------------------------------------------------------------
-
+### load data -----------------------------------------------------------------------
 ANES_2020_raw <- read_csv(here("data/ANES/2020/anes_timeseries_2020_csv_20220210/anes_timeseries_2020_csv_20220210.csv"))
 
 
 
+# DATASET Cleaning and Filtering ----------------------------------------------------------------------
 
-
-
-# Clean 2020 RAW ANES  ------------------------------------------------------------------
-
+### ANES_2020_clean - Standardizing alt codings of NAs  ------------------------------------------------------------------
 ANES_2020_clean <- ANES_2020_raw %>%
   mutate(across(everything(), ~ ifelse(. < 0, # re-coding the ANES missing values as NA
                                        NA, .))) %>% # ANES uses -9, -8, -7 etc to mean different NA reasons
@@ -25,9 +24,7 @@ ANES_2020_clean <- ANES_2020_raw %>%
                                        NA, .))) # know of the subject being discussed (like: do you like feminism? i dont recognize that word)
 
 
-
-
-# Experiment Cont: Taking only select columns from full dset ------------------------------------
+### ANES_2020_clean_slct - Reducing Dataset: Select Columns  -----------------------------------------------------
 
 ANES_2020_clean_slct <- ANES_2020_clean %>%
   # some quick 'mutates' to simplify the variables that are split across two variabls
@@ -50,13 +47,49 @@ ANES_2020_clean_slct <- ANES_2020_clean %>%
                                                                           V202142y2, NA)))) %>%          # V202142y2 Coded in ANES as: 0. Incorrect, 1. Correct
   select(2, # Case ID
       # Voter election history variables
-         V202072, # V202072 - POST: Did R vote for President in this election
-         V202073, # V202073 - POST: For whom did R vote for President
-         V201101_V201102_summary, # Joint V201101 and V201102 - PRE: Did R vote for President in 2016 
-         V201103, # V201103 - PRE: Recall of last (2016) Presidential vote choice
-         V201104, # V201104 - PRE: Did R vote for president in 2012 election
-         V201105, # V201105 - PRE: recall of 2012 presidential vote choice
-      
+      V202072, # V202072 - POST: Did R vote for President in this election
+      V202073, # V202073 - POST: For whom did R vote for President
+      V201101_V201102_summary, # Joint V201101 and V201102 - PRE: Did R vote for President in 2016 
+      V201103, # V201103 - PRE: Recall of last (2016) Presidential vote choice
+      V201104, # V201104 - PRE: Did R vote for president in 2012 election
+      V201105, # V201105 - PRE: recall of 2012 presidential vote choice
+      # Political Involvement/ View of Politics
+      V202014, #V202014 POST: R go to any political meetings, rallies, speeches, dinners, # 1 yes, 2 no
+      V202025, #V202025 POST: Has R in past 12 months: joined a protest march, rally, or demonstration, # 1 yes, 2 no
+      V202406, #V202406 POST: CSES5‐Q01: How interested in politics is R, #1. Very interested, 2. Somewhat interested, 3. Not very interested, 4. Not at all interested
+      V202214, #V202214 POST: [REV] Politics/government too complicated to understand, #1. Always, 2. Most of the time, 3. About half the time, 4. Some of the time, 5. Never
+      V202439, #V202439 POST: CSES5‐Q18: Left‐right‐self, #0. Left, 10. Right
+      V202216, #V202216 POST: Important differences in what major parties stand for, #1. Yes, differences, 2. No, no differences
+      V202431, #V202431 POST: CSES5‐Q14a: 5pt scale: Does it make a difference who is in power, #5-point scale, 1. It doesn’t make any difference 5. It makes a big difference l
+      # Information Level
+      V202138y, #V202138y POST: Office recall: Vice‐President ‐ Mike Pence [coded], #0. Incorrect, 1. Correct
+      V202139y1_V202139y2_summary, # Joint V202139y1 and V202139y2 POST: Office recall: Speaker of the House ‐ Nancy Pelosi,  #0. Incorrect, 1. Correct
+      V202140y1_V202140y2_summary, # Joint V202140y1 and V202140y2 POST: Office recall: German Chancellor ‐ Angela Merkel, #0. Incorrect, 1. Correct
+      V202142y1_V202142y2_summary, # Joint V202142y1 and V202139y2, POST: Office recall: SCOTUS Chief Justice ‐ John Roberts,  #0. Incorrect, 1. Correct
+      # Beliefs
+      V202158, #V202158 POST: Feeling thermometer: Dr. Anthony Fauci, 0-100 scale,#998. Don’t know, 999. Don’t recognize
+      V202160, #V202160 POST: Feeling thermometer: feminists
+      V202159,#V202159 POST: Feeling thermometer: Christian fundamentalists
+      V202162, #V202162 POST: Feeling thermometer: labor unions
+      V202265, #V202265 POST: Fewer problems if there was more emphasis on traditional family values, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+      V202224, #V202224 POST: How important that more women get elected to political office, #1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important
+      # Review of State of Union/ Government's Job
+      V202427, #V202427 POST: CSES5‐Q09: How good/bad a job has government done in last 4 years, #1. Very good job, 2. Good job, 3. Bad job, 4. Very bad job
+      V202430, #V202430 POST: CSES5‐Q11: State of economy better or worse over past 12 months, #1. Gotten much better, 2. Gotten somewhat better, 3. Stayed about the same, 4. Gotten somewhat worse, 5. Gotten much worse
+      V202317, #V202317 POST: How much opportunity in America for average person to get ahead, #1. A great deal, 2. A lot, 3. A moderate amount, 4. A little, 5. None
+      V202271, #V202271 POST: Is the US better or worse than most other countries, #1. Better, 2. Worse, 3. The same
+      V202212, #V202212 POST: [STD] Public officials don't care what people think, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+      V202411, #V202411 POST: CSES5‐Q04c: Attitudes about elites: most politicians are trustworthy, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+      V202304, #V202304 POST: Our political system only works for insiders with money and power, #how well does the statement describe your views #1. Not at all well, 2. Not very well, 3. Somewhat well, 4. Very well, 5. Extremely well
+      # Demographic
+      V202355, #V202355 POST: Does R currently live in a rural or urban area, #1. Rural area, 2. Small town, 3. Suburb, 4. City
+      V202468x, #V202468x PRE‐POST: SUMMARY: Total (family) income
+                    #1. Under $9,999, 2. $10,000-14,999, 3. $15,000-19,999, 4. $20,000-24,999
+                    #5. $25,000-29,999, 6. $30,000-34,999, 7. $35,000-39,999, 8. $40,000-44,999
+                    #9. $45,000-49,999, 10. $50,000-59,999, 11. $60,000-64,999, 12. $65,000-69,999
+                    #13. $70,000-74,999, 14. $75,000-79,999, 15. $80,000-89,999, 16. $90,000-99,999
+                    #17. $100,000-109,999, 18. $110,000-124,999, 19. $125,000-149,999, 20. $150,000-174,999
+                    #21. $175,000-249,999, 22. $250,000 or more
       # New Variables
         V202173, #V202173 POST: Feeling thermometer: scientists
         V202213, #V202213 POST: [STD] Have no say about what goverment does #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
@@ -79,19 +112,20 @@ ANES_2020_clean_slct <- ANES_2020_clean %>%
         V202413, #V202413 POST: CSES5‐Q04e: Attitudes about elites: strong leader in government is good 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
         V202414, #V202414 POST: CSES5‐Q04f: Attitudes about elites: people should make policy decisions 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
         V202424, #V202424 POST: CSES5‐Q06d: National identity: how important to follow America's customs 1. Very important 2. Fairly important 3. Not very important 4. Not important at all
-        V202440, #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
+        V202440  #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
       )
 
 
 
-colSums(is.na(ANES_2020_clean_slct)) # of our voter belief/ attribute columns, max missing is ~1060
+colSums(is.na(ANES_2020_clean_slct)) 
+# of our voter belief/ attribute columns, max missing is ~1060
 # average is about 850 missing values, so about 10%
 # aka no hugely worrisome columns
 
 
 
 
-# Experiment: Voted for Change in Pres, 2020 and two prev elecs -------------------------
+### voted_change_20_allelecs_slct - Create Subset: Voted for Change in 2020, 16, 12 -------------------------
 change_cand_20_20 <- 1 # Change candidate in 2020 in the 2020 ANES dataset
 # Joe Biden is coded as 1 in this dataset
 change_cand_16_20 <- 2 # Change candidate in 2016 in the 2020 ANES dataset
@@ -100,7 +134,7 @@ change_cand_12_20 <- 1 # Change candidate in 2012 in the 2020 ANES dataset
 # Barack Obama is code as 1 in this dataset
 
 # df: find voters that voted Obama -> Trump -> Biden
-voted_change_20_allelecs_slct <- ANES_2020_clean_slct %>%
+voted_change_20_allelecs <- ANES_2020_clean_slct %>%
   filter(!is.na(V202072)) %>% # V202072 - POST: Did R vote for President in this election
   # Filters out: refused q, didnt participate in POST...
   # N: 8280->6029
@@ -129,26 +163,33 @@ voted_change_20_allelecs_slct <- ANES_2020_clean_slct %>%
   filter(!is.na(V201105)) %>%           # V201105 - PRE: recall of 2012 presidential vote choice
   # Filters out: refused q, didnt do post vote survey..
   # N: 187->156
-  filter(V201105 == change_cand_12_20)        # V201105 - PRE: recall of 2012 presidential vote choice
-# Filter: VOTED for Barack Obama
-# N: 156->89 (57% voted Obama)
+  filter(V201105 == change_cand_12_20)      # V201105 - PRE: recall of 2012 presidential vote choice
+  # Filter: VOTED for Barack Obama
+  # N: 156->89 (57% voted Obama)
 # meaning that we have 89 people in this 
 # dataset that voted Obama -> Trump -> Biden  
 # let's see who they are!!
 
 
-# 2020 Select Variables - Comparison between full dataset and change voters -------------------------------------------------
-voted_ANES_2020_clean_slct <- ANES_2020_clean_slct %>%
-  filter(V202072 == 1) 
-# since we are going to be looking for indicators that tell us why people vote the way they do
-# it makes sense to drop all observations that didnt vote in 2020
-# since we don't have the counterfactual for these people of "who would they have voted for"
+# we also get rid of columns that are not useful for summary stats
+# columns that helped us filter earlier
+droplist <- c("V202072", # V202072 - POST: Did R vote for President in this election
+              "V202073", # V202073 - POST: For whom did R vote for President
+              "V201101_V201102_summary", # Joint V201101 and V201102 - PRE: Did R vote for President in 2016 
+              "V201103", # V201103 - PRE: Recall of last (2016) Presidential vote choice
+              "V201104", # V201104 - PRE: Did R vote for president in 2012 election
+              "V201105") # V201105 - PRE: recall of 2012 presidential vote choice
+# note: this droplist is used here and later on fulldset as well
 
-# Drop the ID column
-fulldset <- voted_ANES_2020_clean_slct[ , -1]
-subset <- voted_change_20_allelecs_slct[ , -1]
+# select (drop)
+voted_change_20_allelecs_slct <- voted_change_20_allelecs %>%
+  select(-all_of(droplist))
 
-# Function to compute summary stats depending on variable type
+
+# COMPARISON - Summary Stats -------------------------------------------------------------------------
+
+### function - compute summary stats for visual browsing ------------------------------------------------
+# checks variable type to decide application
 get_summary <- function(vec) {
   vec <- na.omit(vec)
   n_unique <- length(unique(vec))
@@ -158,62 +199,126 @@ get_summary <- function(vec) {
   #return(list(mean = mean(vec), sd = sd(vec), median = median(vec)))
 }
 
-# Wrapper to apply across dataset
+### function - mapping utility for summary stats  ------------------------------------------------
+# wrapper to apply across dataset
 summarize_dataset <- function(df) {
   map(df, get_summary)
 }
 
-# Apply to both datasets
-fulldset_summary <- summarize_dataset(fulldset)
-subset_summary <- summarize_dataset(subset)
 
-# Combine into a tibble with variable names
+### comparison_sumstats - sub vs full dsets summary stats ----------------------------------------------------------------
+# drop observations that didn't vote in 2020
+voted_ANES_2020_clean_slct <- ANES_2020_clean_slct %>%
+  # since we are going to be looking for indicators that tell us why people vote the way they do
+  # it makes sense to drop all observations that didnt vote in 2020
+  # since we don't have the counterfactual for these people of "who would they have voted for"
+  filter(V202072 == 1) %>%
+  # we also get rid of columns that are not useful for summary stats
+  # columns that helped us filter earlier
+  select(-all_of(droplist))
+  
+  
+
+
+  
+# for both datasets,
+fulldset <- voted_ANES_2020_clean_slct[ , -1]   # drop the ID column
+fulldset_summary <- summarize_dataset(fulldset)   # and apply custom function (wrapper and get_summary())
+
+subset <- voted_change_20_allelecs_slct[ , -1] # repeat for sub
+subset_summary <- summarize_dataset(subset) # same wrapper and summary function
+
+
+# combine into tibble (similar to list) for storage
+# variable names as rows, nested structure for values
 combined_summary <- tibble(
   variable = names(fulldset_summary),
   fulldset = fulldset_summary,
-  subset = subset_summary
-)
+  subset = subset_summary)
 
-# Expand into long format with new naming scheme
-comparison_df <- combined_summary %>%
-  unnest_wider(fulldset, names_sep = "_") %>%
+# then turn into long format
+comparison_sumstats <- combined_summary %>%
+  unnest_wider(fulldset, names_sep = "_") %>% # new naming scheme for variables
   unnest_wider(subset, names_sep = "_")
 
-# Rename columns so numbers come first
-colnames(comparison_df) <- ifelse(
-  colnames(comparison_df) == "variable",
-  "variable",
-  paste0(str_extract(colnames(comparison_df), 
-                     "\\d+"), "_", 
-         str_extract(colnames(comparison_df), "fulldset|subset"))
-)
+# for ease of reordering columns:
+# rename so number in var name come first
+colnames(comparison_sumstats) <- ifelse(
+  colnames(comparison_sumstats) == "variable", "variable",  # ifelse() is used to skip over our first column, called 'variable'
+  paste0(str_extract(colnames(comparison_sumstats), "\\d+"), "_", str_extract(colnames(comparison_sumstats), "fulldset|subset"))
+  # for all other columns, rename to bin_var naming convention
+  # where bin is ordinal, binary, semi-continuous bin
+  )
 
-# Get the names of all columns except the 'variable' column
-all_cols <- colnames(comparison_df)
-data_cols <- setdiff(all_cols, "variable")
+# fetch names of all columns except the 'variable' column
+all_cols <- colnames(comparison_sumstats)
+data_cols <- setdiff(all_cols, "variable") # drop col named "variable"
 
-# Extract the number and type (fulldset/subset) to sort properly
-col_order <- tibble(
-  name = data_cols,
+# extract the number and type (fulldset/subset) to sort properly
+col_order <- tibble(name = data_cols,
   varnum = as.numeric(str_extract(data_cols, "^\\d+")),
-  type = str_extract(data_cols, "fulldset|subset")
-)
+  type = str_extract(data_cols, "fulldset|subset"))
 
-# Arrange by varnum then type so we get: 1_fulldset, 1_subset, 2_fulldset, 2_subset...
+# arrange columns by bins and dataset, meaning we get: 
+  # 'variable', '1_fulldset', '1_subset', '2_fulldset', '2_subset'...
+  # where variable has all our variables as rows
+  # and the '1_fulldset' column holds values for all variables in fulldset that have '1' in their scale
 sorted_names <- col_order %>%
   arrange(varnum, type) %>%
   pull(name)
 
-# Reorder the original dataframe
-comparison_df <- comparison_df %>%
+# finally, reorder the original dataframe
+comparison_sumstats <- comparison_sumstats %>%
   select(variable, all_of(sorted_names))
 
 
-# 2020 Select Variables - Graphing Comparison between full dataset and change voters -------------------------------------------------
+# COMPARISON - Graph Overlays -------------------------------------------------------------------------
 
+# 2020 Select Variables - Graphing Comparison between full dataset and subset (change voters)
+
+### annotate variable types (binary, ordinal, cont.) --------------------------------------------------
+
+### var_types_slct_2020 - manual annotation --------------------------------------------------------
 # manually defining types
 var_types_slct_2020 <- tibble::tibble(
   variable = c(
+    # Political Involvement/ View of Politics
+    "V202014", #V202014 POST: R go to any political meetings, rallies, speeches, dinners, # 1 yes, 2 no
+    "V202025", #V202025 POST: Has R in past 12 months: joined a protest march, rally, or demonstration, # 1 yes, 2 no
+    "V202406", #V202406 POST: CSES5‐Q01: How interested in politics is R, #1. Very interested, 2. Somewhat interested, 3. Not very interested, 4. Not at all interested
+    "V202214", #V202214 POST: [REV] Politics/government too complicated to understand, #1. Always, 2. Most of the time, 3. About half the time, 4. Some of the time, 5. Never
+    "V202439", #V202439 POST: CSES5‐Q18: Left‐right‐self, #0. Left, 10. Right
+    "V202216", #V202216 POST: Important differences in what major parties stand for, #1. Yes, differences, 2. No, no differences
+    "V202431", #V202431 POST: CSES5‐Q14a: 5pt scale: Does it make a difference who is in power, #5-point scale, 1. It doesn’t make any difference 5. It makes a big difference l
+    # Information Level
+    "V202138y", #V202138y POST: Office recall: Vice‐President ‐ Mike Pence [coded], #0. Incorrect, 1. Correct
+    "V202139y1_V202139y2_summary", # Joint V202139y1 and V202139y2 POST: Office recall: Speaker of the House ‐ Nancy Pelosi,  #0. Incorrect, 1. Correct
+    "V202140y1_V202140y2_summary", # Joint V202140y1 and V202140y2 POST: Office recall: German Chancellor ‐ Angela Merkel, #0. Incorrect, 1. Correct
+    "V202142y1_V202142y2_summary", # Joint V202142y1 and V202139y2, POST: Office recall: SCOTUS Chief Justice ‐ John Roberts,  #0. Incorrect, 1. Correct
+    # Beliefs
+    "V202158", #V202158 POST: Feeling thermometer: Dr. Anthony Fauci, 0-100 scale,#998. Don’t know, 999. Don’t recognize
+    "V202160", #V202160 POST: Feeling thermometer: feminists
+    "V202159",#V202159 POST: Feeling thermometer: Christian fundamentalists
+    "V202162", #V202162 POST: Feeling thermometer: labor unions
+    "V202265", #V202265 POST: Fewer problems if there was more emphasis on traditional family values, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+    "V202224", #V202224 POST: How important that more women get elected to political office, #1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important
+    # Review of State of Union/ Government's Job
+    "V202427", #V202427 POST: CSES5‐Q09: How good/bad a job has government done in last 4 years, #1. Very good job, 2. Good job, 3. Bad job, 4. Very bad job
+    "V202430", #V202430 POST: CSES5‐Q11: State of economy better or worse over past 12 months, #1. Gotten much better, 2. Gotten somewhat better, 3. Stayed about the same, 4. Gotten somewhat worse, 5. Gotten much worse
+    "V202317", #V202317 POST: How much opportunity in America for average person to get ahead, #1. A great deal, 2. A lot, 3. A moderate amount, 4. A little, 5. None
+    "V202271", #V202271 POST: Is the US better or worse than most other countries, #1. Better, 2. Worse, 3. The same
+    "V202212", #V202212 POST: [STD] Public officials don't care what people think, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+    "V202411", #V202411 POST: CSES5‐Q04c: Attitudes about elites: most politicians are trustworthy, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+    "V202304", #V202304 POST: Our political system only works for insiders with money and power, #how well does the statement describe your views #1. Not at all well, 2. Not very well, 3. Somewhat well, 4. Very well, 5. Extremely well
+    # Demographic
+    "V202355", #V202355 POST: Does R currently live in a rural or urban area, #1. Rural area, 2. Small town, 3. Suburb, 4. City
+    "V202468x",#V202468x PRE‐POST: SUMMARY: Total (family) income
+                        #1. Under $9,999, 2. $10,000-14,999, 3. $15,000-19,999, 4. $20,000-24,999
+                        #5. $25,000-29,999, 6. $30,000-34,999, 7. $35,000-39,999, 8. $40,000-44,999
+                        #9. $45,000-49,999, 10. $50,000-59,999, 11. $60,000-64,999, 12. $65,000-69,999
+                        #13. $70,000-74,999, 14. $75,000-79,999, 15. $80,000-89,999, 16. $90,000-99,999
+                        #17. $100,000-109,999, 18. $110,000-124,999, 19. $125,000-149,999, 20. $150,000-174,999
+                        #21. $175,000-249,999, 22. $250,000 or more
     # New Variables
     "V202173", #V202173 POST: Feeling thermometer: scientists
     "V202213", #V202213 POST: [STD] Have no say about what goverment does #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
@@ -237,9 +342,39 @@ var_types_slct_2020 <- tibble::tibble(
     "V202414", #V202414 POST: CSES5‐Q04f: Attitudes about elites: people should make policy decisions 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
     "V202424", #V202424 POST: CSES5‐Q06d: National identity: how important to follow America's customs 1. Very important 2. Fairly important 3. Not very important 4. Not important at all
     "V202440" #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
-    
   ),
   type = c(
+    # Political Involvement/ View of Politics
+    "binary", #V202014 POST: R go to any political meetings, rallies, speeches, dinners, # 1 yes, 2 no
+    "binary", #V202025 POST: Has R in past 12 months: joined a protest march, rally, or demonstration, # 1 yes, 2 no
+    "ordinal", #V202406 POST: CSES5‐Q01: How interested in politics is R, #1. Very interested, 2. Somewhat interested, 3. Not very interested, 4. Not at all interested
+    "ordinal", #V202214 POST: [REV] Politics/government too complicated to understand, #1. Always, 2. Most of the time, 3. About half the time, 4. Some of the time, 5. Never
+    "ordinal", #V202439 POST: CSES5‐Q18: Left‐right‐self, #0. Left <-> 10. Right
+    "binary", #V202216 POST: Important differences in what major parties stand for, #1. Yes, differences, 2. No, no differences
+    "ordinal", #V202431 POST: CSES5‐Q14a: 5pt scale: Does it make a difference who is in power, #5-point scale, 1. It doesn’t make any difference 5. It makes a big difference l
+    # Information Level
+    "binary", #V202138y POST: Office recall: Vice‐President ‐ Mike Pence [coded], #0. Incorrect, 1. Correct
+    "binary", # Joint V202139y1 and V202139y2 POST: Office recall: Speaker of the House ‐ Nancy Pelosi,  #0. Incorrect, 1. Correct
+    "binary", # Joint V202140y1 and V202140y2 POST: Office recall: German Chancellor ‐ Angela Merkel, #0. Incorrect, 1. Correct
+    "binary", # Joint V202142y1 and V202139y2, POST: Office recall: SCOTUS Chief Justice ‐ John Roberts,  #0. Incorrect, 1. Correct
+    # Beliefs
+    "continuous", #V202158 POST: Feeling thermometer: Dr. Anthony Fauci, 0-100 scale,#998. Don’t know, 999. Don’t recognize
+    "continuous", #V202160 POST: Feeling thermometer: feminists
+    "continuous",#V202159 POST: Feeling thermometer: Christian fundamentalists
+    "continuous", #V202162 POST: Feeling thermometer: labor unions
+    "ordinal", #V202265 POST: Fewer problems if there was more emphasis on traditional family values, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+    "ordinal", #V202224 POST: How important that more women get elected to political office, #1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important
+    # Review of State of Union/ Government's Job
+    "ordinal", #V202427 POST: CSES5‐Q09: How good/bad a job has government done in last 4 years, #1. Very good job, 2. Good job, 3. Bad job, 4. Very bad job
+    "ordinal", #V202430 POST: CSES5‐Q11: State of economy better or worse over past 12 months, #1. Gotten much better, 2. Gotten somewhat better, 3. Stayed about the same, 4. Gotten somewhat worse, 5. Gotten much worse
+    "ordinal", #V202317 POST: How much opportunity in America for average person to get ahead, #1. A great deal, 2. A lot, 3. A moderate amount, 4. A little, 5. None
+    "ordinal", #V202271 POST: Is the US better or worse than most other countries, #1. Better, 2. Worse, 3. The same
+    "ordinal", #V202212 POST: [STD] Public officials don't care what people think, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+    "ordinal", #V202411 POST: CSES5‐Q04c: Attitudes about elites: most politicians are trustworthy, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
+    "ordinal", #V202304 POST: Our political system only works for insiders with money and power, #how well does the statement describe your views #1. Not at all well, 2. Not very well, 3. Somewhat well, 4. Very well, 5. Extremely well
+    # Demographic
+    "ordinal", #V202355 POST: Does R currently live in a rural or urban area, #1. Rural area, 2. Small town, 3. Suburb, 4. City
+    "continuous", #V202468x PRE‐POST: SUMMARY: Total (family) income, #1. <-> 21.
     # New Variables
     "continuous", #V202173 POST: Feeling thermometer: scientists
     "ordinal", #V202213 POST: [STD] Have no say about what goverment does #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
@@ -266,29 +401,28 @@ var_types_slct_2020 <- tibble::tibble(
   ))
 
 
-
-# Add variable names as a column first
+### joint_long_df - format comparison data for further use ----------------------------------------------------------------------
+# add variable names as a column first
 fulldset_long <- fulldset %>%
   pivot_longer(everything(), names_to = "variable", values_to = "value") %>%
   mutate(dataset = "fulldset")
-
+# repeat for subset
 subset_long <- subset %>%
   pivot_longer(everything(), names_to = "variable", values_to = "value") %>%
   mutate(dataset = "subset")
 
-# Combine them
-long_df <- bind_rows(fulldset_long, subset_long)
+# combine both datasets
+joint_long_df <- bind_rows(fulldset_long, subset_long)
 
-# Merge with type info
-long_df <- long_df %>%
+# merge with annotated (manual) 'variable type' info
+joint_long_df <- joint_long_df %>%
   left_join(var_types_slct_2020, by = "variable")
 
 
 
-# graphing 
-
+### function - plot ordinal data (side-by-side bar chart) ---------------------------------------
 plot_bar_comparison <- function(var_name) {
-  long_df %>%
+  joint_long_df %>%
     filter(variable == var_name) %>%
     ggplot(aes(x = as.factor(value), fill = dataset)) +
     geom_bar(
@@ -302,8 +436,9 @@ plot_bar_comparison <- function(var_name) {
     theme_minimal()
 }
 
+### function - plot continuous data (overlayed density plots) ---------------------------------------
 plot_density_comparison <- function(var_name) {
-  long_df %>%
+  joint_long_df %>%
     filter(variable == var_name, !is.na(value)) %>%
     ggplot(aes(x = as.numeric(value), fill = dataset, color = dataset)) +
     geom_density(alpha = 0.4) +
@@ -316,6 +451,7 @@ plot_density_comparison <- function(var_name) {
 }
 
 
+### function - triage variable into graph type -----------------------------------------------------
 plot_by_type <- function(var_name, var_types = var_types_slct_2020) {
   var_type <- var_types %>% filter(variable == var_name) %>% pull(type)
   
@@ -333,20 +469,26 @@ plot_by_type <- function(var_name, var_types = var_types_slct_2020) {
 
 
 
-# big patchwork plot ----------------------
+### plot - big patchwork plot (all vars) ------------------------------------------------------------------
 # Get all variable names
 var_list <- var_types_slct_2020$variable
 
 # Generate the list of plots
 plot_list <- lapply(var_list, plot_by_type)
 
-# Combine all plots into 5 rows x 6 columns
-ggsave(here("outputs/ANES_comparison_grid_newvars.png"), wrap_plots(plot_list, nrow = 5, ncol = 6), width = 20, height = 15)
+# Combine all plots into 8 rows x 7 columns
+ggsave(here("outputs/ANES_comparison_grid_all.png"), wrap_plots(plot_list, nrow = 8, ncol = 7), width = 30, height = 40)
 
-# T-TEST experiments -----------------------------------------------------------------
 
-# Run t-test for variable V202430 comparing fulldset vs subset
-t_test_result <- long_df %>%
+
+
+
+
+# COMPARISON - Statistical Independence -------------------------------------------------------------------------
+
+### Past - T-Test on one variable -----------------------------------------------------------------
+# Run t-test for variable V202430 comparing fulldset vs subset (econ better or worse)
+t_test_result <- joint_long_df %>%
   filter(variable == "V202430") %>%       # focus on just this variable
   t.test(value ~ dataset, data = .)       # run the t-test comparing the two groups
 
@@ -379,20 +521,23 @@ t_test_result
 
 
 
-
-# TO CREATE A LARGER TABLE WITH ALL VARS
+### Past - T-Test on all variables -----------------------------------------------------------------
+#A t-test makes strong assumptions:
+#It assumes interval-level measurement (equal distances between points).
+#It assumes normal distribution (bell curve shape).
+#It assumes mean is a meaningful summary.
 
 # Step 1: Get a list of variables you'd like to run t-tests on
 # (assuming your variable column is called "variable" and dataset is long-form)
-variables_to_test <- long_df %>%
-  filter(type %in% c("ordinal","continuous")) %>% # or "continuous", or omit this if you want all
+variables_to_test <- joint_long_df %>%
+  filter(type %in% c("ordinal","continuous", "binary")) %>% # doesn't filter any out
   distinct(variable) %>%
   pull(variable)
 
 # Step 2: Run t-tests in a loop, collect results
-t_test_summary <- map_dfr(variables_to_test, function(var) {
+comparison_ttest <- map_dfr(variables_to_test, function(var) {
   
-  test_data <- long_df %>%
+  test_data <- joint_long_df %>%
     filter(variable == var)
   
   # If fewer than 2 groups, skip (helps prevent errors)
@@ -422,21 +567,19 @@ t_test_summary <- map_dfr(variables_to_test, function(var) {
 
 
 
-# BINARY VAR COMPARISONS Experiment ---------------------------------------------------
-
-
-
-# Step 1: Define binary variables (only 1 and 2, no 3+ levels)
-binary_vars <- long_df %>%
+### Binary - Fisher's Exact  -----------------------------------------------------------
+# step 1: filter variables to only binary variables 
+binary_vars <- joint_long_df %>%
   group_by(variable) %>%
-  filter(!is.na(value)) %>%
-  summarise(n_levels = n_distinct(value)) %>%
-  filter(n_levels == 2) %>%
+  filter(!is.na(value)) %>% # key!!! otherwise NA would be counted as a 3rd level
+  summarise(n_levels = n_distinct(value)) %>% 
+  filter(n_levels == 2) %>% # (only variables with 2 levels, aka 1 and 0)
   pull(variable)
 
-# Step 2: Function to run Fisher's Test and extract results
+# step 2: Function to run Fisher's Test and extract results
+### function - apply Fisher's test to binary variables -----------------------------------
 run_fisher_test <- function(var_name) {
-  tab <- long_df %>%
+  tab <- joint_long_df %>%
     filter(variable == var_name) %>%
     filter(!is.na(value)) %>%
     count(dataset, value) %>%
@@ -455,13 +598,127 @@ run_fisher_test <- function(var_name) {
   )
 }
 
+### comparison_fisher - results of fisher test --------------------------------------------------
 # Step 3: Apply across all binary variables
-fisher_results_df <- map_dfr(binary_vars, run_fisher_test)
-
-# View results
-print(fisher_results_df)
+comparison_fisher <- map_dfr(binary_vars, run_fisher_test)
 
 
+# Fisher’s test calculates the exact probability of obtaining the 
+# observed table (and more extreme tables) under the null hypothesis of independence.
+# The probability of observing a specific table under the null:
+
+# The p-value is the sum of probabilities of all tables as extreme or more extreme than the observed one.
+# Uses the hypergeometric distribution.
+# No chi-square approximation or large sample assumption — that's why it's “exact.”
 
 
 
+
+
+
+
+### Ordinal - Wilcoxon Rank-Sum Test --------------------------------------------------
+
+# Wilcox is a Non-Parametric Alternative
+# aka doesnt assume normality of distribution (parametric) and 'honours' ordinality more strictly
+# compares ranks between two groups — perfect for your scenario.
+
+# Gives you a p-value indicating group differences
+# It tests whether values from one group tend to be higher or lower than 
+# the other — without assuming equal distances between categories.
+
+# Wilcoxon algorithm:
+  # Combines both groups into a single pool.
+  # Ranks all values from lowest to highest (regardless of group).
+  # Sums the ranks for each group.
+  # Checks whether the sum of ranks differs more than we’d expect by chance.
+  # So instead of comparing means, it's comparing distributional shifts. 
+# It asks:
+# “Is one group generally giving higher or lower responses than the other?”
+
+# wilcoxon effect on important aspects of the numbers:
+#Ordinal: Since it uses ranks, it respects the order of values without assuming equal spacing.
+#Skewed distributions: No need for normality — skew, kurtosis, or multi-modal shapes don’t matter.
+#Outliers: Not as sensitive as t-tests, because outliers only affect ranks slightly.
+#Multi-modality: Still effective, because it's not estimating a single center like a mean, but rather comparing the overall "tendency to rank higher/lower."
+
+#A t-test could mislead you by overemphasizing the “mean” which may sit at 4 (neutral) even if there's bimodality.
+#A Wilcoxon test will detect whether one group tends to choose more favorable values than 
+# another — even if both groups are bi-modal or skewed.
+#So for this variable, the Wilcoxon test will tell you whether the distribution of opinions is 
+# meaningfully shifted between fullset and subset — without assuming the data looks like 
+# a normal curve or that “Favor a great deal” is exactly 6 steps away from “Oppose a great deal”.
+
+# Caveat:
+# It doesn’t tell you how the distributions differ — just that one is generally “higher” or “lower.”
+# You might still want to plot distributions or calculate medians to add context.
+
+
+# Step 1: Filter to ordinal variables (e.g., 3–10 levels, all integers)
+ordinal_vars <- joint_long_df %>%
+  group_by(variable) %>%
+  filter(!is.na(value)) %>%
+  summarise(n_levels = n_distinct(value)) %>%
+  filter(n_levels >= 3, n_levels <= 100) %>%  # adjust this range as needed
+  pull(variable)
+
+### function - apply Wilcoxon's test to ordinal variables -----------------------------------
+# Step 2: Function to run Wilcoxon Test and extract results
+run_wilcox_test <- function(var_name) {
+  data <- joint_long_df %>%
+    filter(variable == var_name, !is.na(value))
+  
+  test_result <- wilcox.test(value ~ dataset, data = data)
+  
+  medians <- data %>% # add mean as well
+    group_by(dataset) %>%
+    summarise(mean = mean(value)) %>%
+    pivot_wider(names_from = dataset, values_from = mean)
+  
+  tibble(
+    variable = var_name,
+    p_value = test_result$p.value,
+    mean_fulldset = mean$fulldset,
+    mean_subset = mean$subset
+  )
+}
+
+
+### comparison_wilcox - results of wilcox test --------------------------------------------------
+# Step 3: Apply across all ordinal variables
+comparison_wilcox <- map_dfr(ordinal_vars, run_wilcox_test)
+
+#p_value: Whether the distributions differ significantly between groups.
+#statistic: Wilcoxon W value (used internally in calculating the p-value).
+
+#You can tweak the level threshold in filter(n_levels >= 3, n_levels <= 10) depending on how wide your ordinal scales are.
+#This test assumes that while ordinal, your values have a ranking (e.g., 1 = strongly disagree, 5 = strongly agree).
+#It does not assume equal intervals between the ranks — unlike a t-test.
+
+
+
+### graphing wilcox ------------------------------------------------------------------------
+plot_shift_violin <- function(var_name, df = joint_long_df) {
+  df %>%
+    filter(variable == var_name, !is.na(value)) %>%
+    ggplot(aes(x = dataset, y = value, fill = dataset)) +
+    # Violin for distribution
+    geom_violin(alpha = 0.4, color = NA, trim = FALSE) +
+    # Stripchart of individual points
+    geom_jitter(aes(color = dataset), width = 0.15, alpha = 0.6, size = 0.5) +
+    # Median lines
+    stat_summary(fun = median, geom = "crossbar", width = 0.5,
+                 color = "black", fatten = 0, linetype = "dashed") +
+    labs(title = var_name,
+         y = "Response (Ordinal Scale)",
+         x = NULL) +
+    theme_minimal() +
+    theme(legend.position = "none") +
+    scale_fill_manual(values = c("fulldset" = "#3a6ad1", "subset" = "#36914c")) +
+    scale_color_manual(values = c("fulldset" = "#3a6ad1", "subset" = "#36914c"))
+}
+
+plot_shift_violin("V202259x")
+
+# "#1f77b4"
+# "#3a6ad1", 
