@@ -12,12 +12,14 @@ options(scipen = 999)
 ### load data -----------------------------------------------------------------------
 ANES_2020_raw <- read_csv(here("data/ANES/2020/anes_timeseries_2020_csv_20220210/anes_timeseries_2020_csv_20220210.csv"))
 
+source(here("code/scripts/var_attributes_2020.R"))
 
 
 # DATASET Cleaning and Filtering ----------------------------------------------------------------------
 
 ### ANES_2020_clean - Standardizing alt codings of NAs  ------------------------------------------------------------------
 ANES_2020_clean <- ANES_2020_raw %>%
+  mutate(V200001 = as.character(V200001)) %>%
   mutate(across(everything(), ~ ifelse(. < 0, # re-coding the ANES missing values as NA
                                        NA, .))) %>% # ANES uses -9, -8, -7 etc to mean different NA reasons
   mutate(across(everything(), ~ ifelse(. > 997, # also, in feeling-thermometer questions, a value of 998 or 999 means they didnt
@@ -45,7 +47,7 @@ ANES_2020_clean_slct <- ANES_2020_clean %>%
                                               V202142y1, ifelse(V202142y1 %in% c(2),
                                                                 1, ifelse(V202142y2 %in% c(0,1),  # V202142y1 Coded in ANES as: 0. Incorrect, 1. Partially correct, 2. Correct
                                                                           V202142y2, NA)))) %>%          # V202142y2 Coded in ANES as: 0. Incorrect, 1. Correct
-  select(2, # Case ID
+  select(V200001, # Case ID
       # Voter election history variables
       V202072, # V202072 - POST: Did R vote for President in this election
       V202073, # V202073 - POST: For whom did R vote for President
@@ -53,67 +55,8 @@ ANES_2020_clean_slct <- ANES_2020_clean %>%
       V201103, # V201103 - PRE: Recall of last (2016) Presidential vote choice
       V201104, # V201104 - PRE: Did R vote for president in 2012 election
       V201105, # V201105 - PRE: recall of 2012 presidential vote choice
-      # Political Involvement/ View of Politics
-      V202014, #V202014 POST: R go to any political meetings, rallies, speeches, dinners, # 1 yes, 2 no
-      V202025, #V202025 POST: Has R in past 12 months: joined a protest march, rally, or demonstration, # 1 yes, 2 no
-      V202406, #V202406 POST: CSES5‐Q01: How interested in politics is R, #1. Very interested, 2. Somewhat interested, 3. Not very interested, 4. Not at all interested
-      V202214, #V202214 POST: [REV] Politics/government too complicated to understand, #1. Always, 2. Most of the time, 3. About half the time, 4. Some of the time, 5. Never
-      V202439, #V202439 POST: CSES5‐Q18: Left‐right‐self, #0. Left, 10. Right
-      V202216, #V202216 POST: Important differences in what major parties stand for, #1. Yes, differences, 2. No, no differences
-      V202431, #V202431 POST: CSES5‐Q14a: 5pt scale: Does it make a difference who is in power, #5-point scale, 1. It doesn’t make any difference 5. It makes a big difference l
-      # Information Level
-      V202138y, #V202138y POST: Office recall: Vice‐President ‐ Mike Pence [coded], #0. Incorrect, 1. Correct
-      V202139y1_V202139y2_summary, # Joint V202139y1 and V202139y2 POST: Office recall: Speaker of the House ‐ Nancy Pelosi,  #0. Incorrect, 1. Correct
-      V202140y1_V202140y2_summary, # Joint V202140y1 and V202140y2 POST: Office recall: German Chancellor ‐ Angela Merkel, #0. Incorrect, 1. Correct
-      V202142y1_V202142y2_summary, # Joint V202142y1 and V202139y2, POST: Office recall: SCOTUS Chief Justice ‐ John Roberts,  #0. Incorrect, 1. Correct
-      # Beliefs
-      V202158, #V202158 POST: Feeling thermometer: Dr. Anthony Fauci, 0-100 scale,#998. Don’t know, 999. Don’t recognize
-      V202160, #V202160 POST: Feeling thermometer: feminists
-      V202159,#V202159 POST: Feeling thermometer: Christian fundamentalists
-      V202162, #V202162 POST: Feeling thermometer: labor unions
-      V202265, #V202265 POST: Fewer problems if there was more emphasis on traditional family values, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-      V202224, #V202224 POST: How important that more women get elected to political office, #1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important
-      # Review of State of Union/ Government's Job
-      V202427, #V202427 POST: CSES5‐Q09: How good/bad a job has government done in last 4 years, #1. Very good job, 2. Good job, 3. Bad job, 4. Very bad job
-      V202430, #V202430 POST: CSES5‐Q11: State of economy better or worse over past 12 months, #1. Gotten much better, 2. Gotten somewhat better, 3. Stayed about the same, 4. Gotten somewhat worse, 5. Gotten much worse
-      V202317, #V202317 POST: How much opportunity in America for average person to get ahead, #1. A great deal, 2. A lot, 3. A moderate amount, 4. A little, 5. None
-      V202271, #V202271 POST: Is the US better or worse than most other countries, #1. Better, 2. Worse, 3. The same
-      V202212, #V202212 POST: [STD] Public officials don't care what people think, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-      V202411, #V202411 POST: CSES5‐Q04c: Attitudes about elites: most politicians are trustworthy, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-      V202304, #V202304 POST: Our political system only works for insiders with money and power, #how well does the statement describe your views #1. Not at all well, 2. Not very well, 3. Somewhat well, 4. Very well, 5. Extremely well
-      # Demographic
-      V202355, #V202355 POST: Does R currently live in a rural or urban area, #1. Rural area, 2. Small town, 3. Suburb, 4. City
-      V202468x, #V202468x PRE‐POST: SUMMARY: Total (family) income
-                    #1. Under $9,999, 2. $10,000-14,999, 3. $15,000-19,999, 4. $20,000-24,999
-                    #5. $25,000-29,999, 6. $30,000-34,999, 7. $35,000-39,999, 8. $40,000-44,999
-                    #9. $45,000-49,999, 10. $50,000-59,999, 11. $60,000-64,999, 12. $65,000-69,999
-                    #13. $70,000-74,999, 14. $75,000-79,999, 15. $80,000-89,999, 16. $90,000-99,999
-                    #17. $100,000-109,999, 18. $110,000-124,999, 19. $125,000-149,999, 20. $150,000-174,999
-                    #21. $175,000-249,999, 22. $250,000 or more
-      # New Variables
-        V202173, #V202173 POST: Feeling thermometer: scientists
-        V202213, #V202213 POST: [STD] Have no say about what goverment does #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-        V202253, #V202253 POST: Less government better OR more that government should be doing, #1. The less government the better, 2. More things government should be doing
-        V202259x,#V202259x POST: SUMMARY: Favor/oppose government trying to reduce income inequality 1. Favor a great deal 2. Favor a moderate amount 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose a moderate amount 7. Oppose a great deal
-        V202260, #V202260 POST: Society should make sure everyone has equal opportunity #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-        V202264, #V202264 POST: The world is changing & we should adjust view of moral behavior 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-        V202290x,#V202290x POST: SUMMARY: Better/worse if man works and woman takes care of home, #1. Much better 2. Somewhat better 3. Slightly better 4. Makes no difference 5. Slightly worse 6. Somewhat worse 7. Much worse
-        V202305, #V202305 POST: Because of rich and powerful it's difficult for the rest to get ahead-- describes your view 1. Not at all well 2. Not very well 3. Somewhat well 4. Very well 5. Extremely well
-        V202308x,#V202308x POST: SUMMARY: Trust ordinary people/experts for public policy, #1. Trust ordinary people much more 2. Trust ordinary people somewhat more 3. Trust both the same 4. Trust experts somwhat more 5. Trust experts much more
-        V202309, #V202309 POST: How much do people need help from experts to understand science #1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-        V202320x,#V202320x POST: SUMMARY: Economic mobility, 1. A great deal easier 2. A moderate amount easier 3. A little easier 4. The same 5. A litte harder 6. A moderate amount harder 7. A great deal harder
-        V202332, #V202332 POST: How much is climate change affecting severe weather/temperatures in US, 1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-        V202333, #V202333 POST: How important is issue of climate change to R, 1. Not at all important 2. A little important 3. Moderately important 4. Very important 5. Extremely important
-        V202361x,#V202361x POST: SUMMARY: Favor/oppose free trade agreement, 1. Favor a great deal 2. Favor moderately 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose moderately 7. Oppose a great deal
-        V202400, #V202400 POST: How much is China a threat to the United States, 1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-        V202407, #V202407 POST: CSES5‐Q02: How closely does R follow politics in media 1. Very closely 2. Fairly closely 3. Not very closely 4. Not at all
-        V202410, #V202410 POST: CSES5‐Q04b: Attitudes about elites: politicians do not care about people 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-        V202412, #V202412 POST: CSES5‐Q04d: Attitudes about elites: politicians are main problem in US 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-        V202413, #V202413 POST: CSES5‐Q04e: Attitudes about elites: strong leader in government is good 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-        V202414, #V202414 POST: CSES5‐Q04f: Attitudes about elites: people should make policy decisions 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-        V202424, #V202424 POST: CSES5‐Q06d: National identity: how important to follow America's customs 1. Very important 2. Fairly important 3. Not very important 4. Not important at all
-        V202440  #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
-      )
+      # Variables of interest, taken from source() at start of script
+      all_of(var_attributes_2020$variable))
 
 
 
@@ -257,14 +200,14 @@ data_cols <- setdiff(all_cols, "variable") # drop col named "variable"
 # extract the number and type (fulldset/subset) to sort properly
 col_order <- tibble(name = data_cols,
   varnum = as.numeric(str_extract(data_cols, "^\\d+")),
-  type = str_extract(data_cols, "fulldset|subset"))
+  dset = str_extract(data_cols, "fulldset|subset"))
 
 # arrange columns by bins and dataset, meaning we get: 
   # 'variable', '1_fulldset', '1_subset', '2_fulldset', '2_subset'...
   # where variable has all our variables as rows
   # and the '1_fulldset' column holds values for all variables in fulldset that have '1' in their scale
 sorted_names <- col_order %>%
-  arrange(varnum, type) %>%
+  arrange(varnum, dset) %>%
   pull(name)
 
 # finally, reorder the original dataframe
@@ -276,129 +219,8 @@ comparison_sumstats <- comparison_sumstats %>%
 
 # 2020 Select Variables - Graphing Comparison between full dataset and subset (change voters)
 
-### annotate variable types (binary, ordinal, cont.) --------------------------------------------------
-
-### var_types_slct_2020 - manual annotation --------------------------------------------------------
-# manually defining types
-var_types_slct_2020 <- tibble::tibble(
-  variable = c(
-    # Political Involvement/ View of Politics
-    "V202014", #V202014 POST: R go to any political meetings, rallies, speeches, dinners, # 1 yes, 2 no
-    "V202025", #V202025 POST: Has R in past 12 months: joined a protest march, rally, or demonstration, # 1 yes, 2 no
-    "V202406", #V202406 POST: CSES5‐Q01: How interested in politics is R, #1. Very interested, 2. Somewhat interested, 3. Not very interested, 4. Not at all interested
-    "V202214", #V202214 POST: [REV] Politics/government too complicated to understand, #1. Always, 2. Most of the time, 3. About half the time, 4. Some of the time, 5. Never
-    "V202439", #V202439 POST: CSES5‐Q18: Left‐right‐self, #0. Left, 10. Right
-    "V202216", #V202216 POST: Important differences in what major parties stand for, #1. Yes, differences, 2. No, no differences
-    "V202431", #V202431 POST: CSES5‐Q14a: 5pt scale: Does it make a difference who is in power, #5-point scale, 1. It doesn’t make any difference 5. It makes a big difference l
-    # Information Level
-    "V202138y", #V202138y POST: Office recall: Vice‐President ‐ Mike Pence [coded], #0. Incorrect, 1. Correct
-    "V202139y1_V202139y2_summary", # Joint V202139y1 and V202139y2 POST: Office recall: Speaker of the House ‐ Nancy Pelosi,  #0. Incorrect, 1. Correct
-    "V202140y1_V202140y2_summary", # Joint V202140y1 and V202140y2 POST: Office recall: German Chancellor ‐ Angela Merkel, #0. Incorrect, 1. Correct
-    "V202142y1_V202142y2_summary", # Joint V202142y1 and V202139y2, POST: Office recall: SCOTUS Chief Justice ‐ John Roberts,  #0. Incorrect, 1. Correct
-    # Beliefs
-    "V202158", #V202158 POST: Feeling thermometer: Dr. Anthony Fauci, 0-100 scale,#998. Don’t know, 999. Don’t recognize
-    "V202160", #V202160 POST: Feeling thermometer: feminists
-    "V202159",#V202159 POST: Feeling thermometer: Christian fundamentalists
-    "V202162", #V202162 POST: Feeling thermometer: labor unions
-    "V202265", #V202265 POST: Fewer problems if there was more emphasis on traditional family values, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-    "V202224", #V202224 POST: How important that more women get elected to political office, #1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important
-    # Review of State of Union/ Government's Job
-    "V202427", #V202427 POST: CSES5‐Q09: How good/bad a job has government done in last 4 years, #1. Very good job, 2. Good job, 3. Bad job, 4. Very bad job
-    "V202430", #V202430 POST: CSES5‐Q11: State of economy better or worse over past 12 months, #1. Gotten much better, 2. Gotten somewhat better, 3. Stayed about the same, 4. Gotten somewhat worse, 5. Gotten much worse
-    "V202317", #V202317 POST: How much opportunity in America for average person to get ahead, #1. A great deal, 2. A lot, 3. A moderate amount, 4. A little, 5. None
-    "V202271", #V202271 POST: Is the US better or worse than most other countries, #1. Better, 2. Worse, 3. The same
-    "V202212", #V202212 POST: [STD] Public officials don't care what people think, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-    "V202411", #V202411 POST: CSES5‐Q04c: Attitudes about elites: most politicians are trustworthy, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-    "V202304", #V202304 POST: Our political system only works for insiders with money and power, #how well does the statement describe your views #1. Not at all well, 2. Not very well, 3. Somewhat well, 4. Very well, 5. Extremely well
-    # Demographic
-    "V202355", #V202355 POST: Does R currently live in a rural or urban area, #1. Rural area, 2. Small town, 3. Suburb, 4. City
-    "V202468x",#V202468x PRE‐POST: SUMMARY: Total (family) income
-                        #1. Under $9,999, 2. $10,000-14,999, 3. $15,000-19,999, 4. $20,000-24,999
-                        #5. $25,000-29,999, 6. $30,000-34,999, 7. $35,000-39,999, 8. $40,000-44,999
-                        #9. $45,000-49,999, 10. $50,000-59,999, 11. $60,000-64,999, 12. $65,000-69,999
-                        #13. $70,000-74,999, 14. $75,000-79,999, 15. $80,000-89,999, 16. $90,000-99,999
-                        #17. $100,000-109,999, 18. $110,000-124,999, 19. $125,000-149,999, 20. $150,000-174,999
-                        #21. $175,000-249,999, 22. $250,000 or more
-    # New Variables
-    "V202173", #V202173 POST: Feeling thermometer: scientists
-    "V202213", #V202213 POST: [STD] Have no say about what goverment does #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-    "V202253", #V202253 POST: Less government better OR more that government should be doing, #1. The less government the better, 2. More things government should be doing
-    "V202259x",#V202259x POST: SUMMARY: Favor/oppose government trying to reduce income inequality 1. Favor a great deal 2. Favor a moderate amount 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose a moderate amount 7. Oppose a great deal
-    "V202260", #V202260 POST: Society should make sure everyone has equal opportunity #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-    "V202264", ##V202264 POST: The world is changing & we should adjust view of moral behavior 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-    "V202290x",#V202290x POST: SUMMARY: Better/worse if man works and woman takes care of home, #1. Much better 2. Somewhat better 3. Slightly better 4. Makes no difference 5. Slightly worse 6. Somewhat worse 7. Much worse
-    "V202305", #V202305 POST: Because of rich and powerful it's difficult for the rest to get ahead-- describes your view 1. Not at all well 2. Not very well 3. Somewhat well 4. Very well 5. Extremely well
-    "V202308x",#V202308x POST: SUMMARY: Trust ordinary people/experts for public policy, #1. Trust ordinary people much more 2. Trust ordinary people somewhat more 3. Trust both the same 4. Trust experts somwhat more 5. Trust experts much more
-    "V202309", #V202309 POST: How much do people need help from experts to understand science #1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-    "V202320x",#V202320x POST: SUMMARY: Economic mobility, 1. A great deal easier 2. A moderate amount easier 3. A little easier 4. The same 5. A litte harder 6. A moderate amount harder 7. A great deal harder
-    "V202332", #V202332 POST: How much is climate change affecting severe weather/temperatures in US, 1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-    "V202333", #V202333 POST: How important is issue of climate change to R, 1. Not at all important 2. A little important 3. Moderately important 4. Very important 5. Extremely important
-    "V202361x",#V202361x POST: SUMMARY: Favor/oppose free trade agreement, 1. Favor a great deal 2. Favor moderately 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose moderately 7. Oppose a great deal
-    "V202400", #V202400 POST: How much is China a threat to the United States, 1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-    "V202407", #V202407 POST: CSES5‐Q02: How closely does R follow politics in media 1. Very closely 2. Fairly closely 3. Not very closely 4. Not at all
-    "V202410", #V202410 POST: CSES5‐Q04b: Attitudes about elites: politicians do not care about people 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-    "V202412", #V202412 POST: CSES5‐Q04d: Attitudes about elites: politicians are main problem in US 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-    "V202413", #V202413 POST: CSES5‐Q04e: Attitudes about elites: strong leader in government is good 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-    "V202414", #V202414 POST: CSES5‐Q04f: Attitudes about elites: people should make policy decisions 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-    "V202424", #V202424 POST: CSES5‐Q06d: National identity: how important to follow America's customs 1. Very important 2. Fairly important 3. Not very important 4. Not important at all
-    "V202440" #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
-  ),
-  type = c(
-    # Political Involvement/ View of Politics
-    "binary", #V202014 POST: R go to any political meetings, rallies, speeches, dinners, # 1 yes, 2 no
-    "binary", #V202025 POST: Has R in past 12 months: joined a protest march, rally, or demonstration, # 1 yes, 2 no
-    "ordinal", #V202406 POST: CSES5‐Q01: How interested in politics is R, #1. Very interested, 2. Somewhat interested, 3. Not very interested, 4. Not at all interested
-    "ordinal", #V202214 POST: [REV] Politics/government too complicated to understand, #1. Always, 2. Most of the time, 3. About half the time, 4. Some of the time, 5. Never
-    "ordinal", #V202439 POST: CSES5‐Q18: Left‐right‐self, #0. Left <-> 10. Right
-    "binary", #V202216 POST: Important differences in what major parties stand for, #1. Yes, differences, 2. No, no differences
-    "ordinal", #V202431 POST: CSES5‐Q14a: 5pt scale: Does it make a difference who is in power, #5-point scale, 1. It doesn’t make any difference 5. It makes a big difference l
-    # Information Level
-    "binary", #V202138y POST: Office recall: Vice‐President ‐ Mike Pence [coded], #0. Incorrect, 1. Correct
-    "binary", # Joint V202139y1 and V202139y2 POST: Office recall: Speaker of the House ‐ Nancy Pelosi,  #0. Incorrect, 1. Correct
-    "binary", # Joint V202140y1 and V202140y2 POST: Office recall: German Chancellor ‐ Angela Merkel, #0. Incorrect, 1. Correct
-    "binary", # Joint V202142y1 and V202139y2, POST: Office recall: SCOTUS Chief Justice ‐ John Roberts,  #0. Incorrect, 1. Correct
-    # Beliefs
-    "continuous", #V202158 POST: Feeling thermometer: Dr. Anthony Fauci, 0-100 scale,#998. Don’t know, 999. Don’t recognize
-    "continuous", #V202160 POST: Feeling thermometer: feminists
-    "continuous",#V202159 POST: Feeling thermometer: Christian fundamentalists
-    "continuous", #V202162 POST: Feeling thermometer: labor unions
-    "ordinal", #V202265 POST: Fewer problems if there was more emphasis on traditional family values, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-    "ordinal", #V202224 POST: How important that more women get elected to political office, #1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important
-    # Review of State of Union/ Government's Job
-    "ordinal", #V202427 POST: CSES5‐Q09: How good/bad a job has government done in last 4 years, #1. Very good job, 2. Good job, 3. Bad job, 4. Very bad job
-    "ordinal", #V202430 POST: CSES5‐Q11: State of economy better or worse over past 12 months, #1. Gotten much better, 2. Gotten somewhat better, 3. Stayed about the same, 4. Gotten somewhat worse, 5. Gotten much worse
-    "ordinal", #V202317 POST: How much opportunity in America for average person to get ahead, #1. A great deal, 2. A lot, 3. A moderate amount, 4. A little, 5. None
-    "ordinal", #V202271 POST: Is the US better or worse than most other countries, #1. Better, 2. Worse, 3. The same
-    "ordinal", #V202212 POST: [STD] Public officials don't care what people think, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-    "ordinal", #V202411 POST: CSES5‐Q04c: Attitudes about elites: most politicians are trustworthy, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
-    "ordinal", #V202304 POST: Our political system only works for insiders with money and power, #how well does the statement describe your views #1. Not at all well, 2. Not very well, 3. Somewhat well, 4. Very well, 5. Extremely well
-    # Demographic
-    "ordinal", #V202355 POST: Does R currently live in a rural or urban area, #1. Rural area, 2. Small town, 3. Suburb, 4. City
-    "continuous", #V202468x PRE‐POST: SUMMARY: Total (family) income, #1. <-> 21.
-    # New Variables
-    "continuous", #V202173 POST: Feeling thermometer: scientists
-    "ordinal", #V202213 POST: [STD] Have no say about what goverment does #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-    "binary", #V202253 POST: Less government better OR more that government should be doing, #1. The less government the better, 2. More things government should be doing
-    "ordinal",#V202259x POST: SUMMARY: Favor/oppose government trying to reduce income inequality 1. Favor a great deal 2. Favor a moderate amount 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose a moderate amount 7. Oppose a great deal
-    "ordinal", #V202260 POST: Society should make sure everyone has equal opportunity #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-    "ordinal", #V202264 POST: The world is changing & we should adjust view of moral behavior 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-    "ordinal",#V202290x POST: SUMMARY: Better/worse if man works and woman takes care of home, #1. Much better 2. Somewhat better 3. Slightly better 4. Makes no difference 5. Slightly worse 6. Somewhat worse 7. Much worse
-    "ordinal", #V202305 POST: Because of rich and powerful it's difficult for the rest to get ahead-- describes your view 1. Not at all well 2. Not very well 3. Somewhat well 4. Very well 5. Extremely well
-    "ordinal",#V202308x POST: SUMMARY: Trust ordinary people/experts for public policy, #1. Trust ordinary people much more 2. Trust ordinary people somewhat more 3. Trust both the same 4. Trust experts somwhat more 5. Trust experts much more
-    "ordinal", #V202309 POST: How much do people need help from experts to understand science #1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-    "ordinal",#V202320x POST: SUMMARY: Economic mobility, 1. A great deal easier 2. A moderate amount easier 3. A little easier 4. The same 5. A litte harder 6. A moderate amount harder 7. A great deal harder
-    "ordinal", #V202332 POST: How much is climate change affecting severe weather/temperatures in US, 1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-    "ordinal", #V202333 POST: How important is issue of climate change to R, 1. Not at all important 2. A little important 3. Moderately important 4. Very important 5. Extremely important
-    "ordinal",#V202361x POST: SUMMARY: Favor/oppose free trade agreement, 1. Favor a great deal 2. Favor moderately 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose moderately 7. Oppose a great deal
-    "ordinal", #V202400 POST: How much is China a threat to the United States, 1. Not at all 2. A little 3. A moderate amount 4. A lot 5. A great deal
-    "ordinal", #V202407 POST: CSES5‐Q02: How closely does R follow politics in media 1. Very closely 2. Fairly closely 3. Not very closely 4. Not at all
-    "ordinal", #V202410 POST: CSES5‐Q04b: Attitudes about elites: politicians do not care about people 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-    "ordinal", #V202412 POST: CSES5‐Q04d: Attitudes about elites: politicians are main problem in US 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-    "ordinal", #V202413 POST: CSES5‐Q04e: Attitudes about elites: strong leader in government is good 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
-    "ordinal", #V202414 POST: CSES5‐Q04f: Attitudes about elites: people should make policy decisions 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
-    "ordinal", #V202424 POST: CSES5‐Q06d: National identity: how important to follow America's customs 1. Very important 2. Fairly important 3. Not very important 4. Not important at all
-    "ordinal" #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
-  ))
+### annotate variable numerical types (binary, ordinal, cont.) --------------------------------------------------
+# 
 
 
 ### joint_long_df - format comparison data for further use ----------------------------------------------------------------------
@@ -416,7 +238,7 @@ joint_long_df <- bind_rows(fulldset_long, subset_long)
 
 # merge with annotated (manual) 'variable type' info
 joint_long_df <- joint_long_df %>%
-  left_join(var_types_slct_2020, by = "variable")
+  left_join(var_attributes_2020, by = "variable")
 
 
 
@@ -452,8 +274,8 @@ plot_density_comparison <- function(var_name) {
 
 
 ### function - triage variable into graph type -----------------------------------------------------
-plot_by_type <- function(var_name, var_types = var_types_slct_2020) {
-  var_type <- var_types %>% filter(variable == var_name) %>% pull(type)
+plot_by_type <- function(var_name, var_attributes = var_attributes_2020, type_col = numerical_type) {
+  var_type <- var_attributes %>% filter(variable == var_name) %>% pull(type_col)
   
   if (var_type %in% c("binary", "ordinal")) {
     plot_bar_comparison(var_name)
@@ -471,13 +293,13 @@ plot_by_type <- function(var_name, var_types = var_types_slct_2020) {
 
 ### plot - big patchwork plot (all vars) ------------------------------------------------------------------
 # Get all variable names
-var_list <- var_types_slct_2020$variable
+var_list <- var_attributes_2020$variable
 
 # Generate the list of plots
-plot_list <- lapply(var_list, plot_by_type)
+#plot_list <- lapply(var_list, plot_by_type)
 
 # Combine all plots into 8 rows x 7 columns
-ggsave(here("outputs/ANES_comparison_grid_all.png"), wrap_plots(plot_list, nrow = 8, ncol = 7), width = 30, height = 40)
+#ggsave(here("outputs/ANES_comparison_grid_all.png"), wrap_plots(plot_list, nrow = 8, ncol = 7), width = 30, height = 40)
 
 
 
@@ -488,12 +310,12 @@ ggsave(here("outputs/ANES_comparison_grid_all.png"), wrap_plots(plot_list, nrow 
 
 ### Past - T-Test on one variable -----------------------------------------------------------------
 # Run t-test for variable V202430 comparing fulldset vs subset (econ better or worse)
-t_test_result <- joint_long_df %>%
-  filter(variable == "V202430") %>%       # focus on just this variable
-  t.test(value ~ dataset, data = .)       # run the t-test comparing the two groups
+#t_test_result <- joint_long_df %>%
+ # filter(variable == "V202430") %>%       # focus on just this variable
+  #t.test(value ~ dataset, data = .)       # run the t-test comparing the two groups
 
 # View the results
-t_test_result
+#t_test_result
 
 #V202430
 
@@ -530,7 +352,7 @@ t_test_result
 # Step 1: Get a list of variables you'd like to run t-tests on
 # (assuming your variable column is called "variable" and dataset is long-form)
 variables_to_test <- joint_long_df %>%
-  filter(type %in% c("ordinal","continuous", "binary")) %>% # doesn't filter any out
+  filter(numerical_type %in% c("ordinal","continuous", "binary")) %>% # doesn't filter any out
   distinct(variable) %>%
   pull(variable)
 
@@ -555,19 +377,41 @@ comparison_ttest <- map_dfr(variables_to_test, function(var) {
   
   tibble(
     variable = var,
-    t_statistic = tidy_result$statistic,
-    df = tidy_result$parameter,
-    p_value = tidy_result$p.value,
-    mean_fulldset = mean(test_data$value[test_data$dataset == "fulldset"], na.rm = TRUE),
-    mean_subset = mean(test_data$value[test_data$dataset == "subset"], na.rm = TRUE),
-    conf_low = tidy_result$conf.low,
-    conf_high = tidy_result$conf.high
+    t_tstat = round(tidy_result$statistic, 2),
+    t_degfree = round(tidy_result$parameter, 1),
+    t_pval = round(tidy_result$p.value, 4),
+    t_meanfulldset = round(mean(test_data$value[test_data$dataset == "fulldset"], na.rm = TRUE), 2),
+    t_meansubset = round(mean(test_data$value[test_data$dataset == "subset"], na.rm = TRUE), 2),
+    t_conflow = round(tidy_result$conf.low, 2),
+    t_confhigh = round(tidy_result$conf.high, 2)
   )
 })
 
 
 
 ### Binary - Fisher's Exact  -----------------------------------------------------------
+
+# p values
+# Small values (e.g. < 0.05) mean meaningful differences in the distribution of 1s and 2s between the datasets.
+# Big values (e.g. > 0.10) mean likely similar distributions in your fullset vs subset.
+
+# odds ratio
+# How much more likely the outcome is in one group compared to the other.
+# ==1: No difference in likelihood between groups.
+# > 1: Outcome is more likely in one group (often subset if coded that way).
+# < 1: Outcome is less likely in that group.
+# For example, if odds_ratio = 2.5, then respondents in one group are 2.5x more 
+# likely to select "Yes" (or 1) than the other group.
+
+# confidence interval
+# tells you A range of plausible values for the true odds ratio with 95% confidence.
+# How to interpret:
+# If the interval includes 1, it suggests no significant effect, 
+# even if the point estimate (odds_ratio) looks dramatic.
+
+# If the interval does not include 1, the odds ratio is likely a real difference.
+# Wide intervals suggest uncertainty in the effect size, often due to small sample sizes (like your subset with 89 obs).
+
 # step 1: filter variables to only binary variables 
 binary_vars <- joint_long_df %>%
   group_by(variable) %>%
@@ -591,10 +435,10 @@ run_fisher_test <- function(var_name) {
   
   tibble(
     variable = var_name,
-    p_value = test_result$p.value,
-    odds_ratio = test_result$estimate,
-    conf_low = test_result$conf.int[1],
-    conf_high = test_result$conf.int[2]
+    f_pval = round(test_result$p.value, 4),
+    f_oddsratio = round(test_result$estimate, 2),
+    f_conflow = round(test_result$conf.int[1], 2),
+    f_confhigh = round(test_result$conf.int[2], 2)
   )
 }
 
@@ -659,7 +503,7 @@ ordinal_vars <- joint_long_df %>%
   group_by(variable) %>%
   filter(!is.na(value)) %>%
   summarise(n_levels = n_distinct(value)) %>%
-  filter(n_levels >= 3, n_levels <= 100) %>%  # adjust this range as needed
+  filter(n_levels >= 2, n_levels <= 101) %>%  # adjust this range as needed
   pull(variable)
 
 ### function - apply Wilcoxon's test to ordinal variables -----------------------------------
@@ -670,16 +514,16 @@ run_wilcox_test <- function(var_name) {
   
   test_result <- wilcox.test(value ~ dataset, data = data)
   
-  medians <- data %>% # add mean as well
+  means <- data %>% # add mean as well
     group_by(dataset) %>%
     summarise(mean = mean(value)) %>%
     pivot_wider(names_from = dataset, values_from = mean)
   
   tibble(
     variable = var_name,
-    p_value = test_result$p.value,
-    mean_fulldset = mean$fulldset,
-    mean_subset = mean$subset
+    w_pval = round(test_result$p.value, 4),
+    w_meanfulldset = round(means$fulldset, 2),
+    w_meansubset = round(means$subset, 2)
   )
 }
 
@@ -718,7 +562,71 @@ plot_shift_violin <- function(var_name, df = joint_long_df) {
     scale_color_manual(values = c("fulldset" = "#3a6ad1", "subset" = "#36914c"))
 }
 
-plot_shift_violin("V202259x")
+#plot_shift_violin("V202259x")
 
 # "#1f77b4"
 # "#3a6ad1", 
+
+
+
+
+
+
+
+
+
+
+
+
+
+# THEORY FORMING ------------------------------------------------------------------
+
+### Joining together all comparison results -------------------------------------------------------
+
+joint_comparison <- comparison_ttest %>%
+  select(-t_confhigh,
+         -t_conflow) %>%
+  rename(mean_fulldset = "t_meanfulldset",
+         mean_subset = "t_meansubset") %>%
+  select(variable,
+         mean_fulldset,
+         mean_subset,
+         t_tstat,
+         t_pval,
+         t_degfree) %>%
+  left_join(comparison_wilcox, by = "variable") %>%
+  select(-w_meanfulldset,
+         -w_meansubset) %>%
+  left_join(comparison_fisher, by = "variable") %>%
+  arrange(desc(t_pval))
+
+
+
+### Filtering - only p-value < 0.05 and < 0.10 -------------------------------------------------------
+
+# p-value < 0.05
+joint_comparison_significant <- joint_comparison %>%
+  filter(t_pval <= 0.05 | w_pval <= 0.05 | f_pval <= 0.05) %>%
+  arrange(t_pval) %>%
+  left_join(var_attributes_2020, by = "variable") %>%
+  select(variable, 
+         description_original,
+         scale,
+         everything())
+
+joint_comparison_significant %>%
+  write_csv(here("data/results/voters/ANES_2020_CVote_StatIndepVars.csv"))
+# ANES 2020 ChangeVoter StatisticallyIndependent Variables
+
+joint_comparison_significant %>%  
+  saveRDS(file = here("data/results/voters/ANES_2020_CVote_StatIndepVars.RDS"))
+
+# p-value < 0.10
+joint_comparison_significant_p10 <- joint_comparison %>%
+  filter(t_pval <= 0.10 | w_pval <= 0.10 | f_pval <= 0.10) %>%
+  filter(!variable %in% joint_comparison_significant$variable)
+  
+
+
+
+  
