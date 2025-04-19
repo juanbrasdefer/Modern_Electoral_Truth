@@ -16,10 +16,10 @@ var_attributes_2020 <- tibble::tibble(
     "V202140y1_V202140y2_summary", # Joint V202140y1 and V202140y2 POST: Office recall: German Chancellor ‐ Angela Merkel, #0. Incorrect, 1. Correct
     "V202142y1_V202142y2_summary", # Joint V202142y1 and V202139y2, POST: Office recall: SCOTUS Chief Justice ‐ John Roberts,  #0. Incorrect, 1. Correct
     
-    "V202158", #V202158 POST: Feeling thermometer: Dr. Anthony Fauci, 0-100 scale,#998. Don’t know, 999. Don’t recognize
-    "V202160", #V202160 POST: Feeling thermometer: feminists
-    "V202159",#V202159 POST: Feeling thermometer: Christian fundamentalists
-    "V202162", #V202162 POST: Feeling thermometer: labor unions
+    "V202158", #V202158 POST: Feeling Favourability Rating: Dr. Anthony Fauci, 0-100 scale: 0 Terrible, 100 Great,#998. Don’t know, 999. Don’t recognize
+    "V202160", #V202160 POST: Feeling Favourability Rating: feminists
+    "V202159",#V202159 POST: Feeling Favourability Rating: Christian fundamentalists
+    "V202162", #V202162 POST: Feeling Favourability Rating: labor unions
     "V202265", #V202265 POST: Fewer problems if there was more emphasis on traditional family values, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
     "V202224", #V202224 POST: How important that more women get elected to political office, #1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important
     
@@ -33,8 +33,8 @@ var_attributes_2020 <- tibble::tibble(
     
     "V202355", #V202355 POST: Does R currently live in a rural or urban area, #1. Rural area, 2. Small town, 3. Suburb, 4. City
     "V202468x",#V202468x PRE‐POST: SUMMARY: Total (family) income
-    
-    "V202173", #V202173 POST: Feeling thermometer: scientists
+#NEW    
+    "V202173", #V202173 POST: Feeling Favourability Rating: scientists
     "V202213", #V202213 POST: [STD] Have no say about what goverment does #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
     "V202253", #V202253 POST: Less government better OR more that government should be doing, #1. The less government the better, 2. More things government should be doing
     "V202259x",#V202259x POST: SUMMARY: Favor/oppose government trying to reduce income inequality 1. Favor a great deal 2. Favor a moderate amount 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose a moderate amount 7. Oppose a great deal
@@ -55,8 +55,28 @@ var_attributes_2020 <- tibble::tibble(
     "V202413", #V202413 POST: CSES5‐Q04e: Attitudes about elites: strong leader in government is good 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
     "V202414", #V202414 POST: CSES5‐Q04f: Attitudes about elites: people should make policy decisions 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
     "V202424", #V202424 POST: CSES5‐Q06d: National identity: how important to follow America's customs 1. Very important 2. Fairly important 3. Not very important 4. Not important at all
-    "V202440" #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
-  ),
+    "V202440", #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
+#NEW NEW
+    "V201115", #V201115 PRE: How hopeful R feels about how things are going in the country
+    "V201116", #V201116 PRE: How afraid R feels about how things are going in the country
+    "V201117", #V201117 PRE: How outraged R feels about how things are going in the country
+    "V201118", #V201118 PRE: How angry R feels about how things are going in the country
+    "V201119", #V201119 PRE: How happy R feels about how things are going in the country
+    "V201120", #V201120 PRE: How worried R feels about how things are going in the country
+    "V201121", #V201121 PRE: How proud R feels about how things are going in the country
+    "V201122", #V201122 PRE: How irritated R feels about how things are going in the country
+    "V201123", #V201123 PRE: How nervous R feels about how things are going in the country
+    
+    "V201208", #V201208 PRE: Democratic Presidential candidate trait: strong leadership
+    "V201209", #V201209 PRE: Democratic Presidential candidate trait: really cares
+    "V201210", #V201210 PRE: Democratic Presidential candidate trait: strong knowledgeable
+    "V201211", #V201211 PRE: Democratic Presidential candidate trait: strong honest
+
+    "V201225x",#V201225xPRE: SUMMARY: Voting as duty or choice
+    "V201366", #V201366 PRE: How important that news organizations free to criticize
+    "V201367", #V201367 PRE: How important branches of government keep one another from too much power 
+    "V201368" #V201368 PRE: How important elected officials face serious consequences for misconduct
+),
   numerical_type = c(
     "binary", #V202014 POST: R go to any political meetings, rallies, speeches, dinners, # 1 yes, 2 no
     "binary", #V202025 POST: Has R in past 12 months: joined a protest march, rally, or demonstration, # 1 yes, 2 no
@@ -71,10 +91,10 @@ var_attributes_2020 <- tibble::tibble(
     "binary", # Joint V202140y1 and V202140y2 POST: Office recall: German Chancellor ‐ Angela Merkel, #0. Incorrect, 1. Correct
     "binary", # Joint V202142y1 and V202139y2, POST: Office recall: SCOTUS Chief Justice ‐ John Roberts,  #0. Incorrect, 1. Correct
     
-    "continuous", #V202158 POST: Feeling thermometer: Dr. Anthony Fauci, 0-100 scale,#998. Don’t know, 999. Don’t recognize
-    "continuous", #V202160 POST: Feeling thermometer: feminists
-    "continuous",#V202159 POST: Feeling thermometer: Christian fundamentalists
-    "continuous", #V202162 POST: Feeling thermometer: labor unions
+    "continuous", #V202158 POST: Feeling Favourability Rating: Dr. Anthony Fauci, 0-100 scale: 0 Terrible, 100 Great,#998. Don’t know, 999. Don’t recognize
+    "continuous", #V202160 POST: Feeling Favourability Rating: feminists
+    "continuous",#V202159 POST: Feeling Favourability Rating: Christian fundamentalists
+    "continuous", #V202162 POST: Feeling Favourability Rating: labor unions
     "ordinal", #V202265 POST: Fewer problems if there was more emphasis on traditional family values, #1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly
     "ordinal", #V202224 POST: How important that more women get elected to political office, #1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important
     
@@ -88,8 +108,8 @@ var_attributes_2020 <- tibble::tibble(
     
     "ordinal", #V202355 POST: Does R currently live in a rural or urban area, #1. Rural area, 2. Small town, 3. Suburb, 4. City
     "continuous", #V202468x PRE‐POST: SUMMARY: Total (family) income, #1. <-> 21.
-    
-    "continuous", #V202173 POST: Feeling thermometer: scientists
+# NEW    
+    "continuous", #V202173 POST: Feeling Favourability Rating: scientists
     "ordinal", #V202213 POST: [STD] Have no say about what goverment does #1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
     "binary", #V202253 POST: Less government better OR more that government should be doing, #1. The less government the better, 2. More things government should be doing
     "ordinal",#V202259x POST: SUMMARY: Favor/oppose government trying to reduce income inequality 1. Favor a great deal 2. Favor a moderate amount 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose a moderate amount 7. Oppose a great deal
@@ -110,15 +130,36 @@ var_attributes_2020 <- tibble::tibble(
     "ordinal", #V202413 POST: CSES5‐Q04e: Attitudes about elites: strong leader in government is good 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly
     "ordinal", #V202414 POST: CSES5‐Q04f: Attitudes about elites: people should make policy decisions 1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree  4. Disagree somewhat 5. Disagree strongly
     "ordinal", #V202424 POST: CSES5‐Q06d: National identity: how important to follow America's customs 1. Very important 2. Fairly important 3. Not very important 4. Not important at all
-    "ordinal" #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
-  ),
+    "ordinal", #V202440 POST: CSES5‐Q21: Satisfaction with democratic process 1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied
+# NEW NEW
+    "ordinal", #V201115 PRE: How hopeful R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    "ordinal", #V201116 PRE: How afraid R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    "ordinal", #V201117 PRE: How outraged R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    "ordinal", #V201118 PRE: How angry R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    "ordinal", #V201119 PRE: How happy R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    "ordinal", #V201120 PRE: How worried R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    "ordinal", #V201121 PRE: How proud R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    "ordinal", #V201122 PRE: How irritated R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    "ordinal", #V201123 PRE: How nervous R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
+    
+    "ordinal", #V201208 PRE: Democratic Presidential candidate trait: strong leadership 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all
+    "ordinal", #V201209 PRE: Democratic Presidential candidate trait: really cares 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all
+    "ordinal", #V201210 PRE: Democratic Presidential candidate trait: strong knowledgeable 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all
+    "ordinal", #V201211 PRE: Democratic Presidential candidate trait: strong honest 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all
+    
+    "ordinal",#V201225xPRE: SUMMARY: Voting as duty or choice 1. Very strongly a duty 2. Moderately strongly a duty 3. A little strongly a duty 4. Neither a duty nor a choice 5. A little strongly a choice 6. Moderately strongly a choice 7. Very strongly a choice
+    "ordinal", #V201366 PRE: How important that news organizations free to criticize 1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important
+    "ordinal", #V201367 PRE: How important branches of government keep one another from too much power 1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important
+    "ordinal" #V201368 PRE: How important elected officials face serious consequences for misconduct 1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important
+    ),
   category = c(
     rep("Political Involvement/ View of Politics", 7),
     rep("Information Level", 4),
     rep("Beliefs", 6),
     rep("Review of State of Union/ Government's Job", 7),
     rep("Demographic", 2),
-    rep("New Variables", 22)
+    rep("New Variables", 22),
+    rep("New New Variables", 17)
   ),
   description = c(
       "Attended political events", 
@@ -132,10 +173,10 @@ var_attributes_2020 <- tibble::tibble(
       "Recall: Speaker Pelosi", 
       "Recall: Chancellor Merkel", 
       "Recall: SCOTUS Chief Roberts",
-      "Thermometer: Fauci", 
-      "Thermometer: Feminists", 
-      "Thermometer: Christian Fundamentalists", 
-      "Thermometer: Labor Unions",
+      "Favourability Rating: Fauci", 
+      "Favourability Rating: Feminists", 
+      "Favourability Rating: Christian Fundamentalists", 
+      "Favourability Rating: Labor Unions",
       "Fewer problems if more Traditional Family Values", 
       "Importance of more Women in public office",
       "Government Performance - 4yrs", 
@@ -147,7 +188,7 @@ var_attributes_2020 <- tibble::tibble(
       "System only works for pol and financial insiders",
       "Self: Rural vs. Urban location", 
       "Family income",
-      "Thermometer: Scientists", 
+      "Favourability Rating: Scientists", 
       "Have no say in government decisions", 
       "Government: more or less better", 
       "Government should do more to reduce inequality", 
@@ -167,7 +208,28 @@ var_attributes_2020 <- tibble::tibble(
       "Strong leader in government is good", 
       "People should make policy decisions", 
       "Important to follow American customs", 
-      "Satisfaction with how Democracy works"
+      "Satisfaction with how Democracy works",
+      
+      "How Hopeful about how things are going in US",
+      "How Afraid about how things are going in US",
+      "How Outraged about how things are going in US",
+      "How Angry about how things are going in US",
+      "How Happy about how things are going in US",
+      "How Worried about how things are going in US",
+      "How Proud about how things are going in US",
+      "How Irritated about how things are going in US",
+      "How Nervous about how things are going in US",
+      
+      "Dem. Candidate Trait: Strong Leadership",
+      "Dem. Candidate Trait: Really Cares",
+      "Dem. Candidate Trait: Knowledgeable",
+      "Dem. Candidate Trait: Honest",
+      
+      "Is Voting a Duty or a Choice",
+      "Importance: News Orgs. be free to criticize",
+      "Importance: Branches of Govt check one another",
+      "Importance: Elected Officials consequences if misconduct"
+
   ),
   description_original = c(
     "POST: R go to any political meetings, rallies, speeches, dinners",
@@ -181,10 +243,10 @@ var_attributes_2020 <- tibble::tibble(
     "POST: Office recall: Speaker of the House ‐ Nancy Pelosi",
     "POST: Office recall: German Chancellor ‐ Angela Merkel",
     "POST: Office recall: SCOTUS Chief Justice ‐ John Roberts",
-    "POST: Feeling thermometer: Dr. Anthony Fauci",
-    "POST: Feeling thermometer: feminists",
-    "POST: Feeling thermometer: Christian fundamentalists",
-    "POST: Feeling thermometer: labor unions",
+    "POST: Feeling Favourability Rating: Dr. Anthony Fauci",
+    "POST: Feeling Favourability Rating: feminists",
+    "POST: Feeling Favourability Rating: Christian fundamentalists",
+    "POST: Feeling Favourability Rating: labor unions",
     "POST: Fewer problems if there was more emphasis on traditional family values",
     "POST: How important that more women get elected to political office",
     "POST: CSES5‐Q09: How good/bad a job has government done in last 4 years",
@@ -196,7 +258,7 @@ var_attributes_2020 <- tibble::tibble(
     "POST: Our political system only works for insiders with money and power",
     "POST: Does R currently live in a rural or urban area",
     "PRE‐POST: SUMMARY: Total (family) income",
-    "POST: Feeling thermometer: scientists",
+    "POST: Feeling Favourability Rating: scientists",
     "POST: [STD] Have no say about what goverment does",
     "POST: Less government better OR more that government should be doing",
     "POST: SUMMARY: Favor/oppose government trying to reduce income inequality",
@@ -217,7 +279,27 @@ var_attributes_2020 <- tibble::tibble(
     "POST: CSES5‐Q04e: Attitudes about elites: strong leader in government is good",
     "POST: CSES5‐Q04f: Attitudes about elites: people should make policy decisions",
     "POST: CSES5‐Q06d: National identity: how important to follow America's customs",
-    "POST: CSES5‐Q21: Satisfaction with democratic process"
+    "POST: CSES5‐Q21: Satisfaction with democratic process",
+    
+    "PRE: How hopeful R feels about how things are going in the country",
+    "PRE: How afraid R feels about how things are going in the country",
+    "PRE: How outraged R feels about how things are going in the country",
+    "PRE: How angry R feels about how things are going in the country",
+    "PRE: How happy R feels about how things are going in the country",
+    "PRE: How worried R feels about how things are going in the country",
+    "PRE: How proud R feels about how things are going in the country",
+    "PRE: How irritated R feels about how things are going in the country",
+    "PRE: How nervous R feels about how things are going in the country",
+    
+    "PRE: Democratic Presidential candidate trait: strong leadership",
+    "PRE: Democratic Presidential candidate trait: really cares",
+    "PRE: Democratic Presidential candidate trait: knowledgeable",
+    "PRE: Democratic Presidential candidate trait: honest",
+    
+    "PRE: SUMMARY: Voting as duty or choice",
+    "PRE: How important that news organizations free to criticize",
+    "PRE: How important branches of government keep one another from too much power",
+    "PRE: How important elected officials face serious consequences for misconduct"
   ),
   scale = c(
     "1 yes, 2 no",
@@ -231,10 +313,10 @@ var_attributes_2020 <- tibble::tibble(
     "0. Incorrect, 1. Correct",
     "0. Incorrect, 1. Correct",
     "0. Incorrect, 1. Correct",
-    "0-100 scale",
-    "0-100 scale",
-    "0-100 scale",
-    "0-100 scale",
+    "0-100 scale: 0 Terrible, 100 Great",
+    "0-100 scale: 0 Terrible, 100 Great",
+    "0-100 scale: 0 Terrible, 100 Great",
+    "0-100 scale: 0 Terrible, 100 Great",
     "1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly",
     "1. Extremely important, 2. Very important, 3. Moderately important, 4. A little important, 5. Not at all important",
     "1. Very good job, 2. Good job, 3. Bad job, 4. Very bad job",
@@ -245,8 +327,8 @@ var_attributes_2020 <- tibble::tibble(
     "1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly",
     "1. Not at all well, 2. Not very well, 3. Somewhat well, 4. Very well, 5. Extremely well",
     "1. Rural area, 2. Small town, 3. Suburb, 4. City",
-    "1. <-> 21. : 1. Under $9,999, 2. $10,000-14,999, 3. $15,000-19,999, 4. $20,000-24,999, 5. $25,000-29,999, 6. $30,000-34,999, 7. $35,000-39,999, 8. $40,000-44,999, 9. $45,000-49,999, 10. $50,000-59,999, 11. $60,000-64,999, 12. $65,000-69,999, 13. $70,000-74,999, 14. $75,000-79,999, 15. $80,000-89,999, 16. $90,000-99,999, 17. $100,000-109,999, 18. $110,000-124,999, 19. $125,000-149,999, 20. $150,000-174,999, 21. $175,000-249,999, 22. $250,000 or more",
-    "0-100 scale",
+    "1. <-> 22.: 1. Under $9,999, 22. $250,000+",
+    "0-100 scale: 0 Terrible, 100 Great",
     "1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly",
     "1. The less government the better, 2. More things government should be doing",
     "1. Favor a great deal 2. Favor a moderate amount 3. Favor a little 4. Neither favor nor oppose 5. Oppose a little 6. Oppose a moderate amount 7. Oppose a great deal",
@@ -267,6 +349,26 @@ var_attributes_2020 <- tibble::tibble(
     "1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly",
     "1. Agree strongly, 2. Agree somewhat, 3. Neither agree nor disagree, 4. Disagree somewhat, 5. Disagree strongly",
     "1. Very important 2. Fairly important 3. Not very important 4. Not important at all",
-    "1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied"
-  )
+    "1. Very satisfied 2. Fairly satisfied 4. Not very satisfied 5. Not at all satisfied",
+    
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
+    
+    " 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all",
+    " 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all",
+    " 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all",
+    " 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all",
+    
+    "1. Very strongly a duty 2. Moderately strongly a duty 3. A little strongly a duty 4. Neither a duty nor a choice 5. A little strongly a choice 6. Moderately strongly a choice 7. Very strongly a choice",
+    "1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important",
+    "1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important",
+    "1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important"
+    )
 )

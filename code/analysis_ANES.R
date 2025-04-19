@@ -4,9 +4,17 @@
 library(tidyverse)
 library(here)
 library(patchwork)
+library(DT)
+library(webshot)
+library(webshot2)
+library(gt)
+library(gtExtras) 
+library(flextable)
+library(officer)
 
 here::i_am("code/analysis_ANES.R")
 options(scipen = 999)
+
 
 
 ### load data -----------------------------------------------------------------------
@@ -621,6 +629,7 @@ joint_comparison_significant %>%
 joint_comparison_significant %>%  
   saveRDS(file = here("data/results/voters/ANES_2020_CVote_StatIndepVars.RDS"))
 
+# just for curiosity
 # p-value < 0.10
 joint_comparison_significant_p10 <- joint_comparison %>%
   filter(t_pval <= 0.10 | w_pval <= 0.10 | f_pval <= 0.10) %>%
@@ -628,5 +637,89 @@ joint_comparison_significant_p10 <- joint_comparison %>%
   
 
 
+### Table for Visualization and Printing --------------------------------------------
+# summarize all numeric columns in the dataframe
 
-  
+joint_comparison_significant_fortable <-joint_comparison_significant %>%
+  select(variable,
+         description,
+         scale,
+         mean_fulldset,
+         mean_subset,
+         t_tstat,
+         t_pval,
+         w_pval,
+         f_pval,
+         f_oddsratio)
+
+
+
+# GT TABLE ------------------------------------------------------------
+# Create gt table
+joint_comparison_significant_fortable %>%
+  gt() %>%
+  tab_header(title = "Statistically Independent Attributes: C-Voter Subset") %>%
+  fmt_number(columns = names(joint_comparison_significant_fortable),
+             decimals = 2) %>%
+  tab_style(style = cell_fill(color = "#e5f5dc"),locations = cells_body(
+    columns = c(t_pval), rows = t_pval < 0.05)) %>%
+  tab_style(style = cell_fill(color = "#e5f5dc"), locations = cells_body(
+    columns = c(w_pval), rows = w_pval < 0.05)) %>%
+  tab_style(style = cell_fill(color = "#e5f5dc"), locations = cells_body(
+    columns = c(f_pval), rows = f_pval < 0.05)) %>%
+  cols_width(variable ~ px(100),
+             description ~ px(150),
+             scale ~ px(250),
+             everything() ~ px(90)
+  ) %>%
+  opt_table_font(font = list(gt::google_font("Roboto"), default_fonts())) %>%
+  gtsave(filename = here("outputs/tables/ANES_2020_CVote_StatIndepVars_table.png"), 
+         #expand = TRUE,  
+         vwidth = 2600,  # try 1600-2400 depending on number of columns
+         vheight = 1000) # adjust as needed
+
+
+
+# # FLEXTABLE ------------------------------------------------------------
+# # Make a copy and handle NAs (replace with blank or other marker)
+# ft_data <- joint_comparison_significant_fortable %>%
+#   mutate(across(everything(), ~ ifelse(is.na(.), "", .)))  # replace NA with blank
+# 
+# # Create the flextable
+# ft <- flextable(joint_comparison_significant_fortable) %>%
+#   set_table_properties(width = 1, layout = "autofit") %>%
+#   theme_booktabs() %>%  # Clean, classic lines
+#   fontsize(size = 11, part = "all") %>%
+#   font(fontname = "Times New Roman", part = "all") %>%  # You could also try "Calibri", "Helvetica", etc.
+#   color(color = "black", part = "all") %>%
+#   bg(part = "header", bg = "#aebff5") %>%     # Light pastel blue for headers
+#   bg(i = ~ t_pval < 0.05, j = "t_pval", bg = "#e5f5dc") %>%  # Light red highlight for significant p-values
+#   bg(i = ~ w_pval < 0.05, j = "w_pval", bg = "#e5f5dc") %>%
+#   bg(i = ~ f_pval < 0.05, j = "f_pval", bg = "#e5f5dc") %>%
+#   align(align = "left", part = "all") %>%
+#   border(border.top = fp_border(color = "darkgrey")) %>%
+#   border(border.left = fp_border(color = "darkgrey")) %>%
+#   border(border.right = fp_border(color = "darkgrey")) %>%
+#   autofit()
+# 
+# 
+# 
+# # Print the flextable in RStudio (or include in RMarkdown)
+# ft
+# 
+# 
+# save_as_docx(ft, path = "outputs/tables/ANES_2020_CVote_table.docx")
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
