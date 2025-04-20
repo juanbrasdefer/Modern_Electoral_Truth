@@ -1,4 +1,5 @@
 ### attributes_vars_2020 - manual annotation of var types, descriptions, scales -------------------------------
+
 # manually defining 
 var_attributes_2020 <- tibble::tibble(
   # 'variable', 'numerical_type', 'category', 'description', 'scale' 
@@ -63,19 +64,14 @@ var_attributes_2020 <- tibble::tibble(
     "V201118", #V201118 PRE: How angry R feels about how things are going in the country
     "V201119", #V201119 PRE: How happy R feels about how things are going in the country
     "V201120", #V201120 PRE: How worried R feels about how things are going in the country
-    "V201121", #V201121 PRE: How proud R feels about how things are going in the country
     "V201122", #V201122 PRE: How irritated R feels about how things are going in the country
     "V201123", #V201123 PRE: How nervous R feels about how things are going in the country
-    
-    "V201208", #V201208 PRE: Democratic Presidential candidate trait: strong leadership
-    "V201209", #V201209 PRE: Democratic Presidential candidate trait: really cares
-    "V201210", #V201210 PRE: Democratic Presidential candidate trait: strong knowledgeable
-    "V201211", #V201211 PRE: Democratic Presidential candidate trait: strong honest
 
     "V201225x",#V201225xPRE: SUMMARY: Voting as duty or choice
     "V201366", #V201366 PRE: How important that news organizations free to criticize
     "V201367", #V201367 PRE: How important branches of government keep one another from too much power 
-    "V201368" #V201368 PRE: How important elected officials face serious consequences for misconduct
+    "V201368", #V201368 PRE: How important elected officials face serious consequences for misconduct
+    "V201400x" #V201400xPRE: SUMMARY: How much larger is income gap today
 ),
   numerical_type = c(
     "binary", #V202014 POST: R go to any political meetings, rallies, speeches, dinners, # 1 yes, 2 no
@@ -138,20 +134,15 @@ var_attributes_2020 <- tibble::tibble(
     "ordinal", #V201118 PRE: How angry R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
     "ordinal", #V201119 PRE: How happy R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
     "ordinal", #V201120 PRE: How worried R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
-    "ordinal", #V201121 PRE: How proud R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
     "ordinal", #V201122 PRE: How irritated R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
     "ordinal", #V201123 PRE: How nervous R feels about how things are going in the country 1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely
-    
-    "ordinal", #V201208 PRE: Democratic Presidential candidate trait: strong leadership 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all
-    "ordinal", #V201209 PRE: Democratic Presidential candidate trait: really cares 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all
-    "ordinal", #V201210 PRE: Democratic Presidential candidate trait: strong knowledgeable 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all
-    "ordinal", #V201211 PRE: Democratic Presidential candidate trait: strong honest 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all
     
     "ordinal",#V201225xPRE: SUMMARY: Voting as duty or choice 1. Very strongly a duty 2. Moderately strongly a duty 3. A little strongly a duty 4. Neither a duty nor a choice 5. A little strongly a choice 6. Moderately strongly a choice 7. Very strongly a choice
     "ordinal", #V201366 PRE: How important that news organizations free to criticize 1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important
     "ordinal", #V201367 PRE: How important branches of government keep one another from too much power 1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important
-    "ordinal" #V201368 PRE: How important elected officials face serious consequences for misconduct 1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important
-    ),
+    "ordinal", #V201368 PRE: How important elected officials face serious consequences for misconduct 1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important
+    "ordinal" #"V201400x" #V201400xPRE: SUMMARY: How much larger is income gap today 1. Much larger 2. Somewhat larger 3. About the same 4. Somewhat smaller 5. Much smaller
+),
   category = c(
     rep("Political Involvement/ View of Politics", 7),
     rep("Information Level", 4),
@@ -159,7 +150,7 @@ var_attributes_2020 <- tibble::tibble(
     rep("Review of State of Union/ Government's Job", 7),
     rep("Demographic", 2),
     rep("New Variables", 22),
-    rep("New New Variables", 17)
+    rep("New New Variables", 13)
   ),
   description = c(
       "Attended political events", 
@@ -216,20 +207,15 @@ var_attributes_2020 <- tibble::tibble(
       "How Angry about how things are going in US",
       "How Happy about how things are going in US",
       "How Worried about how things are going in US",
-      "How Proud about how things are going in US",
       "How Irritated about how things are going in US",
       "How Nervous about how things are going in US",
-      
-      "Dem. Candidate Trait: Strong Leadership",
-      "Dem. Candidate Trait: Really Cares",
-      "Dem. Candidate Trait: Knowledgeable",
-      "Dem. Candidate Trait: Honest",
+
       
       "Is Voting a Duty or a Choice",
       "Importance: News Orgs. be free to criticize",
       "Importance: Branches of Govt check one another",
-      "Importance: Elected Officials consequences if misconduct"
-
+      "Importance: Elected Officials consequences if misconduct",
+      "Income Gap - Today vs 20yrs ago"
   ),
   description_original = c(
     "POST: R go to any political meetings, rallies, speeches, dinners",
@@ -287,19 +273,14 @@ var_attributes_2020 <- tibble::tibble(
     "PRE: How angry R feels about how things are going in the country",
     "PRE: How happy R feels about how things are going in the country",
     "PRE: How worried R feels about how things are going in the country",
-    "PRE: How proud R feels about how things are going in the country",
     "PRE: How irritated R feels about how things are going in the country",
     "PRE: How nervous R feels about how things are going in the country",
-    
-    "PRE: Democratic Presidential candidate trait: strong leadership",
-    "PRE: Democratic Presidential candidate trait: really cares",
-    "PRE: Democratic Presidential candidate trait: knowledgeable",
-    "PRE: Democratic Presidential candidate trait: honest",
     
     "PRE: SUMMARY: Voting as duty or choice",
     "PRE: How important that news organizations free to criticize",
     "PRE: How important branches of government keep one another from too much power",
-    "PRE: How important elected officials face serious consequences for misconduct"
+    "PRE: How important elected officials face serious consequences for misconduct",
+    "PRE: SUMMARY: How much larger is income gap today"
   ),
   scale = c(
     "1 yes, 2 no",
@@ -359,16 +340,15 @@ var_attributes_2020 <- tibble::tibble(
     "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
     "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
     "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
-    "1. Not at all 2. A little 3. Somewhat 4. Very 5. Extremely",
-    
-    " 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all",
-    " 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all",
-    " 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all",
-    " 1. Extremely well 2. Very well 3. Moderately well 4. Slightly well 5. Not well at all",
-    
+      
     "1. Very strongly a duty 2. Moderately strongly a duty 3. A little strongly a duty 4. Neither a duty nor a choice 5. A little strongly a choice 6. Moderately strongly a choice 7. Very strongly a choice",
     "1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important",
     "1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important",
-    "1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important"
+    "1. Not important at all 2. A little important 3. Moderately important 4. Very important 5. Extremely important",
+    "1. Much larger 2. Somewhat larger 3. About the same 4. Somewhat smaller 5. Much smaller"
     )
 )
+
+library(readr)
+library(here)
+write_csv(here("data/ref/var_attributes_2020.R.csv"))

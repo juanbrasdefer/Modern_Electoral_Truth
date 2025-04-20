@@ -76,7 +76,7 @@ colSums(is.na(ANES_2020_clean_slct))
 
 
 
-### voted_change_20_allelecs_slct - Create Subset: Voted for Change in 2020, 16, 12 -------------------------
+### voted_change_20_allelecs_slct - Create CVoters: Voted for Change in 2020, 16, 12 -------------------------
 change_cand_20_20 <- 1 # Change candidate in 2020 in the 2020 ANES dataset
 # Joe Biden is coded as 1 in this dataset
 change_cand_16_20 <- 2 # Change candidate in 2016 in the 2020 ANES dataset
@@ -130,7 +130,7 @@ droplist <- c("V202072", # V202072 - POST: Did R vote for President in this elec
               "V201103", # V201103 - PRE: Recall of last (2016) Presidential vote choice
               "V201104", # V201104 - PRE: Did R vote for president in 2012 election
               "V201105") # V201105 - PRE: recall of 2012 presidential vote choice
-# note: this droplist is used here and later on fulldset as well
+# note: this droplist is used here and later on MVoters as well
 
 # select (drop)
 voted_change_20_allelecs_slct <- voted_change_20_allelecs %>%
@@ -173,30 +173,30 @@ voted_ANES_2020_clean_slct <- ANES_2020_clean_slct %>%
 
   
 # for both datasets,
-fulldset <- voted_ANES_2020_clean_slct[ , -1]   # drop the ID column
-fulldset_summary <- summarize_dataset(fulldset)   # and apply custom function (wrapper and get_summary())
+MVoters <- voted_ANES_2020_clean_slct[ , -1]   # drop the ID column
+MVoters_summary <- summarize_dataset(MVoters)   # and apply custom function (wrapper and get_summary())
 
-subset <- voted_change_20_allelecs_slct[ , -1] # repeat for sub
-subset_summary <- summarize_dataset(subset) # same wrapper and summary function
+CVoters <- voted_change_20_allelecs_slct[ , -1] # repeat for sub
+CVoters_summary <- summarize_dataset(CVoters) # same wrapper and summary function
 
 
 # combine into tibble (similar to list) for storage
 # variable names as rows, nested structure for values
 combined_summary <- tibble(
-  variable = names(fulldset_summary),
-  fulldset = fulldset_summary,
-  subset = subset_summary)
+  variable = names(MVoters_summary),
+  MVoters = MVoters_summary,
+  CVoters = CVoters_summary)
 
 # then turn into long format
 comparison_sumstats <- combined_summary %>%
-  unnest_wider(fulldset, names_sep = "_") %>% # new naming scheme for variables
-  unnest_wider(subset, names_sep = "_")
+  unnest_wider(MVoters, names_sep = "_") %>% # new naming scheme for variables
+  unnest_wider(CVoters, names_sep = "_")
 
 # for ease of reordering columns:
 # rename so number in var name come first
 colnames(comparison_sumstats) <- ifelse(
   colnames(comparison_sumstats) == "variable", "variable",  # ifelse() is used to skip over our first column, called 'variable'
-  paste0(str_extract(colnames(comparison_sumstats), "\\d+"), "_", str_extract(colnames(comparison_sumstats), "fulldset|subset"))
+  paste0(str_extract(colnames(comparison_sumstats), "\\d+"), "_", str_extract(colnames(comparison_sumstats), "MVoters|CVoters"))
   # for all other columns, rename to bin_var naming convention
   # where bin is ordinal, binary, semi-continuous bin
   )
@@ -205,15 +205,15 @@ colnames(comparison_sumstats) <- ifelse(
 all_cols <- colnames(comparison_sumstats)
 data_cols <- setdiff(all_cols, "variable") # drop col named "variable"
 
-# extract the number and type (fulldset/subset) to sort properly
+# extract the number and type (MVoters/CVoters) to sort properly
 col_order <- tibble(name = data_cols,
   varnum = as.numeric(str_extract(data_cols, "^\\d+")),
-  dset = str_extract(data_cols, "fulldset|subset"))
+  dset = str_extract(data_cols, "MVoters|CVoters"))
 
 # arrange columns by bins and dataset, meaning we get: 
-  # 'variable', '1_fulldset', '1_subset', '2_fulldset', '2_subset'...
+  # 'variable', '1_MVoters', '1_CVoters', '2_MVoters', '2_CVoters'...
   # where variable has all our variables as rows
-  # and the '1_fulldset' column holds values for all variables in fulldset that have '1' in their scale
+  # and the '1_MVoters' column holds values for all variables in MVoters that have '1' in their scale
 sorted_names <- col_order %>%
   arrange(varnum, dset) %>%
   pull(name)
@@ -225,7 +225,7 @@ comparison_sumstats <- comparison_sumstats %>%
 
 # COMPARISON - Graph Overlays -------------------------------------------------------------------------
 
-# 2020 Select Variables - Graphing Comparison between full dataset and subset (change voters)
+# 2020 Select Variables - Graphing Comparison between datasets of MVoters and CVoters (change voters)
 
 ### annotate variable numerical types (binary, ordinal, cont.) --------------------------------------------------
 # 
@@ -233,57 +233,72 @@ comparison_sumstats <- comparison_sumstats %>%
 
 ### joint_long_df - format comparison data for further use ----------------------------------------------------------------------
 # add variable names as a column first
-fulldset_long <- fulldset %>%
+MVoters_long <- MVoters %>%
   pivot_longer(everything(), names_to = "variable", values_to = "value") %>%
-  mutate(dataset = "fulldset")
-# repeat for subset
-subset_long <- subset %>%
+  mutate(Voter_Group = "MVoters")
+# repeat for CVoters
+CVoters_long <- CVoters %>%
   pivot_longer(everything(), names_to = "variable", values_to = "value") %>%
-  mutate(dataset = "subset")
+  mutate(Voter_Group = "CVoters")
 
 # combine both datasets
-joint_long_df <- bind_rows(fulldset_long, subset_long)
+joint_long_df <- bind_rows(MVoters_long, CVoters_long)
 
 # merge with annotated (manual) 'variable type' info
 joint_long_df <- joint_long_df %>%
   left_join(var_attributes_2020, by = "variable")
 
 
-
 ### function - plot ordinal data (side-by-side bar chart) ---------------------------------------
-plot_bar_comparison <- function(var_name) {
-  joint_long_df %>%
+plot_bar_comparison <- function(var_name, data_df_long = joint_long_df, var_attributes_df = var_attributes_2020) {
+  var_name <- as.character(var_name)
+  plot_title <- var_attributes_df %>% 
+    filter(variable == var_name) %>% 
+    pull(description)
+  
+  data_df_long %>%
     filter(variable == var_name) %>%
-    ggplot(aes(x = as.factor(value), fill = dataset)) +
+    ggplot(aes(x = as.factor(value), fill = Voter_Group)) +
     geom_bar(
-      aes(y = after_stat(prop), group = dataset),
-      stat = "count",           # count the number of responses
-      position = "dodge"        # put bars side-by-side instead of stacking
+      aes(y = after_stat(prop), group = Voter_Group),
+      stat = "count",
+      position = "dodge"
     ) +
-    scale_fill_manual(values = c("fulldset" = "#3c5cf9", 
-                                 "subset" = "#7ed994")) +
-    labs(title = var_name, x = "Response", y = "Proportion") +
+    scale_fill_manual(values = c("MVoters" = "#3c5cf9", 
+                                 "CVoters" = "#7ed994")) +
+    labs(title = plot_title, subtitle = var_name,x = "Response", y = "Proportion") +
     theme_minimal()
 }
 
 ### function - plot continuous data (overlayed density plots) ---------------------------------------
-plot_density_comparison <- function(var_name) {
-  joint_long_df %>%
+plot_density_comparison <- function(var_name, data_df_long = joint_long_df, var_attributes_df = var_attributes_2020) {
+  var_name <- as.character(var_name)
+  
+  plot_title <- var_attributes_df %>% 
+    filter(variable == var_name) %>% 
+    pull(description)
+  
+  data_df_long %>%
     filter(variable == var_name, !is.na(value)) %>%
-    ggplot(aes(x = as.numeric(value), fill = dataset, color = dataset)) +
-    geom_density(alpha = 0.4) +
-    scale_fill_manual(values = c("fulldset" = "#3a6ad1", 
-                                 "subset" = "#36914c")) +
-    scale_color_manual(values = c("fulldset" = "#3a6ad1", 
-                                  "subset" = "#36914c")) +
-    labs(title = var_name, x = "Score", y = "Density") +
+    ggplot(aes(x = as.numeric(value), fill = Voter_Group, color = Voter_Group)) +
+    geom_density(alpha = 0.4, adjust = 0.5) +
+    #geom_histogram(aes(y = after_stat(density)), bins = 50, position = "identity", alpha = 0.2) +
+    scale_fill_manual(values = c("MVoters" = "#3a6ad1", 
+                                 "CVoters" = "#36914c")) +
+    scale_color_manual(values = c("MVoters" = "#3a6ad1", 
+                                  "CVoters" = "#36914c")) +
+    labs(title = plot_title, subtitle = var_name, x = "Score", y = "Density") +
     theme_minimal()
 }
 
 
+
 ### function - triage variable into graph type -----------------------------------------------------
-plot_by_type <- function(var_name, var_attributes = var_attributes_2020, type_col = numerical_type) {
-  var_type <- var_attributes %>% filter(variable == var_name) %>% pull(type_col)
+plot_by_type <- function(var_name, var_attributes_df = var_attributes_2020, numerical_type = var_attributes_2020$numerical_type) {
+  var_name <- as.character(var_name)
+  var_type <- var_attributes_df %>% 
+    filter(variable == var_name) %>% 
+    pull(numerical_type)
   
   if (var_type %in% c("binary", "ordinal")) {
     plot_bar_comparison(var_name)
@@ -317,10 +332,10 @@ var_list <- var_attributes_2020$variable
 # COMPARISON - Statistical Independence -------------------------------------------------------------------------
 
 ### Past - T-Test on one variable -----------------------------------------------------------------
-# Run t-test for variable V202430 comparing fulldset vs subset (econ better or worse)
+# Run t-test for variable V202430 comparing MVoters vs CVoters (econ better or worse)
 #t_test_result <- joint_long_df %>%
  # filter(variable == "V202430") %>%       # focus on just this variable
-  #t.test(value ~ dataset, data = .)       # run the t-test comparing the two groups
+  #t.test(value ~ Voter_Group, data = .)       # run the t-test comparing the two groups
 
 # View the results
 #t_test_result
@@ -343,11 +358,11 @@ var_list <- var_attributes_2020$variable
 
 #95 percent confidence interval:
 #-0.48108648 -0.05091893
-#This is the confidence interval for the difference in means (fulldset - subset), 
-#and since the whole interval is less than 0, this reinforces that subset tends to score higher on this item.
+#This is the confidence interval for the difference in means (MVoters - CVoters), 
+#and since the whole interval is less than 0, this reinforces that CVoters tends to score higher on this item.
 
-#fulldset mean = 3.664
-#subset mean = 3.930
+#MVoters mean = 3.664
+#CVoters mean = 3.930
 
 
 
@@ -371,11 +386,11 @@ comparison_ttest <- map_dfr(variables_to_test, function(var) {
     filter(variable == var)
   
   # If fewer than 2 groups, skip (helps prevent errors)
-  if (length(unique(test_data$dataset)) < 2) return(NULL)
+  if (length(unique(test_data$Voter_Group)) < 2) return(NULL)
   
   # Run Welch's t-test
   t_test <- tryCatch({
-    t.test(value ~ dataset, data = test_data)
+    t.test(value ~ Voter_Group, data = test_data)
   }, error = function(e) return(NULL))
   
   if (is.null(t_test)) return(NULL)
@@ -388,8 +403,8 @@ comparison_ttest <- map_dfr(variables_to_test, function(var) {
     t_tstat = round(tidy_result$statistic, 2),
     t_degfree = round(tidy_result$parameter, 1),
     t_pval = round(tidy_result$p.value, 4),
-    t_meanfulldset = round(mean(test_data$value[test_data$dataset == "fulldset"], na.rm = TRUE), 2),
-    t_meansubset = round(mean(test_data$value[test_data$dataset == "subset"], na.rm = TRUE), 2),
+    t_meanMVoters = round(mean(test_data$value[test_data$Voter_Group == "MVoters"], na.rm = TRUE), 2),
+    t_meanCVoters = round(mean(test_data$value[test_data$Voter_Group == "CVoters"], na.rm = TRUE), 2),
     t_conflow = round(tidy_result$conf.low, 2),
     t_confhigh = round(tidy_result$conf.high, 2)
   )
@@ -400,13 +415,13 @@ comparison_ttest <- map_dfr(variables_to_test, function(var) {
 ### Binary - Fisher's Exact  -----------------------------------------------------------
 
 # p values
-# Small values (e.g. < 0.05) mean meaningful differences in the distribution of 1s and 2s between the datasets.
-# Big values (e.g. > 0.10) mean likely similar distributions in your fullset vs subset.
+# Small values (e.g. < 0.05) mean meaningful differences in the distribution of 1s and 2s between the Voter_Groups.
+# Big values (e.g. > 0.10) mean likely similar distributions in your fullset vs CVoters.
 
 # odds ratio
 # How much more likely the outcome is in one group compared to the other.
 # ==1: No difference in likelihood between groups.
-# > 1: Outcome is more likely in one group (often subset if coded that way).
+# > 1: Outcome is more likely in one group (often CVoters if coded that way).
 # < 1: Outcome is less likely in that group.
 # For example, if odds_ratio = 2.5, then respondents in one group are 2.5x more 
 # likely to select "Yes" (or 1) than the other group.
@@ -418,7 +433,7 @@ comparison_ttest <- map_dfr(variables_to_test, function(var) {
 # even if the point estimate (odds_ratio) looks dramatic.
 
 # If the interval does not include 1, the odds ratio is likely a real difference.
-# Wide intervals suggest uncertainty in the effect size, often due to small sample sizes (like your subset with 89 obs).
+# Wide intervals suggest uncertainty in the effect size, often due to small sample sizes (like your CVoters with 89 obs).
 
 # step 1: filter variables to only binary variables 
 binary_vars <- joint_long_df %>%
@@ -434,8 +449,8 @@ run_fisher_test <- function(var_name) {
   tab <- joint_long_df %>%
     filter(variable == var_name) %>%
     filter(!is.na(value)) %>%
-    count(dataset, value) %>%
-    pivot_wider(names_from = dataset, values_from = n, values_fill = 0) %>%
+    count(Voter_Group, value) %>%
+    pivot_wider(names_from = Voter_Group, values_from = n, values_fill = 0) %>%
     column_to_rownames("value") %>%
     as.matrix()
   
@@ -498,7 +513,7 @@ comparison_fisher <- map_dfr(binary_vars, run_fisher_test)
 #A Wilcoxon test will detect whether one group tends to choose more favorable values than 
 # another — even if both groups are bi-modal or skewed.
 #So for this variable, the Wilcoxon test will tell you whether the distribution of opinions is 
-# meaningfully shifted between fullset and subset — without assuming the data looks like 
+# meaningfully shifted between fullset and CVoters — without assuming the data looks like 
 # a normal curve or that “Favor a great deal” is exactly 6 steps away from “Oppose a great deal”.
 
 # Caveat:
@@ -520,18 +535,18 @@ run_wilcox_test <- function(var_name) {
   data <- joint_long_df %>%
     filter(variable == var_name, !is.na(value))
   
-  test_result <- wilcox.test(value ~ dataset, data = data)
+  test_result <- wilcox.test(value ~ Voter_Group, data = data)
   
   means <- data %>% # add mean as well
-    group_by(dataset) %>%
+    group_by(Voter_Group) %>%
     summarise(mean = mean(value)) %>%
-    pivot_wider(names_from = dataset, values_from = mean)
+    pivot_wider(names_from = Voter_Group, values_from = mean)
   
   tibble(
     variable = var_name,
     w_pval = round(test_result$p.value, 4),
-    w_meanfulldset = round(means$fulldset, 2),
-    w_meansubset = round(means$subset, 2)
+    w_meanMVoters = round(means$MVoters, 2),
+    w_meanCVoters = round(means$CVoters, 2)
   )
 }
 
@@ -549,15 +564,15 @@ comparison_wilcox <- map_dfr(ordinal_vars, run_wilcox_test)
 
 
 
-### graphing wilcox ------------------------------------------------------------------------
+### violin graphing wilcox ------------------------------------------------------------------------
 plot_shift_violin <- function(var_name, df = joint_long_df) {
   df %>%
     filter(variable == var_name, !is.na(value)) %>%
-    ggplot(aes(x = dataset, y = value, fill = dataset)) +
+    ggplot(aes(x = Voter_Group, y = value, fill = Voter_Group)) +
     # Violin for distribution
     geom_violin(alpha = 0.4, color = NA, trim = FALSE) +
     # Stripchart of individual points
-    geom_jitter(aes(color = dataset), width = 0.15, alpha = 0.6, size = 0.5) +
+    geom_jitter(aes(color = Voter_Group), width = 0.15, alpha = 0.6, size = 0.5) +
     # Median lines
     stat_summary(fun = median, geom = "crossbar", width = 0.5,
                  color = "black", fatten = 0, linetype = "dashed") +
@@ -566,8 +581,8 @@ plot_shift_violin <- function(var_name, df = joint_long_df) {
          x = NULL) +
     theme_minimal() +
     theme(legend.position = "none") +
-    scale_fill_manual(values = c("fulldset" = "#3a6ad1", "subset" = "#36914c")) +
-    scale_color_manual(values = c("fulldset" = "#3a6ad1", "subset" = "#36914c"))
+    scale_fill_manual(values = c("MVoters" = "#3a6ad1", "CVoters" = "#36914c")) +
+    scale_color_manual(values = c("MVoters" = "#3a6ad1", "CVoters" = "#36914c"))
 }
 
 #plot_shift_violin("V202259x")
@@ -594,17 +609,17 @@ plot_shift_violin <- function(var_name, df = joint_long_df) {
 joint_comparison <- comparison_ttest %>%
   select(-t_confhigh,
          -t_conflow) %>%
-  rename(mean_fulldset = "t_meanfulldset",
-         mean_subset = "t_meansubset") %>%
+  rename(mean_MVoters = "t_meanMVoters",
+         mean_CVoters = "t_meanCVoters") %>%
   select(variable,
-         mean_fulldset,
-         mean_subset,
+         mean_MVoters,
+         mean_CVoters,
          t_tstat,
          t_pval,
          t_degfree) %>%
   left_join(comparison_wilcox, by = "variable") %>%
-  select(-w_meanfulldset,
-         -w_meansubset) %>%
+  select(-w_meanMVoters,
+         -w_meanCVoters) %>%
   left_join(comparison_fisher, by = "variable") %>%
   arrange(desc(t_pval))
 
@@ -644,8 +659,8 @@ joint_comparison_significant_fortable <-joint_comparison_significant %>%
   select(variable,
          description,
          scale,
-         mean_fulldset,
-         mean_subset,
+         mean_MVoters,
+         mean_CVoters,
          t_tstat,
          t_pval,
          w_pval,
@@ -658,7 +673,7 @@ joint_comparison_significant_fortable <-joint_comparison_significant %>%
 # Create gt table
 joint_comparison_significant_fortable %>%
   gt() %>%
-  tab_header(title = "Statistically Independent Attributes: C-Voter Subset") %>%
+  tab_header(title = "Statistically Independent Attributes: C-Voters (2012, 2016, 2020 - ANES 2020)") %>%
   fmt_number(columns = names(joint_comparison_significant_fortable),
              decimals = 2) %>%
   tab_style(style = cell_fill(color = "#e5f5dc"),locations = cells_body(
@@ -667,7 +682,7 @@ joint_comparison_significant_fortable %>%
     columns = c(w_pval), rows = w_pval < 0.05)) %>%
   tab_style(style = cell_fill(color = "#e5f5dc"), locations = cells_body(
     columns = c(f_pval), rows = f_pval < 0.05)) %>%
-  cols_width(variable ~ px(100),
+  cols_width(variable ~ px(90),
              description ~ px(150),
              scale ~ px(250),
              everything() ~ px(90)
@@ -678,6 +693,18 @@ joint_comparison_significant_fortable %>%
          vwidth = 2600,  # try 1600-2400 depending on number of columns
          vheight = 1000) # adjust as needed
 
+
+
+### plot - big patchwork plot (independent vars) ------------------------------------------------------------------
+# Get all variable names
+var_list <- joint_comparison_significant_fortable$variable
+
+# Generate the list of plots
+plot_list <- lapply(var_list, plot_by_type)
+
+# Combine all plots into 5 rows x 5 columns
+ggsave(here("outputs/ANES_comparison_grid_indep.png"), 
+       wrap_plots(plot_list, nrow = 5, ncol = 4), width = 30, height = 40)
 
 
 # # FLEXTABLE ------------------------------------------------------------
@@ -714,12 +741,6 @@ joint_comparison_significant_fortable %>%
 # 
 # 
 # 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+
+
+

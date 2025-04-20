@@ -1,0 +1,13 @@
+﻿variable_common,ANES_year,variable,description_original,scale,filter_value
+votedpres_yn,2000,V001248,Did R vote for a presidential candidate,"1. YES, VOTED FOR PRESIDENT 5. NO, DIDN'T VOTE FOR PRESIDENT",1
+pres_choice,2000,V001249,Who did R vote for in Presidential race,1. AL GORE 2. HOWARD PHILLIPS - CONSTITUTION PARTY CANDIDATE  3. GEORGE W. BUSH 4. HARRY BROWN - LIBERTARIAN CANDIDATE 5. PAT BUCHANAN 6. RALPH NADER 7. R REPORTS VOTING FOR SELF,1
+votedpres_yn,2004,V045025,Did R vote for a presidential candidate,"1. Yes, voted for President 5. No, didn't vote for President",1
+pres_choice,2004,V045026,R's vote for President,1. John Kerry 3. George W. Bush 5. Ralph Nader 7. Other {SPECIFY},3
+votedpres_yn,2008,V085044,Did R vote for candidate for President,"1. Yes, voted for President 5. No, didn't vote for President",1
+pres_choice,2008,V085044a,For whom did R vote for President,1. Barack Obama 3. John McCain 7. Other {SPECIFY},1
+votedpres_yn,2012,postvote_presvt,Did R vote for President,"1. Yes, voted for President 2. No, didn't vote for President",1
+pres_choice,2012,presvote2012_x,PREPOST SUMMARY: For whom did R vote for President in 2012,1. <preload: dem_pcname>  2. <preload: rep_pcname 5. Other candidate (SPECIFY),1
+votedpres_yn,2016,V162031x,PRE-POST: SUMMARY - Did R vote in 2016,0 did not vote in 2016 1 did vote in 2016,1
+pres_choice_raw,2016,V161027,PRE: For whom did R vote for President,1. Hillary Clinton 2. Donald Trump 3. Gary Johnson 4. Jill Stein 5. Other candidate (SPECIFY),2
+pres_choice_raw,2016,V162034a,POST: For whom did R vote for President,1. Hillary Clinton 2. Donald Trump 3. Gary Johnson 4. Jill Stein 5. Other candidate SPECIFY 7. Other specify given as: none 9. Other specify given as: RF,2
+pres_choice,2016,V161027_V162034a_summary,SUMMARY - For whom did R Vote for President,,2

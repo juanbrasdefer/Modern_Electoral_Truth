@@ -1197,31 +1197,3 @@ print(fisher_results_df)
   # 2. Approve not strongly
   # 3. Disapprove not strongly 
   # 4. Disapprove strongly
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
