@@ -8,11 +8,14 @@ library(patchwork)
 
 here::i_am("code/generalization_experiment_ANES.R")
 
-# load data ------------------------------------------------------------------
+# load custom functions
+source(here("code/scripts/functions_datasetfiltering.R")) # for filtering and summarizing ANES dsets
 
 # load reference dataframe that will help us deal with the fact that
 # each of the surveys use different naming scheme for variables
 var_names_ref <- read_csv(here("data/ref/ANES_generalization_exp_reftable.csv"))
+
+# load data ------------------------------------------------------------------
 
 
 
@@ -30,50 +33,164 @@ ANES_2000_raw <- read.delim(here("data/ANES/2000/anes_2000prepost/anes_2000prepo
 
 
 
+# Filter and Results 2004 ------------------------------------------------
+ANES_2000_clean <- ANES_2000_raw %>%
+  filter(V001249 != 0) # unfortunately a lot of responses were
+# written physically, and exist in a 'separate file'
+# so to clean this dataset we get rid of those obs. first
 
-# filter 2016 ------------------------------------------------
 
+year <- 2000
+ANES_2000_filtered <- ANES_2000_clean %>%
+  filter_ANES_dset("votedpres_yn", year) %>%
+  #filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% 
+  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% 
+  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 2% bias for Bush, increase in all OTHERS, but especially BROWN
+  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # 4% bias for Bush, nader goes up 1%
+  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 3% drop for gore, bush and nader, brown and buchanan hit 1%
+
+
+CVoters_2000_p <- ANES_2000_filtered %>%
+  summarize_ANES_votes("pres_choice", year) %>%
+  print()
+# pre-filtering: Gore 50%, Bush 45%, Nader 3% 
+# post-filtering: Gore 40%, Bush 51%, Brown 3%, Buchanan 1%, Nader 3% 
+# coded as 1.GORE 2.PHILLIPS 3.BUSH 4.BROWN 5.BUCHANAN 6.NADER 
+
+
+
+
+# Filter and Results 2004 ------------------------------------------------
+year <- 2004
+ANES_2004_filtered <- ANES_2004_raw %>%
+  filter_ANES_dset("votedpres_yn", year) %>%
+  filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% # 6% bias for Kerry, 8% loss for bush, 1% of which went nader
+  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% 
+  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 16% bias for Kerry, 18% loss bush 0.5% nader and 0.5% others
+  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # 1% bias for Kerry BUT FEEL THERM ENCODING ON MY END IS MESSED UP
+  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 4% bump kerry, 5% drop bush, large jump for others (not much, but biggest so far)
+
+
+CVoters_2004_p <- ANES_2004_filtered %>%
+  summarize_ANES_votes("pres_choice", year) %>%
+  print()
+# pre-filtering: Kerry 46%, Bush 52%, Nader 1%, 0% others
+# post-filtering: Kerry 61%, Bush 31%,  Nader 1%, 2% others # massive for others!!!!!
+      # if science: Kerry 69%, Bush 21%, Nader 2%, 2% others
+# coded as 1.Kerry, 2.Bush, 5.Nader, 7.Other
+
+
+
+# Filter and Results 2008 ------------------------------------------------
+year <- 2008
+ANES_2008_filtered <- ANES_2008_raw %>%
+  filter_ANES_dset("votedpres_yn", year) %>%
+  filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% # 4% bias for Obama
+  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% 
+  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 4% bias for Obama
+  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # no real change 
+  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 1% bump for Obama
+
+
+CVoters_2008_p <- ANES_2008_filtered %>%
+  summarize_ANES_votes("pres_choice", year) %>%
+  print()
+# pre-filtering: Obama 64%, McCain 32%, Others 2%
+# post-filtering: Obama 69%, McCain 27%, Others 3%
+      # if we take science:  Obama 71%, McCain 25%, Others 2% - not too exciting
+# coded as 1. Obama 3. McCain 7. Others
+
+
+
+# Filter and Results 2012 ------------------------------------------------
+ANES_2012_clean <- ANES_2012_raw %>%
+  filter(presvote2012_x != -2) # unfortunately a lot of responses were
+                                # written physically, and exist in a 'separate file'
+                                  # so to clean this dataset we get rid of those obs. first
+
+
+year <- 2012
+ANES_2012_filtered <- ANES_2012_clean %>%
+  filter_ANES_dset("votedpres_yn", year) %>%
+  #filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% # 4% bias for Obama
+  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% # not using
+  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 1% bias for obama
+  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # 1% bias for Obama
+  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 11% drop for obamna, 9% increase for Romney; 2% bump for other
+
+
+CVoters_2012_p <- ANES_2012_filtered %>%
+  summarize_ANES_votes("pres_choice", year) %>%
+  print()
+# pre-filtering: Obama 57%, Romney 39%, Other 3%
+# post-filtering: Obama 45%, Romney 46%, Other 7%
+      # if we take science as well,  Obama 48%, Romney 43%, Other 7%
+# Coded as: 1.Obama 2.Romney 5.other cands
+
+
+
+
+# Filter and Results 2016 ------------------------------------------------
 ANES_2016_clean <- ANES_2016_raw %>%
   mutate(V161027_V162034a_summary = ifelse(V161027 %in% c(1,2,3,4,5), V161027,
                                            ifelse(V162034a %in% c(1,2,3,4,5), V162034a,
                                                   NA)))
 
 
-
-
-
-
-# fancy ting -------------------------------------------------------
-
-
-filter_ANES_dset <- function(dataset, var_to_find, year_of_dset, ref_df = var_names_ref){
-  variable_coded <- var_names_ref %>% 
-    filter(variable_common == var_to_find) %>%
-    filter(ANES_year == year_of_dset) %>%
-      pull(variable)
-  
-  correct_value <- var_names_ref %>%
-    filter(variable == variable_coded) %>%
-    pull(filter_value)
-  
-  filtered_dataset <- dataset %>%
-    filter(!!sym(variable_coded) == correct_value)
-return(filtered_dataset)
-}
-  
-  
-  
-# dataset <- ANES_2016_clean
-# var_to_find <- "votedpres_yn"
-# year_of_dset <- 2016
-
-
+year <- 2016
 ANES_2016_filtered <- ANES_2016_clean %>%
-  filter_ANES_dset("votedpres_yn", 2016)
+  filter_ANES_dset("votedpres_yn", year) %>%
+  filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% # 9% bias for clinton
+  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% # 16% bias for clinton
+  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 2% bias for clinton
+  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # clinton same but 3% drop for Trump
+  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 3% bias for clinton
 
 
-ANES_2016_filtered
+CVoters_2016_p <- ANES_2016_filtered %>%
+  summarize_ANES_votes("pres_choice", year) %>%
+  print()
+# pre-filtering: Clinton 47%, Trump 43%, 7% other candidates
+# post-filtering:  Clinton 49%, Trump 37%, 11% other candidates - I guess here you need to check whether Jill stein and Gary Johnson are bigger CHANGE people
+  # if we take science as well,  Clinton 54%, Trump 34%, 11% other candidates
 
+# Coded as: 1.Clinton 2. Trump 3.4.5. other cands
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Variable Selections ---------------------------------------------
 ## 2000 \------------------------- ------------------------------
 
 ### 2000 Presidential  ------------------------------------
@@ -106,30 +223,26 @@ ANES_2016_filtered
 
 
 
-# "belief_in_science"
+
+# "science_belief"
 # V000777 How important is envir regulation
 # 1. NOT AT ALL IMPORTANT 2. NOT TOO IMPORTANT 3. SOMEWHAT IMPORTANT 4. VERY IMPORTANT 5. EXTREMELY IMPORTANT 8. DK 9. RF0. NA
 
-# "climate_fears"8
+# "forward_looking"
 # V000682 Should federal spending on ENVIRONMENTAL PROTECTION be increased, decreased, or kept about the same
 # 1. INCREASED 3. DECREASED 5. KEPT ABOUT THE SAME 7. CUT OUT ENTIRELY [VOL]
 
-# "economic_hardship"
-# V000994 HH income -all HHs (not sure which var is correct here)
-# V000993 Pre-Tax Household Income
-# 1.NONE OR LESS THAN $4,999 2.$5,000-$9,999 3. C. $10,000-$14,999 4. D. $15,000-$24,999 5. $25,000-$34,999 6. $35,000-$49,999 7. $50,000-$64,999 8. $65,000-$74,999 9. $75,000-$84,999 10. $85,000-$94,999 11. $95,000-$104,999 12. $105,000-$114,999 13. $115,000-$124,999 14. $125,000-$134,999 15. $135,000-$144,999 16. $145,000-$154,999 17. $155,000-$164,999 18. $165,000-$174,999 19. $175,000-$184,999 20. $185,000-$194,999 21. $195,000-$199,999 22. $200,000 and over
+# "economic_reality"
+# V000994 Pre-Tax Household Income
 # V000491 Summary US econ btr/worse last year
 
-# "political_cynicism"
+# "partisan_detachment"
 # V001307 Thermometer federal govt in Wash DC
-# V000369 Thermometer Dem Party
-# V000370 Thermometer Rep Party
 # V000372 Thermometer parties in general
 
 # "democratic_apathy"
 # V001651 Is R satisfied with US Democracy
 # V001304 Thermometer supreme court
-# V001429 How much can you trust the media
 
 
 ## 2004 \------------------------- ----------------------------------------------
@@ -159,28 +272,24 @@ ANES_2016_filtered
 ### 2004 Respondent Attributes ----------------------------------
 
 
-# "belief_in_science"
+# "science_belief"
 # V043167 Federal Budget Spending: science and technology
 # V045072 Feeling Thermometer: environmentalists
 
-# "climate_fears"
-#V043182 Environment vs. jobs tradeoff scale - self-placement
+# "forward_looking"
+#not using
 
-
-# "economic_hardship"
+# "economic_reality"
 # V043293x Summary: Household income
-# V045064 Feeling Thermometer: Labor Unions
 # V043214 How much national economy better/worse last 4 years
+# V045064 Feeling Thermometer: Labor Unions
 
-# "political_cynicism"
+# "partisan_detachment"
 # V045060 Feeling Thermometer: Federal Government in Washington
-# V043049 Feeling Thermometer: Democratic party
-# V043050 Feeling Thermometer: Republican party
+# V045271 CSES Left-Right scale - self placement
 
 # "democratic_apathy"
-# V045241 How satisfied with democracy in US
 # V045242 Makes a difference who is in power
-# V045244 Democracy is best form of govt
 # V045073 Feeling Thermometer: U.S. Supreme Court
 
 
@@ -203,32 +312,24 @@ ANES_2016_filtered
 
 ### 2008 Respondent Attributes -------------------------------------
 
-# "belief_in_science"
-# V084405s ENVIRONMENTALISTS thermometer
+# "science_belief"
 # V085064s Feeling thermometer: ENVIRONMENTALISTS
-# V084405e Federal Budget Spending: science and technology
+# V083143 Federal Budget Spending: science and technology
 
-# "climate_fears"
-# V083157 [NEW] Favor/oppose lower emission standards
+# "forward_looking"
 # V083157x [NEW] SUMMARY: favor/oppose lower emission standards ds
 # V083158 [NEW] Importance of emission standards issue
-# V083151x SUMMARY: increase or decrease spending on environment
 
-# "economic_hardship"
-# V084405j LABOR UNIONS thermometer
-# V083248 Family income
+# "economic_reality"
 # V083248x SUMMARY: FAMILY INCOME
-# V085080 Income gap today more or less than 20 years ago
 # V085080x SUMMARY: INCOME GAP COMPARED TO 20 YRS AGO
+# V084405j LABOR UNIONS thermometer
 
-
-# "political_cynicism"
-# V083044a Feeling Thermometer: Democratic Party
-# V083044b Feeling Thermometer: Republican Party
+# "partisan_detachment"
+# V085191 CSES: Left-right: self
 # V085148 Govt run by a few big interests or for benefit of all
 
 # "democratic_apathy"
-# V084405t U.S. SUPREME COURT thermometer (random order q... idk)
 # V085064t Feeling thermometer: THE U.S. SUPREME COURT
 # V085182 Does/doesn't make a difference who is in power
 
@@ -264,35 +365,26 @@ ANES_2016_filtered
 
 ### 2012 Respondent Attributes -------------------------------------
 
-# "belief_in_science"
+# "science_belief"
 # envir_gwarm - Is global warming happening or not
-# envir_gwhow - Anthropogenic climate change (ie: humans cause it)
-
-
-# "climate_fears"
 # envir_gwgood - temperatures continue to go up in the future, would this be good, bad, or neither good nor bad
-# envjob_self - environment-jobs tradeoff self-placement
 
-# "economic_hardship"
-# ftgr_unions - Feeling thermometer: LABOR UNIONS
-# cses_econ - State of economy
-# econ_ecpast_x - PRE: SUMMARY- U.S. economy better or worse than 1 year ago
-# ineq_incgap_x - PRE: SUMMARY- Income gap size compared to 20 years ago
+# "economic_reality"
 # finance_finpast_x - PRE: SUMMARY- Better or worse off than 1 year ago
+# ineq_incgap_x - PRE: SUMMARY- Income gap size compared to 20 years ago
 #  ################Family income RESTRICTED IN 2012
 
 
-# "political_cynicism"
+# "partisan_detachment"
 # cses_selfleft - left-right self placement
-# cses_diffpower - make a difference who is in power
 # cses_closepty - Close to any political party
-# ft_dem - Feeling Thermometer: Republican Party
-# ft_rep - Feeling Thermometer: Republican Party
+
 
 # "democratic_apathy"
-#  ftgr_ussc - Feeling thermometer: THE U.S. SUPREME COURT
 #  cses_diffpower - make a difference who is in power
 #  cses_satisdem - Satisfied with way democracy works in the U.S
+#  ftgr_ussc - Feeling thermometer: THE U.S. SUPREME COURT
+
 
 
 
@@ -332,25 +424,245 @@ ANES_2016_filtered
 
 
 ### 2016 Respondent Attributes -------------------------------------
-# "belief_in_science"
+# "science_belief"
+# V162112 POST: Feeling thermometer: SCIENTISTS
+# V161221 PRE: Is global warming happening or not
+
+# "forward_looking"
+# V161225x - PRE: SUMMARY - Govt action about rising temperatures
+# V162207 - POST: Agree/disagree: world is changing and we should adjust
+
+# "economic_reality"
+# V161361x - PRE: income summary
+# V161138x - PRE: SUMMARY - larger/smaller income gap today
+
+# "partisan_detachment"
+# V161126 - PRE: 7pt scale Liberal conservative self-placement
+# V161155 - PRE: Party ID: Does R think of self as Dem, Rep, Ind or what
+
+
+# "democratic_apathy"
+# V161151x - PRE: SUMMARY - Voting as duty or choice
+# V162290 - POST: CSES: Satisfied with way democracy works in the U.S
+
+#V162281 POST: CSES: 5pt scale: make a difference who is in power
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# OLD Attributes (all, rather) -----------------------------------------------------------
+
+# 2000
+# "science_belief"
+# V000777 How important is envir regulation
+# 1. NOT AT ALL IMPORTANT 2. NOT TOO IMPORTANT 3. SOMEWHAT IMPORTANT 4. VERY IMPORTANT 5. EXTREMELY IMPORTANT 8. DK 9. RF0. NA
+
+# "forward_looking"8
+# V000682 Should federal spending on ENVIRONMENTAL PROTECTION be increased, decreased, or kept about the same
+# 1. INCREASED 3. DECREASED 5. KEPT ABOUT THE SAME 7. CUT OUT ENTIRELY [VOL]
+
+# "economic_reality"
+# V000994 HH income -all HHs (not sure which var is correct here)
+# V000993 Pre-Tax Household Income
+# 1.NONE OR LESS THAN $4,999 2.$5,000-$9,999 3. C. $10,000-$14,999 4. D. $15,000-$24,999 5. $25,000-$34,999 6. $35,000-$49,999 7. $50,000-$64,999 8. $65,000-$74,999 9. $75,000-$84,999 10. $85,000-$94,999 11. $95,000-$104,999 12. $105,000-$114,999 13. $115,000-$124,999 14. $125,000-$134,999 15. $135,000-$144,999 16. $145,000-$154,999 17. $155,000-$164,999 18. $165,000-$174,999 19. $175,000-$184,999 20. $185,000-$194,999 21. $195,000-$199,999 22. $200,000 and over
+# V000491 Summary US econ btr/worse last year
+
+# "partisan_detachment"
+# V001307 Thermometer federal govt in Wash DC
+# V000369 Thermometer Dem Party
+# V000370 Thermometer Rep Party
+# V000372 Thermometer parties in general
+
+# "democratic_apathy"
+# V001651 Is R satisfied with US Democracy
+# V001304 Thermometer supreme court
+# V001429 How much can you trust the media
+
+
+
+
+
+
+# 2004
+# "science_belief"
+# V043167 Federal Budget Spending: science and technology
+# V045072 Feeling Thermometer: environmentalists
+
+# "forward_looking"
+#V043182 Environment vs. jobs tradeoff scale - self-placement
+
+# "economic_reality"
+# V043293x Summary: Household income
+# V045064 Feeling Thermometer: Labor Unions
+# V043214 How much national economy better/worse last 4 years
+
+# "partisan_detachment"
+# V045060 Feeling Thermometer: Federal Government in Washington
+# V043049 Feeling Thermometer: Democratic party
+# V043050 Feeling Thermometer: Republican party
+
+# "democratic_apathy"
+# V045241 How satisfied with democracy in US
+# V045242 Makes a difference who is in power
+# V045244 Democracy is best form of govt
+# V045073 Feeling Thermometer: U.S. Supreme Court
+
+
+
+
+
+
+
+
+
+### 2008
+# "science_belief"
+# V084405s ENVIRONMENTALISTS thermometer
+# V085064s Feeling thermometer: ENVIRONMENTALISTS
+# V084405e Federal Budget Spending: science and technology
+
+# "forward_looking"
+# V083157 [NEW] Favor/oppose lower emission standards
+# V083157x [NEW] SUMMARY: favor/oppose lower emission standards ds
+# V083158 [NEW] Importance of emission standards issue
+# V083151x SUMMARY: increase or decrease spending on environment
+
+# "economic_reality"
+# V084405j LABOR UNIONS thermometer
+# V083248 Family income
+# V083248x SUMMARY: FAMILY INCOME
+# V085080 Income gap today more or less than 20 years ago
+# V085080x SUMMARY: INCOME GAP COMPARED TO 20 YRS AGO
+
+# "partisan_detachment"
+# V083044a Feeling Thermometer: Democratic Party
+# V083044b Feeling Thermometer: Republican Party
+# V085148 Govt run by a few big interests or for benefit of all
+
+# "democratic_apathy"
+# V084405t U.S. SUPREME COURT thermometer (random order q... idk)
+# V085064t Feeling thermometer: THE U.S. SUPREME COURT
+# V085182 Does/doesn't make a difference who is in power
+
+
+
+
+
+
+
+# 2012
+# "science_belief"
+# envir_gwarm - Is global warming happening or not
+# envir_gwhow - Anthropogenic climate change (ie: humans cause it)
+
+# "forward_looking"
+# envir_gwgood - temperatures continue to go up in the future, would this be good, bad, or neither good nor bad
+# envjob_self - environment-jobs tradeoff self-placement
+
+# "economic_reality"
+# ftgr_unions - Feeling thermometer: LABOR UNIONS
+# cses_econ - State of economy
+# econ_ecpast_x - PRE: SUMMARY- U.S. economy better or worse than 1 year ago
+# ineq_incgap_x - PRE: SUMMARY- Income gap size compared to 20 years ago
+# finance_finpast_x - PRE: SUMMARY- Better or worse off than 1 year ago
+#  ################Family income RESTRICTED IN 2012
+
+# "partisan_detachment"
+# cses_selfleft - left-right self placement
+# cses_diffpower - make a difference who is in power
+# cses_closepty - Close to any political party
+# ft_dem - Feeling Thermometer: Republican Party
+# ft_rep - Feeling Thermometer: Republican Party
+
+# "democratic_apathy"
+#  ftgr_ussc - Feeling thermometer: THE U.S. SUPREME COURT
+#  cses_diffpower - make a difference who is in power
+#  cses_satisdem - Satisfied with way democracy works in the U.S
+
+
+
+
+
+
+
+# 2016 
+# "science_belief"
 # V162112 POST: Feeling thermometer: SCIENTISTS
 # V161207 PRE: Federal Budget Spending: science and technology
-# V161221 - PRE: Is global warming happening or not
+# V161221 PRE: Is global warming happening or not
 # V161222 PRE: Anthropogenic climate change
 
-
-# "climate_fears"
+# "forward_looking"
 # V161225x - PRE: SUMMARY - Govt action about rising temperatures
 
-
-# "economic_hardship"
+# "economic_reality"
 # V161110 - PRE: R how much better worse off than 1 year ago
 # V161140x - PRE: SUMMARY - economy better/worse in last year
 # V161138x - PRE: SUMMARY - larger/smaller income gap today
 # V162136x - POST: SUMMARY- Economic mobility easier/harder compared to 20 yrs ago
 # V161361x - PRE: income summary
 
-# "political_cynicism"
+# "partisan_detachment"
 # V161126 - PRE: 7pt scale Liberal conservative self-placement
 # V161155 - PRE: Party ID: Does R think of self as Dem, Rep, Ind or what
 # V161095 - PRE: Feeling Thermometer: Democratic Party
@@ -358,11 +670,6 @@ ANES_2016_filtered
 # V161215 - PRE: REV How often trust govt in Wash to do what is right
 # V161216 - PRE: Govt run by a few big interests or for benefit of all
 
-
 # "democratic_apathy"
 # V161151x - PRE: SUMMARY - Voting as duty or choice
 # V162290 - POST: CSES: Satisfied with way democracy works in the U.S
-
-
-
-

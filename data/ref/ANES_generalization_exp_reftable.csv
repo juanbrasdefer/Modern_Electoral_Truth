@@ -1,13 +1,279 @@
-﻿variable_common,ANES_year,variable,description_original,scale,filter_value
-votedpres_yn,2000,V001248,Did R vote for a presidential candidate,"1. YES, VOTED FOR PRESIDENT 5. NO, DIDN'T VOTE FOR PRESIDENT",1
-pres_choice,2000,V001249,Who did R vote for in Presidential race,1. AL GORE 2. HOWARD PHILLIPS - CONSTITUTION PARTY CANDIDATE  3. GEORGE W. BUSH 4. HARRY BROWN - LIBERTARIAN CANDIDATE 5. PAT BUCHANAN 6. RALPH NADER 7. R REPORTS VOTING FOR SELF,1
-votedpres_yn,2004,V045025,Did R vote for a presidential candidate,"1. Yes, voted for President 5. No, didn't vote for President",1
-pres_choice,2004,V045026,R's vote for President,1. John Kerry 3. George W. Bush 5. Ralph Nader 7. Other {SPECIFY},3
-votedpres_yn,2008,V085044,Did R vote for candidate for President,"1. Yes, voted for President 5. No, didn't vote for President",1
-pres_choice,2008,V085044a,For whom did R vote for President,1. Barack Obama 3. John McCain 7. Other {SPECIFY},1
-votedpres_yn,2012,postvote_presvt,Did R vote for President,"1. Yes, voted for President 2. No, didn't vote for President",1
-pres_choice,2012,presvote2012_x,PREPOST SUMMARY: For whom did R vote for President in 2012,1. <preload: dem_pcname>  2. <preload: rep_pcname 5. Other candidate (SPECIFY),1
-votedpres_yn,2016,V162031x,PRE-POST: SUMMARY - Did R vote in 2016,0 did not vote in 2016 1 did vote in 2016,1
-pres_choice_raw,2016,V161027,PRE: For whom did R vote for President,1. Hillary Clinton 2. Donald Trump 3. Gary Johnson 4. Jill Stein 5. Other candidate (SPECIFY),2
-pres_choice_raw,2016,V162034a,POST: For whom did R vote for President,1. Hillary Clinton 2. Donald Trump 3. Gary Johnson 4. Jill Stein 5. Other candidate SPECIFY 7. Other specify given as: none 9. Other specify given as: RF,2
-pres_choice,2016,V161027_V162034a_summary,SUMMARY - For whom did R Vote for President,,2
+﻿variable_common,ANES_year,variable,description_original,scale,filter_value,notes
+votedpres_yn,2000,V001248,Did R vote for a presidential candidate,"1. YES, VOTED FOR PRESIDENT 5. NO, DIDN'T VOTE FOR PRESIDENT",1,
+pres_choice,2000,V001249,Who did R vote for in Presidential race,1. AL GORE 2. HOWARD PHILLIPS - CONSTITUTION PARTY CANDIDATE  3. GEORGE W. BUSH 4. HARRY BROWN - LIBERTARIAN CANDIDATE 5. PAT BUCHANAN 6. RALPH NADER 7. R REPORTS VOTING FOR SELF,1,
+votedpres_yn,2004,V045025,Did R vote for a presidential candidate,"1. Yes, voted for President 5. No, didn't vote for President",1,
+pres_choice,2004,V045026,R's vote for President,1. John Kerry 3. George W. Bush 5. Ralph Nader 7. Other {SPECIFY},3,
+votedpres_yn,2008,V085044,Did R vote for candidate for President,"1. Yes, voted for President 5. No, didn't vote for President",1,
+pres_choice,2008,V085044a,For whom did R vote for President,1. Barack Obama 3. John McCain 7. Other {SPECIFY},1,
+votedpres_yn,2012,postvote_presvt,Did R vote for President,"1. Yes, voted for President 2. No, didn't vote for President",1,
+pres_choice,2012,presvote2012_x,PREPOST SUMMARY: For whom did R vote for President in 2012,1. <preload: dem_pcname>  2. <preload: rep_pcname 5. Other candidate (SPECIFY),1,
+votedpres_yn,2016,V162031x,PRE-POST: SUMMARY - Did R vote in 2016,0 did not vote in 2016 1 did vote in 2016,1,
+pres_choice_raw,2016,V161027,PRE: For whom did R vote for President,1. Hillary Clinton 2. Donald Trump 3. Gary Johnson 4. Jill Stein 5. Other candidate (SPECIFY),2,
+pres_choice_raw,2016,V162034a,POST: For whom did R vote for President,1. Hillary Clinton 2. Donald Trump 3. Gary Johnson 4. Jill Stein 5. Other candidate SPECIFY 7. Other specify given as: none 9. Other specify given as: RF,2,
+pres_choice,2016,V161027_V162034a_summary,SUMMARY - For whom did R Vote for President,1. Hillary Clinton 2. Donald Trump 3. Gary Johnson 4. Jill Stein 5. Other candidate (SPECIFY),2,
+science_belief_1,2016,V162112,POST: Feeling thermometer: SCIENTISTS,0-100 Thermometer,"60	,
+61	,
+62	,
+63	,
+60	,
+64	,
+65	,
+66	,
+60	,
+67	,
+68	,
+69	,
+60	,
+70	,
+71	,
+72	,
+60	,
+73	,
+74	,
+75	,
+60	,
+76	,
+77	,
+78	,
+60	,
+79	,
+80	,
+81	,
+60	,
+82	,
+83	,
+84	,
+60	,
+85	,
+86	,
+87	,
+60	,
+88	,
+89	,
+90	,
+60	,
+91	,
+92	,
+93	,
+60	,
+94	,
+95	,
+96	,
+60	,
+97	,
+98	,
+99	,
+60	,
+100",need to do a mean
+science_belief_2,2016,V161221,PRE: Is global warming happening or not,1. Happening 2. Not Happening,1,
+forward_looking_1,2016,V161225x,PRE: SUMMARY - Govt action about rising temperatures,"1. Should be doing a great deal more 2. Should be doing a moderate amount more 3. Should be doing a little
+more
+4. Currently doing the right amount
+5. Should be doing a little less 6. Should be doing a moderate amount less 7. Should be doing a great deal less","1,2,3",
+forward_looking_2,2016,V162207,POST: Agree/disagree: world is changing and we should adjust,1. Agree strongly 2. Agree somewhat 3. Neither agree nor disagree 4. Disagree somewhat 5. Disagree strongly,"1,2",
+economic_reality_1,2016,V161361x,PRE: income summary,"01. Under 5,000 21. 80,000-89,999 11. 30,000-34,999 17. 60,000-64,999 15. 50,000-54,999
+23. 100,000-109,999 -9. Refused 24. 110,000-124,999 13. 40,000-44,999 22. 90,000-99,999 12. 35,000-39,999 25. 125,000-149,999 14. 45,000-49,999 26. 150,000-174,999 27. 175,000-249,999 07. 20,000-22,499 09. 25,000-27,499 28. 250,000 or more 19. 70,000-74,999 03. 10,000-12,499","01,02,03,04,05,06,07,08,09,10,1,,12,13,14,15",need to find the average first
+economic_reality_2,2016,V161138x,PRE: SUMMARY - larger/smaller income gap today,1. Much Larger 2. Larger 3. About the Same 4. Smaller 5. Much Smaller,"1,2",
+partisan_detachment_1,2016,V161126,PRE: 7pt scale Liberal conservative self-placement,"1. Extremely liberal 2. Liberal
+3. Slightly liberal 4. Moderate, middle of the road
+5. Slightly conservative
+6. Conservative
+7. Extremely conservative","3,4,5",need to change out. Maybe for a net thermometer of Rep/Dem parties
+partisan_detachment_2,2016,V161155,"PRE: Party ID: Does R think of self as Dem, Rep, Ind or what",0. No preference (FTF ONLY) 1. Democrat 2. Republican 3. Independent,"0,3",
+democratic_apathy_1,2016,V161151x,PRE: SUMMARY - Voting as duty or choice,1. Very strongly feel that voting is a duty 2. Moderately strongly feel that voting is a duty 3. A little strongly feel that voting is a duty 4. Feel that voting is neither a duty nor a choice 5. A little strongly feel that voting is a choice 6. Moderately strongly feel that voting is a choice 7. Very strongly feel that voting is a choice,"4,5,6,7",
+democratic_apathy_2,2016,V162290,POST: CSES: Satisfied with way democracy works in the U.S,1. Very Satisfied 2. Fairly Satisfied 4. Not Very Satisfied 5. Not At All Satisfied,"4,5",
+science_belief_1,2012,envir_gwgood,"temperatures continue to go up in the future, would this be good, bad, or neither good nor bad",1. Good 2. Bad 3. Neither good nor bad,2,
+science_belief_2,2012,envir_gwarm,Is global warming happening or not,1. Has probably been happening 2. Probably hasn't been happening,1,
+forward_looking_1,2012,not using,not using,not using,not using,
+forward_looking_2,2012,not using,not using,not using,not using,
+economic_reality_1,2012,finance_finpast_x,PRE: SUMMARY- Better or worse off than 1 year ago,1. Much better 2. Somewhat better 3. The same (VOL) 4.Somewhat worse 5. Much worse,"4,5",
+economic_reality_2,2012,ineq_incgap_x,PRE: SUMMARY- Income gap size compared to 20 years ago,1. Much larger 2. Somewhat larger 3. About the same Web Total 4. Somewhat smaller 5. Much smaller,"1,2",
+partisan_detachment_1,2012,cses_selfleft,left-right self placement,"10pt scale, 1 = left, 10 = right",5,
+partisan_detachment_2,2012,cses_closepty,Close to any political party,1.Yes 2.No,2,
+democratic_apathy_1,2012,cses_diffpower,CSES: 5pt scale: make a difference who is in power,ONE means that it doesn't make any difference who is in power and FIVE means that it makes a big difference who is in power,"1,2",
+democratic_apathy_2,2012,cses_satisdem,CSES: Satisfied with way democracy works in the U.S,1. Very satisfied 2. Fairly satisfied 3. Not very satisfied 4. Not satisfied at all,"3,4",
+science_belief_1,2008,V083142,Federal Budget Spending: science and technology,"1. Increased
+3. Decreased
+5. Kept about the same
+7. Cut out entirely {VOL}",1,duplicate
+science_belief_2,2008,V083143,Federal Budget Spending: science and technology,"1. Increased
+3. Decreased
+5. Kept about the same
+7. Cut out entirely {VOL}",1,duplicate
+forward_looking_1,2008,not using,not using,not using,not using,
+forward_looking_2,2008,not using,not using,not using,not using,
+economic_reality_1,2008,V083248x,SUMMARY: FAMILY INCOME,"1. A. None or less than $2,999
+2. B. $3,000 -$4,999
+3. C. $5,000 -$7,499
+4. D. $7,500 -$9,999
+5. E. $10,000 -$10,999
+6. F. $11,000-$12,499
+7. G. $12,500-$14,999
+8. H. $15,000-$16,999
+9. J. $17,000-$19,999
+10. K. $20,000-$21,999
+11. M. $22,000-$24,999
+12. N. $25,000-$29,999
+13. P. $30,000-$34,999
+14. Q. $35,000-$39,999
+15. R. $40,000-$44,999
+16. S. $45,000-$49,999
+17. T. $50,000-$59,999
+18. U. $60,000-$74,999
+19. V. $75,000-$89,999
+20. W. $90,000-$99,999
+21. X. $100,000-$109,999
+22. Y. $110,000-$119,999
+23. Z. $120,000-$134,999
+24. AA. $135,000-$149,999
+25. BB. $150,000 and over","1,2,3,4,5,6,7,8,9,10,11,12",avg needed
+economic_reality_2,2008,V085080x,SUMMARY: INCOME GAP COMPARED TO 20 YRS AGO,"1. Much larger
+2. Somewhat larger
+3. About the same
+4. Somewhat smaller
+5. Much smaller","1,2",
+partisan_detachment_1,2008,V085191,CSES: Left-right: self,"10pt scale, 1 = left, 10 = right",5,
+partisan_detachment_2,2008,V085148,Govt run by a few big interests or for benefit of all,"1. Gov't run by a few big interests
+5. Gov't run for the benefit of all",1,
+democratic_apathy_1,2008,V085064t,Feeling thermometer: THE U.S. SUPREME COURT,0-100 Thermometer,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1718,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50",avg needed
+democratic_apathy_2,2008,V085182,Does/doesn't make a difference who is in power,5 Point Scale - 1. It doesn't make any difference who is in power 5. It makes a big difference who is in power,"1,2",
+science_belief_1,2004,V043167,Federal Budget Spending: science and technology,"1. Increased
+3. Decreased
+5. Kept about the same
+7. Cut out entirely {VOL}",1,
+science_belief_2,2004,V045072,Feeling Thermometer: environmentalists,0-100 Thermometer,"""60	,
+61	,
+62	,
+63	,
+60	,
+64	,
+65	,
+66	,
+60	,
+67	,
+68	,
+69	,
+60	,
+70	,
+71	,
+72	,
+60	,
+73	,
+74	,
+75	,
+60	,
+76	,
+77	,
+78	,
+60	,
+79	,
+80	,
+81	,
+60	,
+82	,
+83	,
+84	,
+60	,
+85	,
+86	,
+87	,
+60	,
+88	,
+89	,
+90	,
+60	,
+91	,
+92	,
+93	,
+60	,
+94	,
+95	,
+96	,
+60	,
+97	,
+98	,
+99	,
+60	,
+100""",
+forward_looking_1,2004,not using,not using,not using,not using,
+forward_looking_2,2004,not using,not using,not using,not using,
+economic_reality_1,2004,V043293x,Summary: Household income,"01. A. None or less than $2,999
+02. B. $3,000 -$4,999
+03. C. $5,000 -$6,999
+04. D. $7,000 -$8,999
+05. E. $9,000 -$10,999
+06. F. $11,000-$12,999
+07. G. $13,000-$14,999
+08. H. $15,000-$16,999
+09. J. $17,000-$19,999
+10. K. $20,000-$21,999
+11. M. $22,000-$24,999
+12. N. $25,000-$29,999
+13. P. $30,000-$34,999
+14. Q. $35,000-$39,999
+15. R. $40,000-$44,999
+16. S. $45,000-$49,999
+17. T. $50,000-$59,999
+18. U. $60,000-$69,999
+19. V. $70,000-$79,999
+20. W. $80,000-$89,999
+21. X. $90,000-$104,999
+22. Y. $105,000-$119,000
+23. Z. $120,000 and over","01,02,03,04,05,06,07,08,09,10,11,12",
+economic_reality_2,2004,V043214,How much national economy better/worse last 4 years,"1. Much better
+2. Somewhat better
+3. Same
+4. Somewhat worse
+5. Much worse","4,5",
+partisan_detachment_1,2004,V045060,Feeling Thermometer: Federal Government in Washington,0-100 Thermometer,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1718,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50",therm
+partisan_detachment_2,2004,V045271,CSES Left-Right scale - self placement,"00. Left
+01.
+02.
+03.
+04.
+05.
+06.
+07.
+08.
+09.
+10. Right",5,
+democratic_apathy_1,2004,V045242,Makes a difference who is in power,1. It makes a difference who is in power 5. It doesn't make a difference who is in power,"3,4,5",
+democratic_apathy_2,2004,V045073,Feeling Thermometer: U.S. Supreme Court,0-100 Thermometer,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1718,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50",therm
+science_belief_1,2000,not using,not using,not using,not using,
+science_belief_2,2000,not using,not using,not using,not using,
+forward_looking_1,2000,not using,not using,not using,not using,
+forward_looking_2,2000,not using,not using,not using,not using,
+economic_reality_1,2000,V000994,Pre-Tax Household Income,"1.   A. NONE OR LESS THAN $4,999
+       2.   B. $5,000-$9,999
+       3.   C. $10,000-$14,999
+       4.   D. $15,000-$24,999
+       5.   E. $25,000-$34,999
+       6.   F. $35,000-$49,999
+       7.   G. $50,000-$64,999
+       8.   H. $65,000-$74,999
+       9.   J. $75,000-$84,999
+       10.  K. $85,000-$94,999
+       11.  M. $95,000-$104,999
+       12.  N. $105,000-$114,999
+       13.  P. $115,000-$124,999
+       14.  Q. $125,000-$134,999
+       15.  R. $135,000-$144,999
+       16.  S. $145,000-$154,999
+       17.  T. $155,000-$164,999
+       18.  U. $165,000-$174,999
+       19.  V. $175,000-$184,999
+       20.  W. $185,000-$194,999
+       21.  X. $195,000-$199,999
+       22.  Y. $200,000 and over","1,2,3,4",avg needed
+economic_reality_2,2000,V000491,Summary US econ btr/worse last year,"1. Much better
+       2. Somewhat better
+       3. Stayed about the same
+       4. Somewhat worse
+       5. Much worse","4,5",
+partisan_detachment_1,2000,V001307,Thermometer federal govt in Wash DC,0-100 Thermometer,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1718,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50",avg needed
+partisan_detachment_2,2000,V000372,Thermometer parties in general,0-100 Thermometer,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1718,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50",avg needed
+democratic_apathy_1,2000,V001651,Is R satisfied with US Democracy,"1. SATISFIED
+       2. FAIRLY SATISFIED
+       3. NOT VERY SATISFIED
+       4. NOT AT ALL SATISFIED","3,4",
+democratic_apathy_2,2000,V001304,Thermometer supreme court,0-100 Thermometer,"0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,1718,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50",avg needed
