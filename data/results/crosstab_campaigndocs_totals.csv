@@ -5,7 +5,7 @@ George W. Bush_2000,George W. Bush,2000,172,61444,0.016795782,Republican,1,1
 Richard B. Cheney_2004,Richard B. Cheney,2004,4234,2782347,0.009130421,Republican,0,0
 William J. Clinton_2004,William J. Clinton,2004,27,13933,0.011627072,Democrat,0,0
 John Edwards_2004,John Edwards,2004,244,112025,0.013068511,Democrat,0,0
-John F. Kerry_2004,John F. Kerry,2004,2567,1074188,0.014338272000000001,Democrat,1,0
+John F. Kerry_2004,John F. Kerry,2004,2567,1074188,0.014338272,Democrat,1,0
 George W. Bush_2004,George W. Bush,2004,114,34015,0.020108776,Republican,1,1
 Mike Huckabee_2008,Mike Huckabee,2008,501,391914,0.00767005,Republican,0,0
 Ron Paul_2008,Ron Paul,2008,29,22217,0.00783184,Libertarian,0,0
@@ -98,7 +98,7 @@ Kirsten Gillibrand_2020,Kirsten Gillibrand,2020,309,97961,0.018925899,Democrat,0
 William J. Clinton_2020,William J. Clinton,2020,15,4396,0.020473157,Democrat,0,0
 Jay Inslee_2020,Jay Inslee,2020,435,86619,0.030131957,Democrat,0,0
 Tim Walz_2024,Tim Walz,2024,9,9552,0.005653266,Democrat,0,0
-"Joseph R. Biden, Jr._2024","Joseph R. Biden, Jr.",2024,547,466358,0.007037512,Democrat,0,0
+"Joseph R. Biden, Jr._2024","Joseph R. Biden, Jr.",2024,547,466358,0.007037512,Democrat,1,0
 Donald J. Trump_2024,Donald J. Trump,2024,1359,1150480,0.007087477,Republican,1,1
 Kamala Harris_2024,Kamala Harris,2024,742,558918,0.00796539,Democrat,1,0
 Chris Christie_2024,Chris Christie,2024,35,23459,0.008951788,Republican,0,0

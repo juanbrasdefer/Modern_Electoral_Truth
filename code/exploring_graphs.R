@@ -11,7 +11,8 @@ here::i_am("code/exploring_graphs.R")
 # load main dataset of frequencies and change %s 
 crosstab_campaigndocs_totals <- read_csv(here("data/results/crosstab_campaigndocs_totals.csv"))
 
-
+# load composite index results
+change_index_results <- read_csv(here("data/results/candidate_change_index_results.csv"))
 
 # GRAPHING ---------------------------------------------------------------
 
@@ -175,5 +176,55 @@ crosstab_campaigndocs_totals %>%
 
 
 ggsave(here("outputs/candidates_changengrams_nominees_repel.png"))
+
+
+
+
+
+
+
+
+
+
+# 
+
+
+# scatter 4: all years, nominees only (Dem v Rep final candidates) -----------------------
+
+change_index_results %>%
+  #filter(nominee_yn == 1) %>%
+  ggplot(aes(x = year, 
+             y = change_index_score,
+             color = pol_party)) +
+  geom_point(size = 2, 
+             #color = "#c54bfa", # currently replaced by red blue pol_party
+             alpha = 0.6) +  # Scatter points
+  geom_smooth(method = "lm", formula = y ~ x, color = "#c4167c", se = FALSE) +  # Regression line
+  geom_text_repel(aes(label = speaker), 
+                  vjust = -3, size = 2, 
+                  color = "grey") + # Labels
+  scale_color_manual(values = c("Democrat" = "#3c5cf9", 
+                                "Republican" = "#ff603e",
+                                "Libertarian" = "#f3d04b")) + # Custom colors
+  scale_x_continuous(breaks = c(2000, 2004, 2008, 2012, 2016, 2020, 2024)) +  # Custom x-axis labels
+  labs(
+    title = "Change Index Score in Each Election",
+    subtitle = "Dem and Rep Nominees",
+    x = "Year",
+    y = "Composite 'Change' Score"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),  # White plot background
+    plot.background = element_rect(fill = "white", color = NA),   # White outer background
+    panel.grid.major = element_line(color = "gray90"),  # Light grid lines
+    panel.grid.minor = element_blank()  # Remove minor grid lines
+  ) +
+  scale_y_continuous(#labels = scales::percent_format(scale = 100), # Format y-axis as percentage
+                     expand = c(0, 0), limits = c(0.25, 1)) # make sure it begins at 0
+scale_y_continuous()
+
+ggsave(here("outputs/composite_change_scores_nominees.png"))
+
 
 

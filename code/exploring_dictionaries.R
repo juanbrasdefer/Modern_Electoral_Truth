@@ -220,6 +220,15 @@ crosstab_campaigndocs_totals <- crosstab_campaigndocs %>%
   left_join(ref_affiliations, by = "speaker") %>%
   left_join(ref_nominee_yn, by = "speaker_year_id") %>%
   mutate(percent_changegrams = (total_changegrams/(nchars/6))) %>% # div 6 for avg word length in chars
+  mutate(relative_toall_changegrams = (percent_changegrams - min(percent_changegrams, na.rm = TRUE)) / (max(percent_changegrams, na.rm = TRUE) - min(percent_changegrams, na.rm = TRUE))) %>%
+  group_by(year) %>%
+  mutate(max_year_changegram = max(percent_changegrams, na.rm = TRUE)) %>%
+  mutate(relative_inyear_changegrams = percent_changegrams / max_year_changegram) %>%
+  ungroup() %>%
+  group_by(nominee_yn) %>%
+  mutate(relative_nomineeyn_changegrams = (percent_changegrams - min(percent_changegrams, na.rm = TRUE)) / 
+           (max(percent_changegrams, na.rm = TRUE) - min(percent_changegrams, na.rm = TRUE))) %>%
+  ungroup() %>%
   arrange(desc(percent_changegrams))    # chars (4.5) plus one space character
  
 

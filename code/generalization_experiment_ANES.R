@@ -33,6 +33,29 @@ ANES_2000_raw <- read.delim(here("data/ANES/2000/anes_2000prepost/anes_2000prepo
 
 
 
+
+# temp results -------------------------------------------------------
+#2000
+# pre-filtering: Gore 50%, Bush 45%, Nader 3% 
+# post-filtering: Gore 40%, Bush 51%, Brown 3%, Buchanan 1%, Nader 3% 
+# coded as 1.GORE 2.PHILLIPS 3.BUSH 4.BROWN 5.BUCHANAN 6.NADER
+#2004
+# pre-filtering: Kerry 46%, Bush 52%, Nader 1%, 0% others
+# post-filtering: Kerry 61%, Bush 31%,  Nader 1%, 2% others # massive for others!!!!!
+# if science: Kerry 69%, Bush 21%, Nader 2%, 2% others
+#2008
+# pre-filtering: Obama 64%, McCain 32%, Others 2%
+# post-filtering: Obama 69%, McCain 27%, Others 3%
+# if we take science:  Obama 71%, McCain 25%, Others 2% - not too exciting
+#2012
+# pre-filtering: Obama 57%, Romney 39%, Other 3%
+# post-filtering: Obama 45%, Romney 46%, Other 7%
+#2016
+# pre-filtering: Clinton 47%, Trump 43%, 7% other candidates
+# post-filtering:  Clinton 49%, Trump 37%, 11% other candidates - I guess here you need to check whether Jill stein and Gary Johnson are bigger CHANGE people
+# if we take science as well,  Clinton 54%, Trump 34%, 11% other candidates
+
+
 # Filter and Results 2004 ------------------------------------------------
 ANES_2000_clean <- ANES_2000_raw %>%
   filter(V001249 != 0) # unfortunately a lot of responses were

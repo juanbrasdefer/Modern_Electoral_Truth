@@ -1,0 +1,16 @@
+﻿speaker_year_id,speaker,year,pol_party,visible_minority,gender,highest_govt_office,highest_govt_office_description,surname_political_dynasty,affiliation_relativeto_incumbent
+Kamala Harris_2024,Kamala Harris,2024,Democrat,1,1,0.2,Vice President,1,0
+Donald J. Trump_2024,Donald J. Trump,2024,Republican,0,0,0,President,1,1
+"Joseph R. Biden, Jr._2024","Joseph R. Biden, Jr.",2024,Democrat,0,0,0,President,1,0
+"Joseph R. Biden, Jr._2020","Joseph R. Biden, Jr.",2020,Democrat,0,0,0.2,Vice President,1,1
+Donald J. Trump_2020,Donald J. Trump,2020,Republican,0,0,0,President,1,0
+Donald J. Trump_2016,Donald J. Trump,2016,Republican,0,0,1,No Prior Government Office,1,1
+Hillary Clinton_2016,Hillary Clinton,2016,Democrat,0,1,0.2,Secretary of State,0,0
+Barack Obama_2012,Barack Obama,2012,Democrat,1,0,1,President,1,0
+Mitt Romney_2012,Mitt Romney,2012,Republican,0,0,0.4,Governor,1,1
+Barack Obama_2008,Barack Obama,2008,Democrat,1,0,0.4,Senator,1,1
+John McCain_2008,John McCain,2008,Republican,0,0,0.4,Senator,1,0
+George W. Bush_2004,George W. Bush,2004,Republican,0,0,0,President,0,0
+John F. Kerry_2004,John F. Kerry,2004,Democrat,0,0,0.4,Senator,1,1
+"Albert Gore, Jr._2000","Albert Gore, Jr.",2000,Democrat,0,0,0.2,Vice President,1,0
+George W. Bush_2000,George W. Bush,2000,Republican,0,0,0.4,Governor,0,1

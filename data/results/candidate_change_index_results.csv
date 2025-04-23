@@ -1,0 +1,16 @@
+speaker_year_id,speaker,year,change_index_score,relative_inyear_changegrams,visible_minority,gender,highest_govt_office,surname_political_dynasty,affiliation_relativeto_incumbent,pol_party
+Kamala Harris_2024,Kamala Harris,2024,0.82,1,1,1,0.2,1,0,Democrat
+Donald J. Trump_2024,Donald J. Trump,2024,0.644892026630209,0.889784053260418,0,0,0,1,1,Republican
+"Joseph R. Biden, Jr._2024","Joseph R. Biden, Jr.",2024,0.5417556453607419,0.8835112907214839,0,0,0,1,0,Democrat
+"Joseph R. Biden, Jr._2020","Joseph R. Biden, Jr.",2020,0.72,1,0,0,0.2,1,1,Democrat
+Donald J. Trump_2020,Donald J. Trump,2020,0.5992195693942721,0.9984391387885443,0,0,0,1,0,Republican
+Donald J. Trump_2016,Donald J. Trump,2016,0.7999999999999999,1,0,0,1,1,1,Republican
+Hillary Clinton_2016,Hillary Clinton,2016,0.532866075259045,0.8257321505180898,0,1,0.2,0,0,Democrat
+Barack Obama_2012,Barack Obama,2012,0.7999999999999999,1,1,0,1,1,0,Democrat
+Mitt Romney_2012,Mitt Romney,2012,0.5437040608747472,0.6074081217494945,0,0,0.4,1,1,Republican
+Barack Obama_2008,Barack Obama,2008,0.84,1,1,0,0.4,1,1,Democrat
+John McCain_2008,John McCain,2008,0.5459034318007256,0.8118068636014514,0,0,0.4,1,0,Republican
+George W. Bush_2004,George W. Bush,2004,0.5,1,0,0,0,0,0,Republican
+John F. Kerry_2004,John F. Kerry,2004,0.5965177711462896,0.7130355422925793,0,0,0.4,1,1,Democrat
+"Albert Gore, Jr._2000","Albert Gore, Jr.",2000,0.62,1,0,0,0.2,1,0,Democrat
+George W. Bush_2000,George W. Bush,2000,0.6369172446900674,0.9938344893801347,0,0,0.4,0,1,Republican
