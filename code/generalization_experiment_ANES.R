@@ -13,13 +13,17 @@ source(here("code/scripts/functions_datasetfiltering.R")) # for filtering and su
 
 # load reference dataframe that will help us deal with the fact that
 # each of the surveys use different naming scheme for variables
-var_names_ref <- read_csv(here("data/ref/ANES_generalization_exp_reftable.csv"))
+validation_ref <- read_csv(here("data/ref/validation_reftable.csv"))
+# old one
+var_names_ref_old <- read_csv(here("data/ref/old_generalization_ANES_reftable.csv"))
 
 # load data ------------------------------------------------------------------
 
 
 
 # load years of ANES surveys
+ANES_2020_raw <- read_csv(here("data/ANES/2020/anes_timeseries_2020_csv_20220210/anes_timeseries_2020_csv_20220210.csv"))
+
 ANES_2016_raw <- read.delim(here("data/ANES/2016/anes_timeseries_2016/anes_timeseries_2016_rawdata.txt"),
                             sep = "|", header = TRUE)  #a tab-separated
 ANES_2012_raw <- read.delim(here("data/ANES/2012/anes_timeseries_2012/anes_timeseries_2012_rawdata.txt"), 
@@ -32,9 +36,212 @@ ANES_2000_raw <- read.delim(here("data/ANES/2000/anes_2000prepost/anes_2000prepo
                             sep = ",", header = TRUE)  # comma separated
 
 
+#24.04 Results ----------------------------------------------------------
+# 2000
+# pre-filtering: Gore 50%, Bush 45%, Nader 3% 
+# post-filtering: Gore 53%, Bush 27%, Other 14%, but only 12 respondents...
+
+# 2004
+# pre-filtering: Kerry 46%, Bush 52%, Nader 1%, 0% others
+# post-filtering: Kerry 64%, Bush 29%,  Nader 7%... massive!!!!!
+
+# 2008
+# pre-filtering: Obama 64%, McCain 32%, Others 2%
+# post-filtering: Obama 61%, McCain 33%, Others 3%
+
+# 2012
+# pre-filtering: Obama 57%, Romney 39%, Other 3%
+# post-filtering: Obama 61%, Romney 33%, Other 4%
+
+# 2016
+# pre-filtering: Clinton 47%, Trump 43%, 7% other candidates
+# post-filtering:  Clinton 53%, Trump 34%, 11% other candidates
+
+# 2020
+# pre-filtering: Biden 55%, Trump 41%, 1% other candidates
+# post-filtering: Biden 75%, Trump 19%, 4% other candidates
+
+
+# Filter and Results 2000 ------------------------------------------------
+ANES_2000_clean <- ANES_2000_raw %>%
+  filter(V001249 != 0) # unfortunately a lot of responses were
+# written physically, and exist in a 'separate file'
+# so to clean this dataset we get rid of those obs. first
+
+
+year <- 2000
+ANES_2000_filtered <- ANES_2000_clean %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attribute_single("income_gap", year) %>% # 17% increase for Bush, 20% drop for Gore
+  #filter_ANES_attribute_single("leftright_self", year) %>% # 6% bump for Gore
+  filter_ANES_attribute_single("office_recall", year) # 1% drop for Gore, went to Nader
+  
+CVoters_2000_p <- ANES_2000_filtered %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
+  print()
+# pre-filtering: Gore 50%, Bush 45%, Nader 3% 
+# post-filtering: Gore 53%, Bush 27%, Other 14%, but only 12 respondents...
+# coded as 1.GORE 2.PHILLIPS 3.BUSH 4.BROWN 5.BUCHANAN 6.NADER 
+temp <- ANES_2000_filtered %>%
+  group_by(V000440) %>%
+  summarize(n())
+# if we run only income gap and office recall together, 
+# we get 20% Gore and 66% Bush, with ~70 respondents total
+# important to note that 2000 did not have a left-right variable,
+# instead it had a messy set of ~6 'branching' variables in some form of 
+# "Self placement lib-con scale"
+
+
+
+
+
+
+# Filter and Results 2004 ------------------------------------------------
+year <- 2004
+ANES_2004_filtered <- ANES_2004_raw %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attribute_single("income_gap", year) %>% # 5% bias for Kerry
+  filter_ANES_attribute_single("leftright_self", year) %>% # 2% drop for Kerry, which went to independents
+  filter_ANES_attribute_single("office_recall", year) # 2% bump for Bush
+  
+
+CVoters_2004_p <- ANES_2004_filtered %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
+  print()
+# pre-filtering: Kerry 46%, Bush 52%, Nader 1%, 0% others
+# post-filtering: Kerry 64%, Bush 29%,  Nader 7%... massive!!!!!
+# coded as 1.Kerry, 2.Bush, 5.Nader, 7.Other
+
+
+
+# Filter and Results 2008 ------------------------------------------------
+year <- 2008
+ANES_2008_filtered <- ANES_2008_raw %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attribute_single("income_gap", year) %>% # 4% bias for Obama
+  filter_ANES_attribute_single("leftright_self", year) %>% # 3% bias for McCain
+  filter_ANES_attribute_single("office_recall", year) # no real change (slight bump for mccain, but taken from indeps)
+
+CVoters_2008_p <- ANES_2008_filtered %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
+  print()
+# pre-filtering: Obama 64%, McCain 32%, Others 2%
+# post-filtering: Obama 61%, McCain 33%, Others 3%
+# coded as 1. Obama 3. McCain 7. Others
+
+
+
+# Filter and Results 2012 ------------------------------------------------
+ANES_2012_clean <- ANES_2012_raw %>%
+  filter(presvote2012_x != -2) # unfortunately a lot of responses were
+# written physically, and exist in a 'separate file'
+# so to clean this dataset we get rid of those obs. first
+
+year <- 2012
+ANES_2012_filtered <- ANES_2012_clean %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attribute_single("income_gap", year) %>% # 6% increase for Obama
+  filter_ANES_attribute_single("leftright_self", year) %>% # 2% drop for Obama, but went to indeps (romney stayed)
+  filter_ANES_attribute_single("office_recall", year) # 5% increase for Romney, all from Obama
+
+
+CVoters_2012_p <- ANES_2012_filtered %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
+  print()
+# pre-filtering: Obama 57%, Romney 39%, Other 3%
+# post-filtering: Obama 61%, Romney 33%, Other 4%
+# Coded as: 1.Obama 2.Romney 5.other cands
+
+
+
+
+# Filter and Results 2016 ------------------------------------------------
+ANES_2016_clean <- ANES_2016_raw %>%
+  mutate(V161027_V162034a_summary = ifelse(V161027 %in% c(1,2,3,4,5), V161027, # choice for president
+                                           ifelse(V162034a %in% c(1,2,3,4,5), V162034a,
+                                                  NA))) %>%
+  mutate(V162073a_V162073b_summary = ifelse(V162073a %in% c(1,0), V162073a, # speaker of the house summary
+                                            ifelse(V162073b %in% c(1,0.5), 1,
+                                                   ifelse(V162073b %in% (0), 0,
+                                                          NA))))
+
+year <- 2016
+ANES_2016_filtered <- ANES_2016_clean %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attribute_single("income_gap", year) %>% # 4% increase for Clinton
+  filter_ANES_attribute_single("leftright_self", year) %>% # 4% increase for other candidates (HUGE), 2% increase for Clinton, 9% drop Trump
+  filter_ANES_attribute_single("office_recall", year) # 2% increase for Trump, taken from indeps
+
+
+CVoters_2016_p <- ANES_2016_filtered %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
+  print()
+# pre-filtering: Clinton 47%, Trump 43%, 7% other candidates
+# post-filtering:  Clinton 53%, Trump 34%, 11% other candidates
+# Coded as: 1.Clinton 2. Trump 3.4.5. other cands
+
+
+
+
+
+
+
+# Filter and Results 2020 ------------------------------------------------
+ANES_2020_clean <- ANES_2020_raw %>%
+  mutate(V202139y1_V202139y2_summary = ifelse(V202139y1 %in% c(0,1), # V202139y1 and V202139y2, POST: Office recall: Speaker of the House ‐ Nancy Pelosi
+                                              V202139y1, ifelse(V202139y2 %in% c(0,1),  # V202139y1 Coded in ANES as: 0. Incorrect, 1. Correct
+                                                                V202139y2, ifelse(V202139y2 %in% c(2), # V202139y2 Coded in ANES as: 0. Incorrect, 1. Partially correct, 2. Correct
+                                                                                  1, NA))))  # re-coding 'partially correct' from experimental phrasing to 1        
+
+
+year <- 2020
+ANES_2020_filtered <- ANES_2020_clean %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attribute_single("income_gap", year) %>% # 11% increase for Biden
+  filter_ANES_attribute_single("leftright_self", year) %>% # 9% increase for Biden, 15% drop for Trump, 5% to indeps
+  filter_ANES_attribute_single("office_recall", year) # No change at all
+
+
+CVoters_2020_p <- ANES_2020_filtered %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
+  print()
+# pre-filtering: Biden 55%, Trump 41%, 1% other candidates
+# post-filtering: Biden 75%, Trump 19%, 4% other candidates
+# Coded as: 1.Biden 2.Trump 3.Jorgensen 4.Hawkins 5. Other 8. Libertarian
+
+
+
+
+
+
+
+# OLD --------------------------------------------------------------------
+# colloquium 5 results -------------------------------------------------------
+
+#2000
+# pre-filtering: Gore 50%, Bush 45%, Nader 3% 
+# post-filtering: Gore 40%, Bush 51%, Brown 3%, Buchanan 1%, Nader 3% 
+
+#2004
+# pre-filtering: Kerry 46%, Bush 52%, Nader 1%, 0% others
+# post-filtering: Kerry 61%, Bush 31%,  Nader 1%, 2% others 
+
+#2008
+# pre-filtering: Obama 64%, McCain 32%, Others 2%
+# post-filtering: Obama 69%, McCain 27%, Others 3%
+
+#2012
+# pre-filtering: Obama 57%, Romney 39%, Other 3%
+# post-filtering: Obama 45%, Romney 46%, Other 7%
+
+#2016
+# pre-filtering: Clinton 47%, Trump 43%, 7% other candidates
+# post-filtering:  Clinton 49%, Trump 37%, 11% other candidates                                    - I guess here you need to check whether Jill stein and Gary Johnson are bigger CHANGE people
+
 
 
 # temp results -------------------------------------------------------
+
 #2000
 # pre-filtering: Gore 50%, Bush 45%, Nader 3% 
 # post-filtering: Gore 40%, Bush 51%, Brown 3%, Buchanan 1%, Nader 3% 
@@ -52,11 +259,11 @@ ANES_2000_raw <- read.delim(here("data/ANES/2000/anes_2000prepost/anes_2000prepo
 # post-filtering: Obama 45%, Romney 46%, Other 7%
 #2016
 # pre-filtering: Clinton 47%, Trump 43%, 7% other candidates
-# post-filtering:  Clinton 49%, Trump 37%, 11% other candidates - I guess here you need to check whether Jill stein and Gary Johnson are bigger CHANGE people
+# post-filtering:  Clinton 49%, Trump 37%, 11% other candidates                     - I guess here you need to check whether Jill stein and Gary Johnson are bigger CHANGE people
 # if we take science as well,  Clinton 54%, Trump 34%, 11% other candidates
 
 
-# Filter and Results 2004 ------------------------------------------------
+# Filter and Results 2000 ------------------------------------------------
 ANES_2000_clean <- ANES_2000_raw %>%
   filter(V001249 != 0) # unfortunately a lot of responses were
 # written physically, and exist in a 'separate file'
@@ -65,16 +272,16 @@ ANES_2000_clean <- ANES_2000_raw %>%
 
 year <- 2000
 ANES_2000_filtered <- ANES_2000_clean %>%
-  filter_ANES_dset("votedpres_yn", year) %>%
-  #filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% 
-  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% 
-  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 2% bias for Bush, increase in all OTHERS, but especially BROWN
-  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # 4% bias for Bush, nader goes up 1%
-  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 3% drop for gore, bush and nader, brown and buchanan hit 1%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  #filter_ANES_attributes_OR("science_belief_1", "science_belief_2", year) %>% 
+  #filter_ANES_attributes_OR("forward_looking_1", "forward_looking_2", year) %>% 
+  filter_ANES_attributes_OR("economic_reality_1", "economic_reality_2", year) %>% # 2% bias for Bush, increase in all OTHERS, but especially BROWN
+  filter_ANES_attributes_OR("partisan_detachment_1", "partisan_detachment_2", year) %>% # 4% bias for Bush, nader goes up 1%
+  filter_ANES_attributes_OR("democratic_apathy_1", "democratic_apathy_2", year) # 3% drop for gore, bush and nader, brown and buchanan hit 1%
 
 
 CVoters_2000_p <- ANES_2000_filtered %>%
-  summarize_ANES_votes("pres_choice", year) %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
   print()
 # pre-filtering: Gore 50%, Bush 45%, Nader 3% 
 # post-filtering: Gore 40%, Bush 51%, Brown 3%, Buchanan 1%, Nader 3% 
@@ -86,16 +293,16 @@ CVoters_2000_p <- ANES_2000_filtered %>%
 # Filter and Results 2004 ------------------------------------------------
 year <- 2004
 ANES_2004_filtered <- ANES_2004_raw %>%
-  filter_ANES_dset("votedpres_yn", year) %>%
-  filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% # 6% bias for Kerry, 8% loss for bush, 1% of which went nader
-  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% 
-  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 16% bias for Kerry, 18% loss bush 0.5% nader and 0.5% others
-  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # 1% bias for Kerry BUT FEEL THERM ENCODING ON MY END IS MESSED UP
-  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 4% bump kerry, 5% drop bush, large jump for others (not much, but biggest so far)
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attributes_OR("science_belief_1", "science_belief_2", year) %>% # 6% bias for Kerry, 8% loss for bush, 1% of which went nader
+  #filter_ANES_attributes_OR("forward_looking_1", "forward_looking_2", year) %>% 
+  filter_ANES_attributes_OR("economic_reality_1", "economic_reality_2", year) %>% # 16% bias for Kerry, 18% loss bush 0.5% nader and 0.5% others
+  filter_ANES_attributes_OR("partisan_detachment_1", "partisan_detachment_2", year) %>% # 1% bias for Kerry BUT FEEL THERM ENCODING ON MY END IS MESSED UP
+  filter_ANES_attributes_OR("democratic_apathy_1", "democratic_apathy_2", year) # 4% bump kerry, 5% drop bush, large jump for others (not much, but biggest so far)
 
 
 CVoters_2004_p <- ANES_2004_filtered %>%
-  summarize_ANES_votes("pres_choice", year) %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
   print()
 # pre-filtering: Kerry 46%, Bush 52%, Nader 1%, 0% others
 # post-filtering: Kerry 61%, Bush 31%,  Nader 1%, 2% others # massive for others!!!!!
@@ -107,16 +314,16 @@ CVoters_2004_p <- ANES_2004_filtered %>%
 # Filter and Results 2008 ------------------------------------------------
 year <- 2008
 ANES_2008_filtered <- ANES_2008_raw %>%
-  filter_ANES_dset("votedpres_yn", year) %>%
-  filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% # 4% bias for Obama
-  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% 
-  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 4% bias for Obama
-  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # no real change 
-  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 1% bump for Obama
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attributes_OR("science_belief_1", "science_belief_2", year) %>% # 4% bias for Obama
+  #filter_ANES_attributes_OR("forward_looking_1", "forward_looking_2", year) %>% 
+  filter_ANES_attributes_OR("economic_reality_1", "economic_reality_2", year) %>% # 4% bias for Obama
+  filter_ANES_attributes_OR("partisan_detachment_1", "partisan_detachment_2", year) %>% # no real change 
+  filter_ANES_attributes_OR("democratic_apathy_1", "democratic_apathy_2", year) # 1% bump for Obama
 
 
 CVoters_2008_p <- ANES_2008_filtered %>%
-  summarize_ANES_votes("pres_choice", year) %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
   print()
 # pre-filtering: Obama 64%, McCain 32%, Others 2%
 # post-filtering: Obama 69%, McCain 27%, Others 3%
@@ -134,16 +341,16 @@ ANES_2012_clean <- ANES_2012_raw %>%
 
 year <- 2012
 ANES_2012_filtered <- ANES_2012_clean %>%
-  filter_ANES_dset("votedpres_yn", year) %>%
-  #filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% # 4% bias for Obama
-  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% # not using
-  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 1% bias for obama
-  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # 1% bias for Obama
-  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 11% drop for obamna, 9% increase for Romney; 2% bump for other
+  filter_ANES_vote("votedpres_yn", year) %>%
+  #filter_ANES_attributes_OR("science_belief_1", "science_belief_2", year) %>% # 4% bias for Obama
+  #filter_ANES_attributes_OR("forward_looking_1", "forward_looking_2", year) %>% # not using
+  filter_ANES_attributes_OR("economic_reality_1", "economic_reality_2", year) %>% # 1% bias for obama
+  filter_ANES_attributes_OR("partisan_detachment_1", "partisan_detachment_2", year) %>% # 1% bias for Obama
+  filter_ANES_attributes_OR("democratic_apathy_1", "democratic_apathy_2", year) # 11% drop for obamna, 9% increase for Romney; 2% bump for other
 
 
 CVoters_2012_p <- ANES_2012_filtered %>%
-  summarize_ANES_votes("pres_choice", year) %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
   print()
 # pre-filtering: Obama 57%, Romney 39%, Other 3%
 # post-filtering: Obama 45%, Romney 46%, Other 7%
@@ -155,27 +362,69 @@ CVoters_2012_p <- ANES_2012_filtered %>%
 
 # Filter and Results 2016 ------------------------------------------------
 ANES_2016_clean <- ANES_2016_raw %>%
-  mutate(V161027_V162034a_summary = ifelse(V161027 %in% c(1,2,3,4,5), V161027,
+  mutate(V161027_V162034a_summary = ifelse(V161027 %in% c(1,2,3,4,5), V161027, # choice for president
                                            ifelse(V162034a %in% c(1,2,3,4,5), V162034a,
-                                                  NA)))
+                                                  NA))) %>%
+  mutate(V162073a_V162073b_summary = ifelse(V162073a %in% c(1,0), V162073a, # speaker of the house summary
+                                         ifelse(V162073b %in% c(1,0.5), 1,
+                                                ifelse(V162073b %in% (0), 0,
+                                                NA))))
 
-
+  
+temp <- ANES_2016_raw %>%
+  select(V162073a)
 year <- 2016
 ANES_2016_filtered <- ANES_2016_clean %>%
-  filter_ANES_dset("votedpres_yn", year) %>%
-  filter_ANES_attributes("science_belief_1", "science_belief_2", year) %>% # 9% bias for clinton
-  #filter_ANES_attributes("forward_looking_1", "forward_looking_2", year) %>% # 16% bias for clinton
-  filter_ANES_attributes("economic_reality_1", "economic_reality_2", year) %>% # 2% bias for clinton
-  filter_ANES_attributes("partisan_detachment_1", "partisan_detachment_2", year) %>% # clinton same but 3% drop for Trump
-  filter_ANES_attributes("democratic_apathy_1", "democratic_apathy_2", year) # 3% bias for clinton
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attributes_OR("science_belief_1", "science_belief_2", year) %>% # 9% bias for clinton
+  #filter_ANES_attributes_OR("forward_looking_1", "forward_looking_2", year) %>% # 16% bias for clinton
+  filter_ANES_attributes_OR("economic_reality_1", "economic_reality_2", year) %>% # 2% bias for clinton
+  filter_ANES_attributes_OR("partisan_detachment_1", "partisan_detachment_2", year) %>% # clinton same but 3% drop for Trump
+  filter_ANES_attributes_OR("democratic_apathy_1", "democratic_apathy_2", year) # 3% bias for clinton
 
 
 CVoters_2016_p <- ANES_2016_filtered %>%
-  summarize_ANES_votes("pres_choice", year) %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
   print()
 # pre-filtering: Clinton 47%, Trump 43%, 7% other candidates
 # post-filtering:  Clinton 49%, Trump 37%, 11% other candidates - I guess here you need to check whether Jill stein and Gary Johnson are bigger CHANGE people
   # if we take science as well,  Clinton 54%, Trump 34%, 11% other candidates
+
+# Coded as: 1.Clinton 2. Trump 3.4.5. other cands
+
+
+
+
+
+
+
+# Filter and Results 2020 ------------------------------------------------
+ANES_2020_clean <- ANES_2020_raw %>%
+  mutate(V202139y1_V202139y2_summary = ifelse(V202139y1 %in% c(0,1), # V202139y1 and V202139y2, POST: Office recall: Speaker of the House ‐ Nancy Pelosi
+                                              V202139y1, ifelse(V202139y2 %in% c(0,1),  # V202139y1 Coded in ANES as: 0. Incorrect, 1. Correct
+                                                                V202139y2, ifelse(V202139y2 %in% c(2), # V202139y2 Coded in ANES as: 0. Incorrect, 1. Partially correct, 2. Correct
+                                                                                  1, NA))))  # re-coding 'partially correct' from experimental phrasing to 1        
+  
+  
+
+temp <- ANES_2016_raw %>%
+  select(V162073a)
+year <- 2016
+ANES_2016_filtered <- ANES_2016_clean %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  filter_ANES_attributes_OR("science_belief_1", "science_belief_2", year) %>% # 9% bias for clinton
+  #filter_ANES_attributes_OR("forward_looking_1", "forward_looking_2", year) %>% # 16% bias for clinton
+  filter_ANES_attributes_OR("economic_reality_1", "economic_reality_2", year) %>% # 2% bias for clinton
+  filter_ANES_attributes_OR("partisan_detachment_1", "partisan_detachment_2", year) %>% # clinton same but 3% drop for Trump
+  filter_ANES_attributes_OR("democratic_apathy_1", "democratic_apathy_2", year) # 3% bias for clinton
+
+
+CVoters_2016_p <- ANES_2016_filtered %>%
+  summarize_ANES_preschoice("pres_choice", year) %>%
+  print()
+# pre-filtering: Clinton 47%, Trump 43%, 7% other candidates
+# post-filtering:  Clinton 49%, Trump 37%, 11% other candidates - I guess here you need to check whether Jill stein and Gary Johnson are bigger CHANGE people
+# if we take science as well,  Clinton 54%, Trump 34%, 11% other candidates
 
 # Coded as: 1.Clinton 2. Trump 3.4.5. other cands
 
@@ -204,17 +453,12 @@ CVoters_2016_p <- ANES_2016_filtered %>%
 
 
 
-
-
-
-
-
-
-
-
-
 # Variable Selections ---------------------------------------------
 ## 2000 \------------------------- ------------------------------
+# for visual scanning of variables available in dataset
+# raw_lines <- readLines(here("data/ANES/2000/anes_2000prepost/anes_2000prepost_var.txt"))
+# v_lines <- grep("^V\\d+", raw_lines, value = TRUE)
+# v_df <- tibble(variable_code = v_lines)
 
 ### 2000 Presidential  ------------------------------------
 # V001241 - Did R Vote
@@ -266,6 +510,9 @@ CVoters_2016_p <- ANES_2016_filtered %>%
 # "democratic_apathy"
 # V001651 Is R satisfied with US Democracy
 # V001304 Thermometer supreme court
+
+# "information_level"
+# has Cheney, V045162 (speaker of house), SCOTUS chief, tony blair
 
 
 ## 2004 \------------------------- ----------------------------------------------
@@ -357,7 +604,8 @@ CVoters_2016_p <- ANES_2016_filtered %>%
 # V085182 Does/doesn't make a difference who is in power
 
 
-
+temp <- ANES_2008_raw %>%
+  select(V085120)
 
 
 

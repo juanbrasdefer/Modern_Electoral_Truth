@@ -3,13 +3,13 @@
 library(tidyverse)
 
 
-filter_ANES_dset <- function(dataset, var_to_find, year_of_dset, ref_df = var_names_ref){
-  variable_coded <- var_names_ref %>% 
+filter_ANES_vote <- function(dataset, var_to_find, year_of_dset, ref_df = validation_ref){
+  variable_coded <- ref_df %>% 
     filter(variable_common == var_to_find) %>%
     filter(ANES_year == year_of_dset) %>%
     pull(variable)
   
-  correct_value <- var_names_ref %>%
+  correct_value <- ref_df %>%
     filter(variable == variable_coded) %>%
     pull(filter_value)
   
@@ -19,23 +19,42 @@ filter_ANES_dset <- function(dataset, var_to_find, year_of_dset, ref_df = var_na
 }
 
 
+filter_ANES_attribute_single <- function(dataset, var_to_find, year_of_dset, ref_df = validation_ref){
+  
+  variable_coded <- ref_df %>% 
+    filter(variable_common == var_to_find) %>%
+    filter(ANES_year == year_of_dset) %>%
+    pull(variable)
+  
+  correct_value <- ref_df %>%
+    filter(variable == variable_coded) %>%
+    pull(filter_value)
+  
+  for_comparison <- strsplit(correct_value, ",")[[1]]
 
-filter_ANES_attributes <- function(dataset, var_to_find_1, var_to_find_2, year_of_dset, ref_df = var_names_ref){
-  variable_coded_1 <- var_names_ref %>% 
+  filtered_dataset <- dataset %>%
+    filter(as.character(!!sym(variable_coded)) %in% for_comparison)
+  
+  return(filtered_dataset)
+}
+
+
+filter_ANES_attributes_OR <- function(dataset, var_to_find_1, var_to_find_2, year_of_dset, ref_df = var_names_ref_old){
+  variable_coded_1 <- ref_df %>% 
     filter(variable_common == var_to_find_1) %>%
     filter(ANES_year == year_of_dset) %>%
     pull(variable)
   
-  variable_coded_2 <- var_names_ref %>% 
+  variable_coded_2 <- ref_df %>% 
     filter(variable_common == var_to_find_2) %>%
     filter(ANES_year == year_of_dset) %>%
     pull(variable)
   
-  correct_value_1 <- var_names_ref %>%
+  correct_value_1 <- ref_df %>%
     filter(variable == variable_coded_1) %>%
     pull(filter_value)
   
-  correct_value_2 <- var_names_ref %>%
+  correct_value_2 <- ref_df %>%
     filter(variable == variable_coded_2) %>%
     pull(filter_value)
   
@@ -50,13 +69,13 @@ filter_ANES_attributes <- function(dataset, var_to_find_1, var_to_find_2, year_o
 
 
 
-summarize_ANES_votes <- function(dataset, var_to_find, year_of_dset, ref_df = var_names_ref){
-  variable_coded <- var_names_ref %>% 
+summarize_ANES_preschoice <- function(dataset, var_to_find, year_of_dset, ref_df = validation_ref){
+  variable_coded <- ref_df %>% 
     filter(variable_common == var_to_find) %>%
     filter(ANES_year == year_of_dset) %>%
     pull(variable)
   
-  correct_value <- var_names_ref %>%
+  correct_value <- ref_df %>%
     filter(variable == variable_coded) %>%
     pull(filter_value)
   

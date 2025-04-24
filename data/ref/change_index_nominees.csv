@@ -1,16 +1,16 @@
-﻿speaker_year_id,speaker,year,pol_party,visible_minority,gender,highest_govt_office,highest_govt_office_description,surname_political_dynasty,affiliation_relativeto_incumbent
-Kamala Harris_2024,Kamala Harris,2024,Democrat,1,1,0.2,Vice President,1,0
-Donald J. Trump_2024,Donald J. Trump,2024,Republican,0,0,0,President,1,1
-"Joseph R. Biden, Jr._2024","Joseph R. Biden, Jr.",2024,Democrat,0,0,0,President,1,0
-"Joseph R. Biden, Jr._2020","Joseph R. Biden, Jr.",2020,Democrat,0,0,0.2,Vice President,1,1
-Donald J. Trump_2020,Donald J. Trump,2020,Republican,0,0,0,President,1,0
-Donald J. Trump_2016,Donald J. Trump,2016,Republican,0,0,1,No Prior Government Office,1,1
-Hillary Clinton_2016,Hillary Clinton,2016,Democrat,0,1,0.2,Secretary of State,0,0
-Barack Obama_2012,Barack Obama,2012,Democrat,1,0,1,President,1,0
-Mitt Romney_2012,Mitt Romney,2012,Republican,0,0,0.4,Governor,1,1
-Barack Obama_2008,Barack Obama,2008,Democrat,1,0,0.4,Senator,1,1
-John McCain_2008,John McCain,2008,Republican,0,0,0.4,Senator,1,0
-George W. Bush_2004,George W. Bush,2004,Republican,0,0,0,President,0,0
-John F. Kerry_2004,John F. Kerry,2004,Democrat,0,0,0.4,Senator,1,1
-"Albert Gore, Jr._2000","Albert Gore, Jr.",2000,Democrat,0,0,0.2,Vice President,1,0
-George W. Bush_2000,George W. Bush,2000,Republican,0,0,0.4,Governor,0,1
+﻿speaker_year_id,speaker,year,pol_party,visible_minority,gender,birthday,age_sept_election_year,age_score,highest_govt_office,highest_govt_office_description,surname_political_dynasty,affiliation_relativeto_incumbent,,,,
+Kamala Harris_2024,Kamala Harris,2024,Democrat,1,1,20-Oct-64,59,0.619788758,0.2,Vice President,1,0,,Kamala Harris,2024,59
+Donald J. Trump_2024,Donald J. Trump,2024,Republican,0,0,14-Jun-46,78,0.366531544,0,President,1,1,,Donald J. Trump,2024,78
+"Joseph R. Biden, Jr._2024","Joseph R. Biden, Jr.",2024,Democrat,0,0,20-Nov-42,81,0.337242168,0,President,1,0,,"Joseph R. Biden, Jr.",2024,81
+"Joseph R. Biden, Jr._2020","Joseph R. Biden, Jr.",2020,Democrat,0,0,20-Nov-42,77,0.37675071,0.2,Vice President,1,1,,"Joseph R. Biden, Jr.",2020,77
+Donald J. Trump_2020,Donald J. Trump,2020,Republican,0,0,14-Jun-46,74,0.408935393,0,President,1,0,,Donald J. Trump,2020,74
+Donald J. Trump_2016,Donald J. Trump,2016,Republican,0,0,14-Jun-46,70,0.455931956,1,No Prior Government Office,1,1,,Donald J. Trump,2016,70
+Hillary Clinton_2016,Hillary Clinton,2016,Democrat,0,1,26-Oct-47,68,0.48148606,0.2,Secretary of State,0,0,,Hillary Clinton,2016,68
+Barack Obama_2012,Barack Obama,2012,Democrat,1,0,04-Aug-61,51,0.795880017,0,President,1,0,,Barack Obama,2012,51
+Mitt Romney_2012,Mitt Romney,2012,Republican,0,0,12-Mar-47,65,0.522878745,0.4,Governor,1,1,,Mitt Romney,2012,65
+Barack Obama_2008,Barack Obama,2008,Democrat,1,0,04-Aug-61,47,0.920818754,0.4,Senator,1,1,,Barack Obama,2008,47
+John McCain_2008,John McCain,2008,Republican,0,0,29-Aug-36,72,0.431798276,0.4,Senator,1,0,,John McCain,2008,72
+George W. Bush_2004,George W. Bush,2004,Republican,0,0,06-Jul-46,58,0.638272164,0,President,0,0,,George W. Bush,2004,58
+John F. Kerry_2004,John F. Kerry,2004,Democrat,0,0,11-Dec-43,60,0.602059991,0.4,Senator,1,1,,John F. Kerry,2004,60
+"Albert Gore, Jr._2000","Albert Gore, Jr.",2000,Democrat,0,0,31-Mar-48,52,0.769551079,0.2,Vice President,1,0,,"Albert Gore, Jr.",2000,52
+George W. Bush_2000,George W. Bush,2000,Republican,0,0,06-Jul-46,54,0.721246399,0.4,Governor,0,1,,George W. Bush,2000,54

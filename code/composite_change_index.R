@@ -40,6 +40,8 @@ cci_attributes <- ref_cci %>%
   # ungroup()
 
 #cci_attributes_temp <- cci_attributes 
+# need to add in age and code it as 
+# =1-LOG((AGEATELECTION-35)/100)-1
 
 
 cci_attributes_clean <- cci_attributes_temp %>%
