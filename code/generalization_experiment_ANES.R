@@ -4,6 +4,8 @@
 library(tidyverse)
 library(here)
 library(patchwork)
+library(ggrepel)
+
 
 
 here::i_am("code/generalization_experiment_ANES.R")
@@ -14,8 +16,14 @@ source(here("code/scripts/functions_datasetfiltering.R")) # for filtering and su
 # load reference dataframe that will help us deal with the fact that
 # each of the surveys use different naming scheme for variables
 validation_ref <- read_csv(here("data/ref/validation_reftable.csv"))
+
+# load composite index
+candidate_change_scores <- read_csv(here("data/results/candidate_change_index_results.csv"))
+
 # old one
 var_names_ref_old <- read_csv(here("data/ref/old_generalization_ANES_reftable.csv"))
+
+
 
 # load data ------------------------------------------------------------------
 
@@ -36,6 +44,377 @@ ANES_2000_raw <- read.delim(here("data/ANES/2000/anes_2000prepost/anes_2000prepo
                             sep = ",", header = TRUE)  # comma separated
 
 
+
+
+# BiVariate Experiment -------------------------------------------------
+# BiVariate 2000 -------------------------------------------------------
+year <- 2000
+ANES_2000_clean <- ANES_2000_raw %>%
+  filter(V001249 != 0) %>% # unfortunately a lot of responses were written physically, and exist in a 'separate file' so to clean this dataset we get rid of those obs. first
+  filter_ANES_vote("votedpres_yn", year) %>%
+  clean_ANES_for_scoring("income_gap", year) %>%
+  clean_ANES_for_scoring("leftright_self", year) %>%
+  clean_ANES_for_scoring("office_recall", year)
+
+year <- 2000
+ANES_2000_scored <- ANES_2000_clean %>%
+  score_economic("income_gap", year) %>%
+  score_leftright("leftright_self", year) %>%
+  score_informed("office_recall", year) %>%
+  score_changevoter() %>%
+  encode_preschoice("pres_choice",year) %>%
+  mutate(ANES_year = year) %>%
+  select(ANES_year,
+         changevoter_score, # 21 unique scores
+         score_economic,
+         score_leftright,
+         score_informed,
+         year_preschoice_coded)
+
+
+# BiVariate 2004 -------------------------------------------------------
+year <- 2004
+ANES_2004_clean <- ANES_2004_raw %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  clean_ANES_for_scoring("income_gap", year) %>%
+  clean_ANES_for_scoring("leftright_self", year) %>%
+  clean_ANES_for_scoring("office_recall", year)
+
+year <- 2004
+ANES_2004_scored <- ANES_2004_clean %>%
+  score_economic("income_gap", year) %>%
+  score_leftright("leftright_self", year) %>%
+  score_informed("office_recall", year) %>%
+  score_changevoter() %>%
+  encode_preschoice("pres_choice",year) %>%
+  mutate(ANES_year = year) %>%
+  select(ANES_year,
+         changevoter_score, # 27 unique scores
+         score_economic,
+         score_leftright,
+         score_informed,
+         year_preschoice_coded)
+
+
+# BiVariate 2008 -------------------------------------------------------
+year <- 2008
+ANES_2008_clean <- ANES_2008_raw %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  clean_ANES_for_scoring("income_gap", year) %>%
+  clean_ANES_for_scoring("leftright_self", year) %>%
+  clean_ANES_for_scoring("office_recall", year)
+
+year <- 2008
+ANES_2008_scored <- ANES_2008_clean %>%
+  score_economic("income_gap", year) %>%
+  score_leftright("leftright_self", year) %>%
+  score_informed("office_recall", year) %>%
+  score_changevoter() %>%
+  encode_preschoice("pres_choice",year) %>%
+  mutate(ANES_year = year) %>%
+  select(ANES_year,
+         changevoter_score, # 77 unique scores
+         score_economic,
+         score_leftright,
+         score_informed,
+         year_preschoice_coded) 
+
+
+# BiVariate 2012 -------------------------------------------------------
+year <- 2012
+ANES_2012_clean <- ANES_2012_raw %>%
+  filter(presvote2012_x != -2) %>% # unfortunately a lot of responses were written physically, and exist in a 'separate file' so to clean this dataset we get rid of those obs. first
+  filter_ANES_vote("votedpres_yn", year) %>%
+  clean_ANES_for_scoring("income_gap", year) %>%
+  clean_ANES_for_scoring("leftright_self", year) %>%
+  clean_ANES_for_scoring("office_recall", year)
+
+year <- 2012
+ANES_2012_scored <- ANES_2012_clean %>%
+  score_economic("income_gap", year) %>%
+  score_leftright("leftright_self", year) %>%
+  score_informed("office_recall", year) %>%
+  score_changevoter() %>%
+  encode_preschoice("pres_choice",year) %>%
+  mutate(ANES_year = year) %>%
+  select(ANES_year,
+         changevoter_score, # 41 unique scores
+         score_economic,
+         score_leftright,
+         score_informed,
+         year_preschoice_coded)
+
+# BiVariate 2016 -------------------------------------------------------
+year <- 2016
+ANES_2016_clean <- ANES_2016_raw %>%
+  mutate(V161027_V162034a_summary = ifelse(V161027 %in% c(1,2,3,4,5), V161027, # choice for president
+                                           ifelse(V162034a %in% c(1,2,3,4,5), V162034a,
+                                                  NA))) %>%
+  mutate(V162073a_V162073b_summary = ifelse(V162073a %in% c(1,0), V162073a, # speaker of the house summary
+                                            ifelse(V162073b %in% c(1,0.5), 1,
+                                                   ifelse(V162073b %in% (0), 0,
+                                                          NA)))) %>%
+  filter_ANES_vote("votedpres_yn", year) %>%
+  clean_ANES_for_scoring("income_gap", year) %>%
+  clean_ANES_for_scoring("leftright_self", year) %>%
+  clean_ANES_for_scoring("office_recall", year)
+
+year <- 2016
+ANES_2016_scored <- ANES_2016_clean %>%
+  score_economic("income_gap", year) %>%
+  score_leftright("leftright_self", year) %>%
+  score_informed("office_recall", year) %>%
+  score_changevoter() %>%
+  encode_preschoice("pres_choice",year) %>%
+  mutate(ANES_year = year) %>%
+  select(ANES_year,
+         changevoter_score, # 41 unique scores
+         score_economic,
+         score_leftright,
+         score_informed,
+         year_preschoice_coded)
+
+
+# BiVariate 2020 -------------------------------------------------------
+year <- 2020
+ANES_2020_clean <- ANES_2020_raw %>%
+  mutate(V202139y1_V202139y2_summary = ifelse(V202139y1 %in% c(0,1), # V202139y1 and V202139y2, POST: Office recall: Speaker of the House ‐ Nancy Pelosi
+                                              V202139y1, ifelse(V202139y2 %in% c(0,1),  # V202139y1 Coded in ANES as: 0. Incorrect, 1. Correct
+                                                                V202139y2, ifelse(V202139y2 %in% c(2), # V202139y2 Coded in ANES as: 0. Incorrect, 1. Partially correct, 2. Correct
+                                                                                  1, NA)))) %>%  # re-coding 'partially correct' from experimental phrasing to 1        
+  filter_ANES_vote("votedpres_yn", year) %>%
+  clean_ANES_for_scoring("income_gap", year) %>%
+  clean_ANES_for_scoring("leftright_self", year) %>%
+  clean_ANES_for_scoring("office_recall", year)
+
+year <- 2020
+ANES_2020_scored <- ANES_2020_clean %>%
+  score_economic("income_gap", year) %>%
+  score_leftright("leftright_self", year) %>%
+  score_informed("office_recall", year) %>%
+  score_changevoter() %>%
+  encode_preschoice("pres_choice",year) %>%
+  mutate(ANES_year = year) %>%
+  select(ANES_year,
+         changevoter_score, # 41 unique scores
+         score_economic,
+         score_leftright,
+         score_informed,
+         year_preschoice_coded)
+
+
+
+# Joining ANES Scored datasets -----------------------------------------------
+ANES_scored_allyears <- rbind(ANES_2000_scored,
+                              ANES_2004_scored,
+                              ANES_2008_scored,
+                              ANES_2012_scored,
+                              ANES_2016_scored,
+                              ANES_2020_scored)
+
+# Joining ANES Scored and CCI ------------------------------------------------
+
+candidate_change_scores_joinable <- candidate_change_scores %>%
+# key measure:
+  # finding the score margin between the two candidates in a year
+  # for the top one, the margin will be positive,
+  # for the bottom one the margin will be negative
+  # but the absolute value of the margin would be the same
+  group_by(year) %>%
+  mutate(max_year_cci = max(change_index_score, na.rm = TRUE)) %>%
+  mutate(min_year_cci = min(change_index_score, na.rm = TRUE)) %>%
+  mutate(relative_inyear_cci_margin = ifelse(change_index_score == max_year_cci, 
+                                         change_index_score - min_year_cci,
+                                         change_index_score - max_year_cci)) %>%
+  ungroup() %>%
+  mutate(year_preschoice_coded = paste0(year,"_",encoding_ANES)) %>%
+  select(speaker, 
+         #year, 
+         year_preschoice_coded,
+         encoding_ANES,
+         change_index_score, 
+         relative_inyear_cci_margin,
+         min_year_cci,
+         max_year_cci,
+         relative_inyear_changegrams)
+
+
+CCI_ANES_scored_graphable <- ANES_scored_allyears %>% 
+  left_join(candidate_change_scores_joinable, by = "year_preschoice_coded")
+
+
+# plotting ----------------------------------------------------------
+# Set custom colors for each year
+year_colors <- c(
+  "2000" = "#1b9e77",
+  "2004" = "#d95f02",
+  "2008" = "#7570b3",
+  "2012" = "#e7298a",
+  "2016" = "#66a61e",
+  "2020" = "#e6ab02"
+)
+
+
+# standard scatter graph ------------------------------------------
+CCI_ANES_scored_graphable %>%
+ggplot(aes(
+  x = changevoter_score,
+  y = relative_inyear_cci_margin,
+  color = factor(ANES_year))) +
+  geom_point(alpha = 0.7, size = 0.5) +
+  scale_color_manual(values = year_colors,
+                     name = "ANES Year") +
+  labs(x = "Change Voter Score",
+       y = "Relative In-Year CCI Margin") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "right")
+
+ggsave(here("outputs/bivariate.png"))
+
+
+
+# lms graph --------------------------------------------------------
+ggplot(CCI_ANES_scored_graphable, aes(
+  x = changevoter_score,
+  y = relative_inyear_cci_margin,
+  color = factor(ANES_year)
+)) +
+  geom_point(alpha = 0.6, size = 2) +
+  geom_smooth(se = FALSE, method = "loess", span = 1) +  # You can try method = "lm" too
+  scale_color_manual(values = year_colors, name = "ANES Year") +
+  labs(x = "Change Voter Score", y = "Relative In-Year CCI Margin") +
+  theme_minimal(base_size = 14)
+
+ggsave(here("outputs/bivariate_lms.png"))
+
+
+
+plot_loess_year <- function(year, show_y = TRUE) {
+  data_year <- CCI_ANES_scored_graphable %>%
+    filter(ANES_year == year)
+  
+  ggplot(data_year, aes(x = changevoter_score, y = relative_inyear_cci_margin)) +
+    geom_point(color = year_colors[as.character(year)], alpha = 0.5, size = 2) +
+    geom_smooth(se = FALSE, method = "loess", span = 1, color = "black", size = 1) +
+    labs(
+      title = paste("Year:", year),
+      x = "Change Voter Score",
+      y = if (show_y) "Relative CCI Margin" else NULL
+    ) +
+    theme_minimal(base_size = 13) +
+    theme(axis.text.y = if (show_y) element_text() else element_blank(),
+          axis.ticks.y = if (show_y) element_line() else element_blank(),
+          axis.title.y = if (show_y) element_text() else element_blank())
+}
+
+
+years <- c(2000, 2004, 2008, 2012, 2016, 2020)
+plots_loess <- mapply(plot_loess_year, years, show_y = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE), SIMPLIFY = FALSE)
+combined_loess_plot <- wrap_plots(plots_loess, ncol = 2)
+
+ggsave(here("outputs/bivariate_lms_patchwork.png"), width = 14, height = 10, dpi = 300)
+
+# means --------------------------------------------------------------
+
+
+plot_year <- function(year, show_y = TRUE) {
+  data_year <- CCI_ANES_scored_graphable %>%
+    filter(ANES_year == year)
+  
+  medians <- data_year %>%
+    group_by(relative_inyear_cci_margin) %>%
+    summarise(mean_score = mean(changevoter_score), .groups = "drop") %>%
+    arrange(relative_inyear_cci_margin)
+  
+  # Identify which point is "higher" in x
+  label_df <- medians %>%
+    filter(mean_score == max(mean_score)) %>%
+    mutate(label = "X")
+  
+  p <- ggplot(data_year, aes(x = changevoter_score, y = relative_inyear_cci_margin)) +
+    geom_point(color = year_colors[as.character(year)], alpha = 0.5, size = 2) +
+    geom_point(data = medians, aes(x = mean_score, y = relative_inyear_cci_margin), 
+               color = year_colors[as.character(year)], size = 3, shape = 18) +
+    geom_path(data = medians, aes(x = mean_score, y = relative_inyear_cci_margin, group = 1),
+              color = year_colors[as.character(year)], size = 1.1) +
+    geom_text(data = label_df, aes(x = mean_score, y = relative_inyear_cci_margin, label = label),
+              color = "red", size = 7) +
+    labs(
+      title = paste("Year:", year),
+      x = "Change Voter Score",
+      y = if (show_y) "Relative CCI Margin" else NULL
+    ) +
+    theme_minimal(base_size = 13) +
+    theme(axis.text.y = if (show_y) element_text() else element_blank(),
+          axis.ticks.y = if (show_y) element_line() else element_blank(),
+          axis.title.y = if (show_y) element_text() else element_blank())
+  
+  return(p)
+}
+
+# Only show Y-axis labels for the first column of plots
+years <- c(2000, 2004, 2008, 2012, 2016, 2020)
+plots <- mapply(plot_year, years, show_y = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE), SIMPLIFY = FALSE)
+wrap_plots(plots, ncol = 2)
+
+ggsave(here("outputs/bivariate_means_patchwork.png"), width = 14, height = 10, dpi = 300)
+
+
+
+
+
+# lms and means graph --------------------------------------------------------
+
+plot_loess_year <- function(year, show_y = TRUE) {
+  data_year <- CCI_ANES_scored_graphable %>%
+    filter(ANES_year == year)
+  
+  medians <- data_year %>%
+    group_by(relative_inyear_cci_margin) %>%
+    summarise(mean_score = mean(changevoter_score), .groups = "drop") %>%
+    arrange(relative_inyear_cci_margin)
+  
+  # Identify which point is "higher" in x
+  label_df <- medians %>%
+    filter(mean_score == max(mean_score)) %>%
+    mutate(label = "X")
+  
+  ggplot(data_year, aes(x = changevoter_score, y = relative_inyear_cci_margin)) +
+    geom_point(color = year_colors[as.character(year)], alpha = 0.5, size = 2) +
+    geom_point(data = medians, aes(x = mean_score, y = relative_inyear_cci_margin), 
+               color = year_colors[as.character(year)], size = 3, shape = 18) +
+    geom_path(data = medians, aes(x = mean_score, y = relative_inyear_cci_margin, group = 1),
+              color = year_colors[as.character(year)], size = 1.1) +
+    geom_text(data = label_df, aes(x = mean_score, y = relative_inyear_cci_margin, label = label),
+              color = "red", size = 7) +
+    geom_smooth(se = FALSE, method = "loess", span = 1, color = "black", size = 1) +
+    labs(
+      title = paste("Year:", year),
+      x = "Change Voter Score",
+      y = if (show_y) "Relative CCI Margin" else NULL
+    ) +
+    theme_minimal(base_size = 13) +
+    theme(axis.text.y = element_text() ,
+          axis.ticks.y = element_line() ,
+          axis.title.y = if (show_y) element_text() else element_blank())
+}
+
+
+years <- c(2000, 2004, 2008, 2012, 2016, 2020)
+plots_loess <- mapply(plot_loess_year, years, show_y = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE), SIMPLIFY = FALSE)
+combined_loess_plot <- wrap_plots(plots_loess, ncol = 2)
+
+ggsave(here("outputs/bivariate_lms+means_patchwork.png"), width = 14, height = 10, dpi = 300)
+
+
+
+
+
+
+
+
+
+
 #24.04 Results ----------------------------------------------------------
 # 2000
 # pre-filtering: Gore 50%, Bush 45%, Nader 3% 
@@ -47,7 +426,7 @@ ANES_2000_raw <- read.delim(here("data/ANES/2000/anes_2000prepost/anes_2000prepo
 
 # 2008
 # pre-filtering: Obama 64%, McCain 32%, Others 2%
-# post-filtering: Obama 61%, McCain 33%, Others 3%
+# post-filtering: Obama 74%, McCain 21%, Others 1%
 
 # 2012
 # pre-filtering: Obama 57%, Romney 39%, Other 3%
@@ -68,7 +447,6 @@ ANES_2000_clean <- ANES_2000_raw %>%
 # written physically, and exist in a 'separate file'
 # so to clean this dataset we get rid of those obs. first
 
-
 year <- 2000
 ANES_2000_filtered <- ANES_2000_clean %>%
   filter_ANES_vote("votedpres_yn", year) %>%
@@ -82,9 +460,9 @@ CVoters_2000_p <- ANES_2000_filtered %>%
 # pre-filtering: Gore 50%, Bush 45%, Nader 3% 
 # post-filtering: Gore 53%, Bush 27%, Other 14%, but only 12 respondents...
 # coded as 1.GORE 2.PHILLIPS 3.BUSH 4.BROWN 5.BUCHANAN 6.NADER 
-temp <- ANES_2000_filtered %>%
-  group_by(V000440) %>%
-  summarize(n())
+
+
+
 # if we run only income gap and office recall together, 
 # we get 20% Gore and 66% Bush, with ~70 respondents total
 # important to note that 2000 did not have a left-right variable,
@@ -110,7 +488,7 @@ CVoters_2004_p <- ANES_2004_filtered %>%
   print()
 # pre-filtering: Kerry 46%, Bush 52%, Nader 1%, 0% others
 # post-filtering: Kerry 64%, Bush 29%,  Nader 7%... massive!!!!!
-# coded as 1.Kerry, 2.Bush, 5.Nader, 7.Other
+# coded as 1.Kerry, 3.Bush, 5.Nader, 7.Other
 
 
 
@@ -118,15 +496,15 @@ CVoters_2004_p <- ANES_2004_filtered %>%
 year <- 2008
 ANES_2008_filtered <- ANES_2008_raw %>%
   filter_ANES_vote("votedpres_yn", year) %>%
-  filter_ANES_attribute_single("income_gap", year) %>% # 4% bias for Obama
-  filter_ANES_attribute_single("leftright_self", year) %>% # 3% bias for McCain
-  filter_ANES_attribute_single("office_recall", year) # no real change (slight bump for mccain, but taken from indeps)
+  filter_ANES_attribute_single("income_gap", year) %>% # 4% increase for Obama
+  filter_ANES_attribute_single("leftright_self", year) %>% # 3% increase for McCain
+  filter_ANES_attribute_single("office_recall", year) # 4% increase for Obama 
 
 CVoters_2008_p <- ANES_2008_filtered %>%
   summarize_ANES_preschoice("pres_choice", year) %>%
   print()
 # pre-filtering: Obama 64%, McCain 32%, Others 2%
-# post-filtering: Obama 61%, McCain 33%, Others 3%
+# post-filtering: Obama 74%, McCain 21%, Others 1%
 # coded as 1. Obama 3. McCain 7. Others
 
 

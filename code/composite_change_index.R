@@ -5,7 +5,7 @@ library(tidyverse)
 library(here)
 
 
-
+here::i_am("code/composite_change_index.R")
 # load data -------------------------------------------------------------------------
 
 # ref dataset for CCI
@@ -28,41 +28,49 @@ crosstab_campaigndocs_totals_slct <- crosstab_campaigndocs_totals %>%
 
 
 cci_attributes <- ref_cci %>% 
-  left_join(crosstab_campaigndocs_totals_slct, by = "speaker_year_id") #%>%
-  # mutate(relative_toall_changegrams = (percent_changegrams - min(percent_changegrams, na.rm = TRUE)) / (max(percent_changegrams, na.rm = TRUE) - min(percent_changegrams, na.rm = TRUE))) %>%
-  # group_by(year) %>%
-  # mutate(max_year_changegram = max(percent_changegrams, na.rm = TRUE)) %>%
-  # mutate(relative_inyear_changegrams = percent_changegrams / max_year_changegram) %>%
-  # ungroup() %>%
-  # group_by(nominee_yn) %>%
-  # mutate(relative_nomineeyn_changegrams = (percent_changegrams - min(percent_changegrams, na.rm = TRUE)) / 
-  #          (max(percent_changegrams, na.rm = TRUE) - min(percent_changegrams, na.rm = TRUE))) %>%
-  # ungroup()
+  left_join(crosstab_campaigndocs_totals_slct, by = "speaker_year_id") %>%
+  # original excel formula for age scoring # =1-LOG((AGEATELECTION-35)/100)-1
+  mutate(age_score = -log10((age_sept_election_year - 35) / 100)) %>% # is great, but if we get values below 45 it breaks down (ie: spits out a num above 1)
+  #mutate(age_score1 = (1-((age_sept_election_year-35)/100))) %>% # was good, but didnt penalize oldies enough
+  #mutate(age_score1 = (1 / (1 + exp(0.15 * (age_sept_election_year - 45))))+0.12) %>% penalizes the 45 and older too hard... 47 is 0.54
+  # key measure of changegrams: 
+  # key: within year relative changegrams
+  group_by(year) %>%
+  mutate(max_year_changegram = max(percent_changegrams, na.rm = TRUE)) %>%
+  mutate(relative_inyear_changegrams = percent_changegrams / max_year_changegram) %>%
+  # for fun: relative to all candidates changegrams
+  mutate(relative_toall_changegrams = (percent_changegrams - min(percent_changegrams, na.rm = TRUE)) / (max(percent_changegrams, na.rm = TRUE) - min(percent_changegrams, na.rm = TRUE))) %>%
+  # for fun: relative to all nomieens changegrams
+  group_by(nominee_yn) %>%
+  mutate(relative_nomineeyn_changegrams = (percent_changegrams - min(percent_changegrams, na.rm = TRUE)) / 
+           (max(percent_changegrams, na.rm = TRUE) - min(percent_changegrams, na.rm = TRUE))) %>%
+  ungroup()
+  
 
-#cci_attributes_temp <- cci_attributes 
-# need to add in age and code it as 
-# =1-LOG((AGEATELECTION-35)/100)-1
 
 
-cci_attributes_clean <- cci_attributes_temp %>%
+
+
+cci_attributes_clean <- cci_attributes %>%
   select(speaker_year_id,
          speaker,
          year,
          relative_inyear_changegrams,
          visible_minority,
          gender,
+         age_score,
          highest_govt_office,
          surname_political_dynasty,
-         affiliation_relativeto_incumbent,
-         pol_party) 
+         pol_party,
+         everything()) 
 
 
 weight_changegrams <- 0.5
 weight_minority <- 0.1
 weight_gender <- 0.1
+weight_age <- 0.1
 weight_govtoffice <- 0.1
 weight_dynasty <- 0.1
-weight_affiliation <- 0.1
   
 
 cci_attributes_weighted <- cci_attributes_clean %>%
@@ -71,7 +79,7 @@ cci_attributes_weighted <- cci_attributes_clean %>%
                            (weight_gender*gender)+
                            (weight_govtoffice*highest_govt_office)+
                            (weight_dynasty*surname_political_dynasty)+
-                           (weight_affiliation*affiliation_relativeto_incumbent))) %>%
+                           (weight_age*age_score))) %>%
   select(speaker_year_id,
          speaker,
          year,
