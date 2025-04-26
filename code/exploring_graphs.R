@@ -186,10 +186,9 @@ ggsave(here("outputs/candidates_changengrams_nominees_repel.png"))
 
 
 
-# 
 
 
-# scatter 4: all years, nominees only (Dem v Rep final candidates) -----------------------
+# scatter 5: Candidate CCI Scores ------------------------------------------
 
 change_index_results %>%
   #filter(nominee_yn == 1) %>%
@@ -224,7 +223,7 @@ change_index_results %>%
                      expand = c(0, 0), limits = c(0.25, 1)) # make sure it begins at 0
 scale_y_continuous()
 
-ggsave(here("outputs/composite_change_scores_nominees.png"))
+ggsave(here("outputs/composite_change_scores_nominees2.png"))
 
 
 

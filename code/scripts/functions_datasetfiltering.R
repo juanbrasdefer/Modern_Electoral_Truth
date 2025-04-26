@@ -129,7 +129,7 @@ score_changevoter <- function(dataset, score_economic = "score_economic",
                               score_informed = "score_informed"){
   
   dataset_scored <- dataset %>%
-  mutate(changevoter_score = ((0.3 * !!sym(score_economic)) + (0.4 * !!sym(score_leftright)) + (0.3 * !!sym(score_informed))))
+  mutate(changevoter_score = ((0.5* !!sym(score_economic)) + (0.3 * !!sym(score_leftright)) + (0.2 * !!sym(score_informed))))
   
          return(dataset_scored)
 }

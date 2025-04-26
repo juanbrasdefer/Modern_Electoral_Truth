@@ -174,7 +174,7 @@ ANES_2016_scored <- ANES_2016_clean %>%
          score_informed,
          year_preschoice_coded)
 
-
+unique(ANES_2016_scored$changevoter_score)
 # BiVariate 2020 -------------------------------------------------------
 year <- 2020
 ANES_2020_clean <- ANES_2020_raw %>%
@@ -236,7 +236,8 @@ candidate_change_scores_joinable <- candidate_change_scores %>%
          relative_inyear_cci_margin,
          min_year_cci,
          max_year_cci,
-         relative_inyear_changegrams)
+         relative_inyear_changegrams,
+         pol_party)
 
 
 CCI_ANES_scored_graphable <- ANES_scored_allyears %>% 
@@ -253,6 +254,72 @@ year_colors <- c(
   "2016" = "#66a61e",
   "2020" = "#e6ab02"
 )
+
+
+
+# lms and means graph --------------------------------------------------------
+
+plot_loess_year <- function(year, show_y = TRUE) {
+  data_year <- CCI_ANES_scored_graphable %>%
+    filter(ANES_year == year)
+  
+  candidates <- unique(data_year$speaker)
+  
+  jitter_prep1 <- (unique(data_year$change_index_score))[1]
+  jitter_prep2 <- (unique(data_year$change_index_score))[2]
+  jitter_size <- (0.05*(max(jitter_prep1,jitter_prep2) - min(jitter_prep1, jitter_prep2)))
+  
+  means <- data_year %>%
+    #group_by(relative_inyear_cci_margin) %>%
+    group_by(change_index_score) %>%
+    summarise(mean_score = mean(changevoter_score), .groups = "drop") %>%
+    arrange(change_index_score)
+  
+  # Identify which point is "higher" in x
+  label_df <- means %>%
+    filter(mean_score == max(mean_score)) %>%
+    mutate(label = "X")
+  
+  ggplot(data_year, aes(x = changevoter_score, y = change_index_score,
+                        color = pol_party)) +
+    geom_point( #color = year_colors[as.character(year)], 
+      alpha = 0.5, size = 2) +
+    #geom_jitter(alpha = 0.5, size = 2, width = 0, height = jitter_size)+
+    scale_color_manual(
+      values = c("Democrat" = "#377eb8", "Republican" = "#c9102d")) +
+    geom_point(data = means, aes(x = mean_score, y = change_index_score),
+               #color = year_colors[as.character(year)],
+               color = "#c04aff",
+               size = 3, shape = 18) +
+    geom_path(data = means, aes(x = mean_score, y = change_index_score, group = 1),
+              #color = year_colors[as.character(year)],
+              color = "#c04aff",
+              size = 1.1) +
+    geom_text(data = label_df, aes(x = mean_score, y = change_index_score, label = label),
+              color = "#c04aff",
+              #color = "red"
+              size = 7) +
+    geom_smooth(se = FALSE, method = "loess", span = 1, color = "#691496", size = 1) +
+    labs(
+      title = paste0("Election ", year, ": ", candidates[1], " & ", candidates[2]),
+      x = "Voter Change Scores",
+      y = if (show_y) "Candidate Change Margin" else NULL
+    ) +
+    theme_minimal(base_size = 13) +
+    theme(legend.position = "none",
+          axis.text.y = element_text() , # show axis numbering
+          axis.ticks.y = element_line() , # show axis ticks
+          axis.title.y = if (show_y) element_text() else element_blank()) # only show axis y label for first column
+}
+
+
+years <- c(2000, 2004, 2008, 2012, 2016, 2020)
+plots_loess <- mapply(plot_loess_year, years, show_y = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE), SIMPLIFY = FALSE)
+combined_loess_plot <- wrap_plots(plots_loess, ncol = 2)
+
+ggsave(here("outputs/bivariate_lms+means_patchwork_NoInfo.png"), width = 14, height = 10, dpi = 300)
+
+
 
 
 # standard scatter graph ------------------------------------------
@@ -274,20 +341,6 @@ ggsave(here("outputs/bivariate.png"))
 
 
 # lms graph --------------------------------------------------------
-ggplot(CCI_ANES_scored_graphable, aes(
-  x = changevoter_score,
-  y = relative_inyear_cci_margin,
-  color = factor(ANES_year)
-)) +
-  geom_point(alpha = 0.6, size = 2) +
-  geom_smooth(se = FALSE, method = "loess", span = 1) +  # You can try method = "lm" too
-  scale_color_manual(values = year_colors, name = "ANES Year") +
-  labs(x = "Change Voter Score", y = "Relative In-Year CCI Margin") +
-  theme_minimal(base_size = 14)
-
-ggsave(here("outputs/bivariate_lms.png"))
-
-
 
 plot_loess_year <- function(year, show_y = TRUE) {
   data_year <- CCI_ANES_scored_graphable %>%
@@ -312,7 +365,7 @@ years <- c(2000, 2004, 2008, 2012, 2016, 2020)
 plots_loess <- mapply(plot_loess_year, years, show_y = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE), SIMPLIFY = FALSE)
 combined_loess_plot <- wrap_plots(plots_loess, ncol = 2)
 
-ggsave(here("outputs/bivariate_lms_patchwork.png"), width = 14, height = 10, dpi = 300)
+ggsave(here("outputs/bivariate_lms_patchwork_2.png"), width = 14, height = 10, dpi = 300)
 
 # means --------------------------------------------------------------
 
@@ -357,46 +410,70 @@ years <- c(2000, 2004, 2008, 2012, 2016, 2020)
 plots <- mapply(plot_year, years, show_y = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE), SIMPLIFY = FALSE)
 wrap_plots(plots, ncol = 2)
 
-ggsave(here("outputs/bivariate_means_patchwork.png"), width = 14, height = 10, dpi = 300)
+ggsave(here("outputs/bivariate_means_patchwork_2.png"), width = 14, height = 10, dpi = 300)
 
 
 
 
 
-# lms and means graph --------------------------------------------------------
+
+
+
+
+
+# lms speaker y axis graph --------------------------------------------------------
 
 plot_loess_year <- function(year, show_y = TRUE) {
   data_year <- CCI_ANES_scored_graphable %>%
     filter(ANES_year == year)
   
-  medians <- data_year %>%
-    group_by(relative_inyear_cci_margin) %>%
+  candidates <- unique(data_year$speaker)
+  
+  jitter_prep1 <- (unique(data_year$change_index_score))[1]
+  jitter_prep2 <- (unique(data_year$change_index_score))[2]
+  jitter_size <- (0.05*(max(jitter_prep1,jitter_prep2) - min(jitter_prep1, jitter_prep2)))
+  
+  means <- data_year %>%
+    #group_by(relative_inyear_cci_margin) %>%
+    group_by(speaker) %>%
     summarise(mean_score = mean(changevoter_score), .groups = "drop") %>%
-    arrange(relative_inyear_cci_margin)
+    arrange(speaker)
   
   # Identify which point is "higher" in x
-  label_df <- medians %>%
+  label_df <- means %>%
     filter(mean_score == max(mean_score)) %>%
     mutate(label = "X")
   
-  ggplot(data_year, aes(x = changevoter_score, y = relative_inyear_cci_margin)) +
-    geom_point(color = year_colors[as.character(year)], alpha = 0.5, size = 2) +
-    geom_point(data = medians, aes(x = mean_score, y = relative_inyear_cci_margin), 
-               color = year_colors[as.character(year)], size = 3, shape = 18) +
-    geom_path(data = medians, aes(x = mean_score, y = relative_inyear_cci_margin, group = 1),
-              color = year_colors[as.character(year)], size = 1.1) +
-    geom_text(data = label_df, aes(x = mean_score, y = relative_inyear_cci_margin, label = label),
-              color = "red", size = 7) +
-    geom_smooth(se = FALSE, method = "loess", span = 1, color = "black", size = 1) +
+  ggplot(data_year, aes(x = changevoter_score, y = speaker,
+                        color = pol_party)) +
+    # geom_point( #color = year_colors[as.character(year)], 
+    #   alpha = 0.5, size = 2) +
+    geom_jitter(alpha = 0.3, size = 2, width = 0, height = 0.5)+
+    scale_color_manual(
+      values = c("Democrat" = "#377eb8", "Republican" = "#c9102d")) +
+    # geom_point(data = means, aes(x = mean_score, y = speaker),
+    #            #color = year_colors[as.character(year)],
+    #            color = "#c04aff",
+    #            size = 3, shape = 18) +
+    geom_path(data = means, aes(x = mean_score, y = speaker, group = 1),
+              #color = year_colors[as.character(year)],
+              color = "#c04aff",
+              size = 1.1) +
+    geom_text(data = label_df, aes(x = mean_score, y = speaker, label = label),
+              color = "#c04aff",
+              #color = "red"
+              size = 7) +
+    geom_smooth(se = FALSE, method = "loess", span = 1, color = "#691496", size = 1) +
     labs(
-      title = paste("Year:", year),
-      x = "Change Voter Score",
-      y = if (show_y) "Relative CCI Margin" else NULL
+      title = paste0("Election ", year, ": ", candidates[1], " & ", candidates[2]),
+      x = "Voter Change Scores",
+      y = if (show_y) "Candidate Change Margin" else NULL
     ) +
     theme_minimal(base_size = 13) +
-    theme(axis.text.y = element_text() ,
-          axis.ticks.y = element_line() ,
-          axis.title.y = if (show_y) element_text() else element_blank())
+    theme(legend.position = "none",
+          axis.text.y = element_text() , # show axis numbering
+          axis.ticks.y = element_line() , # show axis ticks
+          axis.title.y = if (show_y) element_text() else element_blank()) # only show axis y label for first column
 }
 
 
@@ -404,7 +481,8 @@ years <- c(2000, 2004, 2008, 2012, 2016, 2020)
 plots_loess <- mapply(plot_loess_year, years, show_y = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE), SIMPLIFY = FALSE)
 combined_loess_plot <- wrap_plots(plots_loess, ncol = 2)
 
-ggsave(here("outputs/bivariate_lms+means_patchwork.png"), width = 14, height = 10, dpi = 300)
+ggsave(here("outputs/temp.png"), width = 14, height = 10, dpi = 300)
+
 
 
 
