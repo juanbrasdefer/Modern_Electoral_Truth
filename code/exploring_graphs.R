@@ -6,13 +6,13 @@ library(tictoc)
 library(ggrepel)
 
 here::i_am("code/exploring_graphs.R")
-
+source(here("code/scripts/graph_colours.R"))
 
 # load main dataset of frequencies and change %s 
 crosstab_campaigndocs_totals <- read_csv(here("data/results/crosstab_campaigndocs_totals.csv"))
 
 # load composite index results
-change_index_results <- read_csv(here("data/results/candidate_change_index_results.csv"))
+change_index_results <- read_csv(here("data/results/CCI_results.csv"))
 
 # GRAPHING ---------------------------------------------------------------
 
@@ -150,35 +150,35 @@ crosstab_campaigndocs_totals %>%
              color = pol_party)) +
   geom_point(size = 2, 
              #color = "#c54bfa", # currently replaced by red blue pol_party
-             alpha = 0.6) +  # Scatter points
-  geom_smooth(method = "lm", formula = y ~ x, color = "#c4167c", se = FALSE) +  # Regression line
+             alpha = 0.7) +  # Scatter points
+  geom_smooth(method = "lm", formula = y ~ x, color = lm_pink, size = 0.8, se = FALSE) +  # Regression line
   geom_text_repel(aes(label = speaker_year_id), 
                   vjust = -3, size = 2, 
-                  color = "grey") + # Labels
-  scale_color_manual(values = c("Democrat" = "#3c5cf9", 
-                                "Republican" = "#ff603e",
-                                "Libertarian" = "#f3d04b")) + # Custom colors
+                  color = name_text,
+                  family = "Times New Roman") + # Labels
+  scale_color_manual(values = c("Democrat" = democrat_violet, 
+                                "Republican" = republican_orange)) + # Custom colors
   scale_x_continuous(breaks = c(2000, 2004, 2008, 2012, 2016, 2020, 2024)) +  # Custom x-axis labels
   labs(
-    title = "'Change Vocabulary' Across Election Years",
-    subtitle = "Dem and Rep Nominees",
-    x = "Year",
-    y = "Percent of 'Change' Vocab"
+    title = "Use of 'Change' Vocabulary across Electoral Cycles",
+    subtitle = "Democratic and Republican Presidential Nominees",
+    x = "Electoral Cycle",
+    y = "Percent use of 'Change' Vocab",
+    color = "Political Party"
   ) +
   theme_minimal() + 
   theme(
+    text = element_text(family = "Times New Roman"),  # <-- this line sets all text
     panel.background = element_rect(fill = "white", color = NA),  # White plot background
     plot.background = element_rect(fill = "white", color = NA),   # White outer background
     panel.grid.major = element_line(color = "gray90"),  # Light grid lines
     panel.grid.minor = element_blank()  # Remove minor grid lines
   ) +
-  scale_y_continuous(labels = scales::percent_format(scale = 100)) # Format y-axis as percentage
+  scale_y_continuous(#limits = c(0.05, 0.025),
+                     labels = scales::percent_format(scale = 100)) # Format y-axis as percentage
 
 
-ggsave(here("outputs/candidates_changengrams_nominees_repel.png"))
-
-
-
+ggsave(here("outputs/candidates_changengrams_nominees_26.04.png"))
 
 
 
@@ -197,23 +197,28 @@ change_index_results %>%
              color = pol_party)) +
   geom_point(size = 2, 
              #color = "#c54bfa", # currently replaced by red blue pol_party
-             alpha = 0.6) +  # Scatter points
-  geom_smooth(method = "lm", formula = y ~ x, color = "#c4167c", se = FALSE) +  # Regression line
+             alpha = 0.7) +  # Scatter points
+  geom_smooth(method = "lm", formula = y ~ x, 
+              color = lm_pink, size = 0.8,
+              se = FALSE) +  # Regression line
   geom_text_repel(aes(label = speaker), 
                   vjust = -3, size = 2, 
-                  color = "grey") + # Labels
-  scale_color_manual(values = c("Democrat" = "#3c5cf9", 
-                                "Republican" = "#ff603e",
-                                "Libertarian" = "#f3d04b")) + # Custom colors
+                  color = name_text,
+                  family = "Times New Roman")+ # Labels
+  scale_color_manual(values = c("Democrat" = democrat_violet, 
+                                "Republican" = republican_orange,
+                                "Libertarian" = libertarian_yellow)) + # Custom colors
   scale_x_continuous(breaks = c(2000, 2004, 2008, 2012, 2016, 2020, 2024)) +  # Custom x-axis labels
   labs(
-    title = "Change Index Score in Each Election",
-    subtitle = "Dem and Rep Nominees",
-    x = "Year",
-    y = "Composite 'Change' Score"
+    title = "Composite Change (CCI) Scores across Electoral Cycles",
+    subtitle = "Democrat and Republican Presidential Nominees",
+    x = "Electoral Cycle",
+    y = "Composite 'Change' (CCI) Score",
+    color = "Political Party"
   ) +
   theme_minimal() + 
   theme(
+    text = element_text(family = "Times New Roman"),  # <-- this line sets all text
     panel.background = element_rect(fill = "white", color = NA),  # White plot background
     plot.background = element_rect(fill = "white", color = NA),   # White outer background
     panel.grid.major = element_line(color = "gray90"),  # Light grid lines
@@ -223,7 +228,7 @@ change_index_results %>%
                      expand = c(0, 0), limits = c(0.25, 1)) # make sure it begins at 0
 scale_y_continuous()
 
-ggsave(here("outputs/composite_change_scores_nominees2.png"))
+ggsave(here("outputs/CCI_Presidential_6V_OC.png"))
 
 
 

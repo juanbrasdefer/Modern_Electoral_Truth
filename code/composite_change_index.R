@@ -61,17 +61,26 @@ cci_attributes_clean <- cci_attributes %>%
          age_score,
          highest_govt_office,
          surname_political_dynasty,
+         affiliation_relativeto_incumbent,
          pol_party,
          everything()) 
 
 
 weight_changegrams <- 0.5
-weight_minority <- 0.1
-weight_gender <- 0.1
-weight_age <- 0.1
-weight_govtoffice <- 0.1
-weight_dynasty <- 0.1
-  
+weight_minority <- 0.083
+weight_gender <- 0.083
+weight_age <- 0.083
+weight_govtoffice <- 0.083
+weight_dynasty <- 0.083
+weight_incumbent <- 0.083
+
+# weight_changegrams <- 0.4
+# weight_minority <- 0.1
+# weight_gender <- 0.1
+# weight_age <- 0.1
+# weight_govtoffice <- 0.1
+# weight_dynasty <- 0.1
+# weight_incumbent <- 0.1
 
 cci_attributes_weighted <- cci_attributes_clean %>%
   mutate(change_index_score = ((relative_inyear_changegrams*weight_changegrams)+
@@ -79,7 +88,8 @@ cci_attributes_weighted <- cci_attributes_clean %>%
                            (weight_gender*gender)+
                            (weight_govtoffice*highest_govt_office)+
                            (weight_dynasty*surname_political_dynasty)+
-                           (weight_age*age_score))) %>%
+                           (weight_age*age_score)+
+                           (weight_incumbent*affiliation_relativeto_incumbent))) %>%
   select(speaker_year_id,
          speaker,
          year,
@@ -87,6 +97,6 @@ cci_attributes_weighted <- cci_attributes_clean %>%
          everything()) 
 
 cci_attributes_weighted %>%
-  write_csv(here("data/results/candidate_change_index_results.csv"))
+  write_csv(here("data/results/CCI_results.csv"))
 
 

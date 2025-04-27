@@ -12,13 +12,13 @@ here::i_am("code/generalization_experiment_ANES.R")
 
 # load custom functions
 source(here("code/scripts/functions_datasetfiltering.R")) # for filtering and summarizing ANES dsets
-
+source(here("code/scripts/graph_colours.R"))
 # load reference dataframe that will help us deal with the fact that
 # each of the surveys use different naming scheme for variables
 validation_ref <- read_csv(here("data/ref/validation_reftable.csv"))
 
 # load composite index
-candidate_change_scores <- read_csv(here("data/results/candidate_change_index_results.csv"))
+candidate_change_scores <- read_csv(here("data/results/CCI_results.csv"))
 
 # old one
 var_names_ref_old <- read_csv(here("data/ref/old_generalization_ANES_reftable.csv"))
@@ -245,30 +245,16 @@ CCI_ANES_scored_graphable <- ANES_scored_allyears %>%
 
 
 # plotting ----------------------------------------------------------
-# Set custom colors for each year
-year_colors <- c(
-  "2000" = "#1b9e77",
-  "2004" = "#d95f02",
-  "2008" = "#7570b3",
-  "2012" = "#e7298a",
-  "2016" = "#66a61e",
-  "2020" = "#e6ab02"
-)
+# Dancers (LOESS and means graph) --------------------------------------------------------
 
-
-
-# lms and means graph --------------------------------------------------------
-
+#'LOESS' plot (Locally Estimated Scatterplot Smoothing)
+# with means!
 plot_loess_year <- function(year, show_y = TRUE) {
   data_year <- CCI_ANES_scored_graphable %>%
     filter(ANES_year == year)
   
   candidates <- unique(data_year$speaker)
-  
-  jitter_prep1 <- (unique(data_year$change_index_score))[1]
-  jitter_prep2 <- (unique(data_year$change_index_score))[2]
-  jitter_size <- (0.05*(max(jitter_prep1,jitter_prep2) - min(jitter_prep1, jitter_prep2)))
-  
+
   means <- data_year %>%
     #group_by(relative_inyear_cci_margin) %>%
     group_by(change_index_score) %>%
@@ -282,31 +268,28 @@ plot_loess_year <- function(year, show_y = TRUE) {
   
   ggplot(data_year, aes(x = changevoter_score, y = change_index_score,
                         color = pol_party)) +
-    geom_point( #color = year_colors[as.character(year)], 
-      alpha = 0.5, size = 2) +
-    #geom_jitter(alpha = 0.5, size = 2, width = 0, height = jitter_size)+
+    geom_point(alpha = 0.2, size = 2) +
     scale_color_manual(
-      values = c("Democrat" = "#377eb8", "Republican" = "#c9102d")) +
+      values = c("Democrat" = democrat_blue, "Republican" = republican_red)) +
     geom_point(data = means, aes(x = mean_score, y = change_index_score),
-               #color = year_colors[as.character(year)],
-               color = "#c04aff",
+               color = bipartisan_purple_light,
                size = 3, shape = 18) +
     geom_path(data = means, aes(x = mean_score, y = change_index_score, group = 1),
-              #color = year_colors[as.character(year)],
-              color = "#c04aff",
+              color = bipartisan_purple_light,
               size = 1.1) +
     geom_text(data = label_df, aes(x = mean_score, y = change_index_score, label = label),
-              color = "#c04aff",
-              #color = "red"
+              color = bipartisan_purple_light,
               size = 7) +
-    geom_smooth(se = FALSE, method = "loess", span = 1, color = "#691496", size = 1) +
+    geom_smooth(se = FALSE, method = "loess", span = 1, color = bipartisan_purple_dark, size = 1) +
     labs(
-      title = paste0("Election ", year, ": ", candidates[1], " & ", candidates[2]),
+      title = paste0("Election Cycle: ", year),
+      subtitle = paste0("Candidates: ", candidates[1], " & ", candidates[2]),
       x = "Voter Change Scores",
-      y = if (show_y) "Candidate Change Margin" else NULL
+      y = if (show_y) "Candidate CCI Score" else NULL
     ) +
     theme_minimal(base_size = 13) +
-    theme(legend.position = "none",
+    theme(  text = element_text(family = "Times New Roman"),  # <-- this line sets all text 
+            legend.position = "none",
           axis.text.y = element_text() , # show axis numbering
           axis.ticks.y = element_line() , # show axis ticks
           axis.title.y = if (show_y) element_text() else element_blank()) # only show axis y label for first column
@@ -315,9 +298,18 @@ plot_loess_year <- function(year, show_y = TRUE) {
 
 years <- c(2000, 2004, 2008, 2012, 2016, 2020)
 plots_loess <- mapply(plot_loess_year, years, show_y = c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE), SIMPLIFY = FALSE)
-combined_loess_plot <- wrap_plots(plots_loess, ncol = 2)
+combined_loess_plot <- wrap_plots(plots_loess, ncol = 2) + 
+  plot_annotation(title = "Voter 'Change' Propensities",
+                  subtitle = "Voter 'Change' Scores compared with their Presidential Vote",
+                  caption = "Data Sources: APP, ANES",
+                  theme = theme(
+      plot.title = element_text(hjust = 0.5, size = 24, family = "Times New Roman"),
+      plot.subtitle = element_text(hjust = 0.5, size = 18, family = "Times New Roman"),
+      plot.caption = element_text(size = 11, family = "Times New Roman")
+    ))
+ggsave(here("outputs/Dancing_Patchwork_503515.png"), width = 14, height = 12, dpi = 300)
 
-ggsave(here("outputs/bivariate_lms+means_patchwork_NoInfo.png"), width = 14, height = 10, dpi = 300)
+
 
 
 
@@ -489,9 +481,60 @@ ggsave(here("outputs/temp.png"), width = 14, height = 10, dpi = 300)
 
 
 
-
-
-
+ 
+# LOESS Graph V2, with legends but gpt took away the lm -----------------------------
+# plot_loess_year <- function(year, show_y = TRUE) {
+#   data_year <- CCI_ANES_scored_graphable %>%
+#     filter(ANES_year == year)
+#   
+#   candidates <- unique(data_year$speaker)
+#   
+#   jitter_prep1 <- (unique(data_year$change_index_score))[1]
+#   jitter_prep2 <- (unique(data_year$change_index_score))[2]
+#   jitter_size <- (0.05*(max(jitter_prep1,jitter_prep2) - min(jitter_prep1, jitter_prep2)))
+#   
+#   means <- data_year %>%
+#     group_by(change_index_score) %>%
+#     summarise(mean_score = mean(changevoter_score), .groups = "drop") %>%
+#     arrange(change_index_score)
+#   
+#   label_df <- means %>%
+#     filter(mean_score == max(mean_score)) %>%
+#     mutate(label = "X")   # the X mark
+#   
+#   ggplot(data_year, aes(x = changevoter_score, y = change_index_score)) +
+#     geom_point(aes(color = pol_party), alpha = 0.2, size = 2) +
+#     geom_point(data = means, aes(x = mean_score, y = change_index_score, shape = "Mean Voter Change Score"), 
+#                color = bipartisan_purple_light, size = 3, inherit.aes = FALSE) + 
+#   geom_path(data = means, aes(x = mean_score, y = change_index_score, group = 1),
+#             color = bipartisan_purple_light, size = 1.1) +
+#     geom_text(data = label_df, aes(x = mean_score, y = change_index_score, label = label),
+#               color = bipartisan_purple_light, size = 7, inherit.aes = FALSE) +
+#     geom_smooth(aes(color = pol_party), se = FALSE, method = "loess", span = 1, size = 1) +
+#     
+#     scale_color_manual(values = c("Democrat" = democrat_blue, "Republican" = republican_red)) +
+#     
+#     scale_shape_manual(name = "Special Points", values = c("Mean Voter Change Score" = 4)) + 
+#   guides(
+#     color = guide_legend(order = 1),
+#     shape = guide_legend(order = 2, override.aes = list(color = bipartisan_purple_light, size = 5))
+#   ) + 
+#   
+#   labs(
+#     title = paste0("Election Cycle: ", year),
+#     subtitle = paste0("Candidates: ", candidates[1], " & ", candidates[2]),
+#     x = "Voter Change Scores",
+#     y = if (show_y) "CCI Margin between Candidates" else NULL
+#   ) +
+#     theme_minimal(base_size = 13) +
+#     theme(
+#       text = element_text(family = "Times New Roman"),
+#       legend.position = "right",  # Keep legends visible so patchwork can gather them
+#       axis.text.y = element_text(),
+#       axis.ticks.y = element_line(),
+#       axis.title.y = if (show_y) element_text() else element_blank()
+#     )
+# }
 
 #24.04 Results ----------------------------------------------------------
 # 2000
@@ -528,7 +571,7 @@ ANES_2000_clean <- ANES_2000_raw %>%
 year <- 2000
 ANES_2000_filtered <- ANES_2000_clean %>%
   filter_ANES_vote("votedpres_yn", year) %>%
-  filter_ANES_attribute_single("income_gap", year) %>% # 17% increase for Bush, 20% drop for Gore
+  #filter_ANES_attribute_single("income_gap", year) %>% # 17% increase for Bush, 20% drop for Gore
   #filter_ANES_attribute_single("leftright_self", year) %>% # 6% bump for Gore
   filter_ANES_attribute_single("office_recall", year) # 1% drop for Gore, went to Nader
   
