@@ -121,7 +121,7 @@ voted_change_20_allelecs <- ANES_2020_clean_slct %>%
 # dataset that voted Obama -> Trump -> Biden  
 # let's see who they are!!
 
-
+156/189
 # we also get rid of columns that are not useful for summary stats
 # columns that helped us filter earlier
 droplist <- c("V202072", # V202072 - POST: Did R vote for President in this election
