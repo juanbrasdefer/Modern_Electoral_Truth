@@ -1,4 +1,4 @@
-# Change is the Only Constant: A Multi-Modal Analysis of Voter Desire for 'Change' in US Elections
+# Change is the Only Constant: A Multi-Modal Analysis of Political Communications and Voter Desire for 'Change' in US Elections
 
 ### Author: 					      	       Juan Pablo Brasdefer
 ### Supervisor: 					          		Mark Kayser, PhD.
