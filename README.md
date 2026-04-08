@@ -13,6 +13,11 @@ The paper is broken down into three studies, which tackle
 The findings suggest that 'change voting' is a unique phenomenon, and is one born from persistent economic distress, a conscious political non-alignment, and a strong level of political knowledge, opening the door for further research into the implications of rhetoric and misinformation on this identified group of voters.
 
 
+The primary insights and research methods are visualized in [this research poster](https://github.com/user-attachments/files/20257866/brasdefer_juan_masters_thesis_poster.pdf)
+
+The full paper can be found here
+
+
 
 ### Data Sources:
 
@@ -25,4 +30,4 @@ American National Election Studies. (n.d.). Retrieved December 12, 2024, from ht
 
 
 
-[brasdefer_juan_masters_thesis_poster.pdf](https://github.com/user-attachments/files/20257866/brasdefer_juan_masters_thesis_poster.pdf)
+
