@@ -275,7 +275,13 @@ plot_bar_comparison <- function(var_name, data_df_long = joint_long_df, var_attr
     ) +
     scale_fill_manual(values = c("MVoters" = "#3c5cf9", 
                                  "CVoters" = "#7ed994")) +
-    labs(title = plot_title, subtitle = var_name,x = "Response", y = "Proportion") +
+    labs(
+      title = plot_title,
+      subtitle = var_name,
+      x = "Response",
+      y = "Proportion",
+      fill = "Voter Group"  # This changes the legend title
+    ) +
     theme_minimal()
 }
 
@@ -332,6 +338,7 @@ plot_list <- lapply(var_list, plot_by_type)
 
 # Combine all plots into 8 rows x 8 columns
 ggsave(here("outputs/ANES_attributes_all.png"), wrap_plots(plot_list, nrow = 8, ncol = 8), width = 30, height = 40)
+
 
 
 
